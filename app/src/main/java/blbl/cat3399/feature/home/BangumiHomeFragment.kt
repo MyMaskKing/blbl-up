@@ -63,12 +63,14 @@ class BangumiHomeFragment : Fragment(), RefreshKeyHandler {
         binding.rvHot.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         binding.rvHot.setHasFixedSize(true)
 
-        bangumiAdapter = PgcHorizontalAdapter { season -> openBangumiDetail(season, 1) }
+        bangumiAdapter = PgcHorizontalAdapter(
+            onItemClick = { season -> openBangumiDetail(season, 1) })
         binding.rvBangumi.adapter = bangumiAdapter
         binding.rvBangumi.layoutManager = GridLayoutManager(context, 3)
         binding.rvBangumi.setHasFixedSize(true)
 
-        chineseAdapter = PgcHorizontalAdapter { season -> openBangumiDetail(season, 4) }
+        chineseAdapter = PgcHorizontalAdapter(
+            onItemClick = { season -> openBangumiDetail(season, 4) })
         binding.rvChinese.adapter = chineseAdapter
         binding.rvChinese.layoutManager = GridLayoutManager(context, 3)
         binding.rvChinese.setHasFixedSize(true)

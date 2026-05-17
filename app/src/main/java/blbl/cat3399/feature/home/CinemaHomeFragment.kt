@@ -69,22 +69,26 @@ class CinemaHomeFragment : Fragment(), RefreshKeyHandler {
         binding.rvHot.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         binding.rvHot.setHasFixedSize(true)
 
-        moviesAdapter = PgcHorizontalAdapter { season -> openBangumiDetail(season, 2) }
+        moviesAdapter = PgcHorizontalAdapter(
+            onItemClick = { season -> openBangumiDetail(season, 2) })
         binding.rvMovies.adapter = moviesAdapter
         binding.rvMovies.layoutManager = GridLayoutManager(context, 3)
         binding.rvMovies.setHasFixedSize(true)
 
-        tvAdapter = PgcHorizontalAdapter { season -> openBangumiDetail(season, 5) }
+        tvAdapter = PgcHorizontalAdapter(
+            onItemClick = { season -> openBangumiDetail(season, 5) })
         binding.rvTv.adapter = tvAdapter
         binding.rvTv.layoutManager = GridLayoutManager(context, 3)
         binding.rvTv.setHasFixedSize(true)
 
-        documentaryAdapter = PgcHorizontalAdapter { season -> openBangumiDetail(season, 3) }
+        documentaryAdapter = PgcHorizontalAdapter(
+            onItemClick = { season -> openBangumiDetail(season, 3) })
         binding.rvDocumentary.adapter = documentaryAdapter
         binding.rvDocumentary.layoutManager = GridLayoutManager(context, 3)
         binding.rvDocumentary.setHasFixedSize(true)
 
-        varietyAdapter = PgcHorizontalAdapter { season -> openBangumiDetail(season, 7) }
+        varietyAdapter = PgcHorizontalAdapter(
+            onItemClick = { season -> openBangumiDetail(season, 7) })
         binding.rvVariety.adapter = varietyAdapter
         binding.rvVariety.layoutManager = GridLayoutManager(context, 3)
         binding.rvVariety.setHasFixedSize(true)
