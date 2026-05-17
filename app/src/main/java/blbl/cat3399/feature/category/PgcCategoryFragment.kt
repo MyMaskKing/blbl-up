@@ -65,7 +65,7 @@ data class PgcFilterState(
     val seasonStatus: Int = -1,
     val year: String = "-1",
     val releaseDate: String = "-1",
-    val order: Int = 0,
+    val order: Int = -1,
     val sort: Int = 0,
 ) {
     val displayName: String
@@ -73,9 +73,14 @@ data class PgcFilterState(
             val names = mutableListOf<String>()
             if (area != "-1") names.add(PgcConstants.PGC_AREA_NAMES[area] ?: "地区")
             if (year != "-1") names.add(year)
-            if (order != 0) names.add(PgcConstants.PGC_ORDER_NAMES.getOrNull(order) ?: "排序")
+            if (order != -1) names.add(PgcConstants.PGC_ORDER_NAMES.getOrNull(order) ?: "排序")
             return if (names.isEmpty()) "筛选" else names.joinToString(" · ")
         }
+
+    fun getEffectiveOrder(): Int {
+        if (order != -1) return order
+        return if (seasonType in listOf(1, 4)) 5 else 6
+    }
 }
 
 class PgcCategoryFragment : Fragment(), RefreshKeyHandler {
@@ -268,7 +273,7 @@ class PgcCategoryFragment : Fragment(), RefreshKeyHandler {
                         seasonStatus = filterState.seasonStatus.takeIf { it != -1 },
                         year = filterState.year.takeIf { it != "-1" },
                         releaseDate = filterState.releaseDate.takeIf { it != "-1" },
-                        order = filterState.order,
+                        order = filterState.getEffectiveOrder(),
                         sort = filterState.sort,
                     )
 

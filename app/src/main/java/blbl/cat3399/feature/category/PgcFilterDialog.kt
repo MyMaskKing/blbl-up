@@ -22,6 +22,7 @@ class PgcFilterDialog(
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        window?.setBackgroundDrawableResource(R.color.blbl_surface)
         binding = DialogPgcFilterBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
