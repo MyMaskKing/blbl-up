@@ -15,7 +15,7 @@ class PgcFilterDialog(
     context: Context,
     private val initialState: PgcFilterState,
     private val onApply: (PgcFilterState) -> Unit,
-) : Dialog(context, R.style.Theme_BlBl_Dialog) {
+) : Dialog(context, R.style.ThemeOverlay_Blbl_TransparentDialog) {
     private lateinit var binding: DialogPgcFilterBinding
 
     private var currentState = initialState

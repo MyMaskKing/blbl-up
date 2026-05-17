@@ -27,6 +27,34 @@ import blbl.cat3399.ui.RefreshKeyHandler
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 
+object PgcConstants {
+    val PGC_AREA_NAMES =
+        mapOf(
+            "-1" to "全部",
+            "1" to "中国大陆",
+            "2" to "日本",
+            "3" to "美国",
+            "4" to "英国",
+            "5" to "加拿大",
+            "6" to "中国香港",
+            "7" to "中国台湾",
+            "8" to "韩国",
+            "9" to "法国",
+            "10" to "泰国",
+        )
+
+    val PGC_ORDER_NAMES =
+        listOf(
+            "更新时间",
+            "弹幕数量",
+            "播放数量",
+            "追剧人数",
+            "最高评分",
+            "开播时间",
+            "上映时间",
+        )
+}
+
 data class PgcFilterState(
     val seasonType: Int = 1,
     val area: String = "-1",
@@ -43,9 +71,9 @@ data class PgcFilterState(
     val displayName: String
         get() {
             val names = mutableListOf<String>()
-            if (area != "-1") names.add(PGC_AREA_NAMES[area] ?: "地区")
+            if (area != "-1") names.add(PgcConstants.PGC_AREA_NAMES[area] ?: "地区")
             if (year != "-1") names.add(year)
-            if (order != 0) names.add(PGC_ORDER_NAMES.getOrNull(order) ?: "排序")
+            if (order != 0) names.add(PgcConstants.PGC_ORDER_NAMES.getOrNull(order) ?: "排序")
             return if (names.isEmpty()) "筛选" else names.joinToString(" · ")
         }
 }
@@ -129,6 +157,13 @@ class PgcCategoryFragment : Fragment(), RefreshKeyHandler {
                         override fun onTopEdge(): Boolean {
                             binding.tabLayout.getTabAt(0)?.view?.requestFocus()
                             return true
+                        }
+
+                        override fun onLeftEdge(): Boolean {
+                            return false
+                        }
+
+                        override fun onRightEdge() {
                         }
 
                         override fun canLoadMore(): Boolean = hasNext && !isLoadingMore
@@ -325,33 +360,5 @@ class PgcCategoryFragment : Fragment(), RefreshKeyHandler {
         dpadGridController = null
         _binding = null
         super.onDestroyView()
-    }
-
-    companion object {
-        val PGC_AREA_NAMES =
-            mapOf(
-                "-1" to "全部",
-                "1" to "中国大陆",
-                "2" to "日本",
-                "3" to "美国",
-                "4" to "英国",
-                "5" to "加拿大",
-                "6" to "中国香港",
-                "7" to "中国台湾",
-                "8" to "韩国",
-                "9" to "法国",
-                "10" to "泰国",
-            )
-
-        val PGC_ORDER_NAMES =
-            listOf(
-                "更新时间",
-                "弹幕数量",
-                "播放数量",
-                "追剧人数",
-                "最高评分",
-                "开播时间",
-                "上映时间",
-            )
     }
 }
