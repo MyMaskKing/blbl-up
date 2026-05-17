@@ -160,7 +160,7 @@ class PgcFilterDialog(
     private fun onFilterOptionClick(category: FilterCategory, value: String) {
         currentState = when (category) {
             FilterCategory.AREA -> currentState.copy(area = value)
-            FilterCategory.STYLE -> currentState.copy(styleId = value.toIntOrNull() ?: -1)
+            FilterCategory.STYLE -> currentState.copy(styleId = value)
             FilterCategory.YEAR -> {
                 if (currentState.seasonType in listOf(1, 4)) {
                     currentState.copy(year = value)
@@ -185,7 +185,7 @@ class PgcFilterDialog(
 
         items += FilterItem.Header("题材")
         items += PgcConstants.getStyles(currentState.seasonType).map { (label, value) ->
-            FilterItem.Option(FilterCategory.STYLE, label, value.toString(), currentState.styleId == value)
+            FilterItem.Option(FilterCategory.STYLE, label, value, currentState.styleId == value)
         }
 
         items += FilterItem.Header("年份")

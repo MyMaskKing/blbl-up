@@ -30,7 +30,7 @@ import kotlinx.coroutines.launch
 data class PgcFilterState(
     val seasonType: Int = 1,
     val area: String = "-1",
-    val styleId: Int = -1,
+    val styleId: String = "-1",
     val spokenLanguageType: Int = -1,
     val seasonVersion: Int = -1,
     val isFinish: Int = -1,
@@ -44,7 +44,7 @@ data class PgcFilterState(
         get() {
             val names = mutableListOf<String>()
             if (area != "-1") names.add(PgcConstants.PGC_AREA_NAMES[area] ?: "地区")
-            if (styleId != -1) names.add(PgcConstants.getStyleName(seasonType, styleId) ?: "题材")
+            if (styleId != "-1") names.add(PgcConstants.getStyleName(seasonType, styleId) ?: "题材")
             if (year != "-1") names.add(year)
             if (order != -1) names.add(PgcConstants.PGC_ORDER_NAMES[order] ?: "排序")
             return if (names.isEmpty()) "筛选" else names.joinToString(" · ")
@@ -78,50 +78,72 @@ object PgcConstants {
         6 to "上映时间",
     )
 
-    fun getStyles(seasonType: Int): List<Pair<String, Int>> {
+    fun getStyles(seasonType: Int): List<Pair<String, String>> {
         return when (seasonType) {
             1 -> listOf(
-                "全部" to -1,
-                "热血" to 2, "战斗" to 3, "青春" to 5, "搞笑" to 6,
-                "日常" to 7, "治愈" to 8, "励志" to 10, "恋爱" to 11,
-                "科幻" to 12, "奇幻" to 13, "悬疑" to 15, "冒险" to 16,
-                "校园" to 17, "魔法" to 20, "动作" to 21, "百合" to 24,
-                "运动" to 25, "推理" to 26, "偶像" to 27, "音乐" to 28, "竞技" to 30,
+                "全部" to "-1",
+                // 题材 ID 来自 B 站 PGC condition 接口，旧的 2/3/104 等 ID 已不再命中。
+                "原创" to "10010", "漫画改" to "10011", "小说改" to "10012", "游戏改" to "10013",
+                "特摄" to "10102", "布袋戏" to "10015", "热血" to "10016", "穿越" to "10017",
+                "奇幻" to "10018", "战斗" to "10020", "搞笑" to "10021", "日常" to "10022",
+                "科幻" to "10023", "萌系" to "10024", "治愈" to "10025", "校园" to "10026",
+                "少儿" to "10027", "泡面" to "10028", "恋爱" to "10029", "少女" to "10030",
+                "魔法" to "10031", "冒险" to "10032", "历史" to "10033", "架空" to "10034",
+                "机战" to "10035", "神魔" to "10036", "声控" to "10037", "运动" to "10038",
+                "励志" to "10039", "音乐" to "10040", "推理" to "10041", "社团" to "10042",
+                "智斗" to "10043", "催泪" to "10044", "美食" to "10045", "偶像" to "10046",
+                "乙女" to "10047", "职场" to "10048",
             )
             2 -> listOf(
-                "全部" to -1,
-                "动作" to 104, "喜剧" to 105, "爱情" to 106, "科幻" to 107,
-                "奇幻" to 108, "悬疑" to 109, "犯罪" to 110, "恐怖" to 111,
-                "冒险" to 112, "战争" to 113, "动画" to 114, "历史" to 116,
-                "古装" to 117, "运动" to 118, "音乐" to 119,
+                "全部" to "-1",
+                "短片" to "10104", "剧情" to "10050", "喜剧" to "10051", "爱情" to "10052",
+                "动作" to "10053", "恐怖" to "10054", "科幻" to "10023", "犯罪" to "10055",
+                "惊悚" to "10056", "悬疑" to "10057", "奇幻" to "10018", "战争" to "10058",
+                "动画" to "10059", "传记" to "10060", "家庭" to "10061", "歌舞" to "10062",
+                "历史" to "10033", "冒险" to "10032", "纪实" to "10063", "灾难" to "10064",
+                "漫画改" to "10011", "小说改" to "10012",
             )
             3 -> listOf(
-                "全部" to -1,
-                "历史" to 25, "美食" to 39, "文化" to 19, "科技" to 27,
-                "探索" to 29, "宇宙" to 1201, "宠物" to 1202, "社会" to 1203,
-                "动物" to 989, "自然" to 34, "医学" to 1204, "军事" to 988,
-                "灾难" to 1205, "旅行" to 31,
+                "全部" to "-1",
+                "历史" to "10033", "美食" to "10045", "人文" to "10065", "科技" to "10066",
+                "探险" to "10067", "宇宙" to "10068", "萌宠" to "10069", "社会" to "10070",
+                "动物" to "10071", "自然" to "10072", "医疗" to "10073", "军事" to "10074",
+                "灾难" to "10064", "罪案" to "10075", "神秘" to "10076", "旅行" to "10077",
+                "运动" to "10038", "电影" to "-10",
             )
             4 -> listOf(
-                "全部" to -1,
-                "搞笑" to 51, "日常" to 52, "励志" to 53, "治愈" to 54, "古风" to 55,
+                "全部" to "-1",
+                "原创" to "10010", "漫画改" to "10011", "小说改" to "10012", "游戏改" to "10013",
+                "动态漫" to "10014", "布袋戏" to "10015", "热血" to "10016", "奇幻" to "10018",
+                "玄幻" to "10019", "战斗" to "10020", "搞笑" to "10021", "武侠" to "10078",
+                "日常" to "10022", "科幻" to "10023", "萌系" to "10024", "治愈" to "10025",
+                "悬疑" to "10057", "校园" to "10026", "少儿" to "10027", "泡面" to "10028",
+                "恋爱" to "10029", "少女" to "10030", "魔法" to "10031", "历史" to "10033",
+                "机战" to "10035", "神魔" to "10036", "声控" to "10037", "运动" to "10038",
+                "励志" to "10039", "音乐" to "10040", "推理" to "10041", "社团" to "10042",
+                "智斗" to "10043", "催泪" to "10044", "美食" to "10045", "偶像" to "10046",
+                "乙女" to "10047", "职场" to "10048", "古风" to "10049", "漫剧" to "50112",
             )
             5 -> listOf(
-                "全部" to -1,
-                "爱情" to 106, "喜剧" to 105, "动作" to 104, "悬疑" to 109,
-                "奇幻" to 108, "古装" to 117, "都市" to 101, "剧情" to 102,
-                "战争" to 113, "历史" to 116,
+                "全部" to "-1",
+                "剧情" to "10050", "情感" to "10084", "搞笑" to "10021", "悬疑" to "10057",
+                "都市" to "10080", "家庭" to "10061", "古装" to "10081", "历史" to "10033",
+                "奇幻" to "10018", "青春" to "10079", "战争" to "10058", "武侠" to "10078",
+                "励志" to "10039", "短剧" to "10103", "科幻" to "10023",
+                "其他" to "10086,10088,10089,10017,10083,10082,10087,10085",
             )
             7 -> listOf(
-                "全部" to -1,
-                "真人秀" to 201, "搞笑" to 202, "音乐" to 203, "美食" to 204,
-                "旅行" to 205, "竞技" to 206, "访谈" to 207, "生活" to 208,
+                "全部" to "-1",
+                "音乐" to "10040", "访谈" to "10090", "脱口秀" to "10091", "真人秀" to "10092",
+                "选秀" to "10094", "美食" to "10045", "旅游" to "10095", "晚会" to "10098",
+                "演唱会" to "10096", "情感" to "10084", "喜剧" to "10051", "亲子" to "10097",
+                "文化" to "10100", "职场" to "10048", "萌宠" to "10069", "养成" to "10099",
             )
-            else -> listOf("全部" to -1)
+            else -> listOf("全部" to "-1")
         }
     }
 
-    fun getStyleName(seasonType: Int, styleId: Int): String? {
+    fun getStyleName(seasonType: Int, styleId: String): String? {
         return getStyles(seasonType).find { it.second == styleId }?.first
     }
 
@@ -392,7 +414,7 @@ class PgcCategoryFragment : Fragment(), RefreshKeyHandler {
                         page = currentPage,
                         pageSize = 20,
                         area = filterState.area.takeIf { it != "-1" },
-                        styleId = filterState.styleId.takeIf { it != -1 },
+                        styleId = filterState.styleId.takeIf { it != "-1" },
                         spokenLanguageType = filterState.spokenLanguageType.takeIf { it != -1 },
                         seasonVersion = filterState.seasonVersion.takeIf { it != -1 },
                         isFinish = filterState.isFinish.takeIf { it != -1 },
