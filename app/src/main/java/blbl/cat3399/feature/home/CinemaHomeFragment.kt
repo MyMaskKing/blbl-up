@@ -36,7 +36,6 @@ class CinemaHomeFragment : Fragment(), RefreshKeyHandler {
     )
 
     private var sections = listOf<CinemaSection>()
-    private val loadedSeasonTypes = mutableSetOf<Int>()
     
     // 正在热播数据
     private var hotItems = mutableListOf<BangumiSeason>()
@@ -101,9 +100,7 @@ class CinemaHomeFragment : Fragment(), RefreshKeyHandler {
 
     private fun loadSections() {
         sections.forEach { section ->
-            if (!loadedSeasonTypes.contains(section.seasonType)) {
-                loadSection(section)
-            }
+            loadSection(section)
         }
     }
 
@@ -117,7 +114,6 @@ class CinemaHomeFragment : Fragment(), RefreshKeyHandler {
                     order = 6, // 上映时间排序
                     sort = 0,
                 )
-                loadedSeasonTypes.add(section.seasonType)
                 section.items.clear()
                 section.items.addAll(result.items)
                 updateSectionView(section)
@@ -190,7 +186,6 @@ class CinemaHomeFragment : Fragment(), RefreshKeyHandler {
         hotAdapter?.submit(hotItems)
         loadHotSection()
         
-        loadedSeasonTypes.clear()
         sections.forEach { section ->
             section.items.clear()
         }

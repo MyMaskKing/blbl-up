@@ -32,9 +32,9 @@ class PgcFilterDialog(
         super.onCreate(savedInstanceState)
         window?.apply {
             setBackgroundDrawableResource(R.color.blbl_surface)
-            // 设置对话框尺寸为屏幕的98%宽度和95%高度，适合TV版全屏显示
-            val width = (context.resources.displayMetrics.widthPixels * 0.98).toInt()
-            val height = (context.resources.displayMetrics.heightPixels * 0.95).toInt()
+            // 设置对话框尺寸为全屏，适合TV版显示，手机上也使用全屏
+            val width = context.resources.displayMetrics.widthPixels
+            val height = context.resources.displayMetrics.heightPixels
             setLayout(width, height)
             setGravity(Gravity.CENTER)
         }
@@ -73,7 +73,7 @@ class PgcFilterDialog(
 
     private fun setupStyleOptions() {
         val container = binding.styleContainer
-        val items = PgcConstants.getStyles(initialState.seasonType)
+        val items = PgcConstants.getStyles(currentState.seasonType)
         allStyleButtons.clear()
 
         items.forEach { (label, value) ->

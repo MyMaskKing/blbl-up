@@ -35,7 +35,6 @@ class BangumiHomeFragment : Fragment(), RefreshKeyHandler {
     )
 
     private var sections = listOf<BangumiSection>()
-    private val loadedSeasonTypes = mutableSetOf<Int>()
     
     // 正在热播数据
     private var hotItems = mutableListOf<BangumiSeason>()
@@ -98,9 +97,7 @@ class BangumiHomeFragment : Fragment(), RefreshKeyHandler {
 
     private fun loadSections() {
         sections.forEach { section ->
-            if (!loadedSeasonTypes.contains(section.seasonType)) {
-                loadSection(section)
-            }
+            loadSection(section)
         }
     }
 
@@ -114,7 +111,6 @@ class BangumiHomeFragment : Fragment(), RefreshKeyHandler {
                     order = 5, // 开播时间排序
                     sort = 0,
                 )
-                loadedSeasonTypes.add(section.seasonType)
                 section.items.clear()
                 section.items.addAll(result.items)
                 updateSectionView(section)
