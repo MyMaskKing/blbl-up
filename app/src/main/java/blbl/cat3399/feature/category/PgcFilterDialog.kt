@@ -28,7 +28,7 @@ private sealed class FilterItem {
     ) : FilterItem()
 }
 
-private enum class FilterCategory { AREA, STYLE, YEAR, ORDER, STATUS, FINISH }
+private enum class FilterCategory { AREA, STYLE, YEAR, ORDER, SORT, STATUS, FINISH }
 
 private class FilterGridAdapter(
     private val onOptionClick: (FilterCategory, String) -> Unit,
@@ -168,7 +168,13 @@ class PgcFilterDialog(
                     currentState.copy(releaseDate = value)
                 }
             }
-            FilterCategory.ORDER -> currentState.copy(order = value.toIntOrNull() ?: 0)
+            FilterCategory.ORDER -> {
+                val order = value.toIntOrNull() ?: 2
+                val sortItems = PgcConstants.getSortItems(currentState.seasonType, order)
+                val sort = currentState.sort.takeIf { selected -> sortItems.any { it.second == selected } } ?: 0
+                currentState.copy(order = order, sort = sort)
+            }
+            FilterCategory.SORT -> currentState.copy(sort = value.toIntOrNull() ?: 0)
             FilterCategory.STATUS -> currentState.copy(seasonStatus = value)
             FilterCategory.FINISH -> currentState.copy(isFinish = value.toIntOrNull() ?: -1)
         }
@@ -201,6 +207,14 @@ class PgcFilterDialog(
         items += FilterItem.Header("排序")
         items += PgcConstants.getOrderItems(initialState.seasonType).map { (label, value) ->
             FilterItem.Option(FilterCategory.ORDER, label, value.toString(), currentState.order == value)
+        }
+
+        val sortItems = PgcConstants.getSortItems(currentState.seasonType, currentState.order)
+        if (sortItems.size > 1) {
+            items += FilterItem.Header("排序方向")
+            items += sortItems.map { (label, value) ->
+                FilterItem.Option(FilterCategory.SORT, label, value.toString(), currentState.sort == value)
+            }
         }
 
         items += FilterItem.Header("付费状态")

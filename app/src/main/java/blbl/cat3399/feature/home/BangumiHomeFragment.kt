@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import blbl.cat3399.R
 import blbl.cat3399.core.api.BiliApi
 import blbl.cat3399.core.model.BangumiSeason
@@ -54,14 +53,11 @@ class BangumiHomeFragment : Fragment(), RefreshKeyHandler {
     }
 
     private fun initAdapters() {
-        val hotItemWidth = (resources.displayMetrics.density * 150).toInt()
-
         hotAdapter = PgcHorizontalAdapter(
             onItemClick = { season -> openBangumiDetail(season, 1) },
-            itemWidth = hotItemWidth,
         )
         binding.rvHot.adapter = hotAdapter
-        binding.rvHot.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        binding.rvHot.layoutManager = GridLayoutManager(context, spanCountForPgc())
         binding.rvHot.setHasFixedSize(true)
 
         bangumiAdapter = PgcHorizontalAdapter(
@@ -95,7 +91,7 @@ class BangumiHomeFragment : Fragment(), RefreshKeyHandler {
                     BiliApi.pgcSeasonIndex(
                         seasonType = 1,
                         page = 1,
-                        pageSize = 15,
+                        pageSize = hotPageSize(),
                         order = 2,
                         sort = 0,
                     )
@@ -140,6 +136,8 @@ class BangumiHomeFragment : Fragment(), RefreshKeyHandler {
         }
         adapter?.submit(section.items)
     }
+
+    private fun hotPageSize(): Int = spanCountForPgc() * 4
 
     private fun setupSectionClickListeners() {
         binding.btnBangumiMore.setOnClickListener { openCategoryPage(1) }

@@ -49,6 +49,7 @@ data class PgcFilterState(
             val selectedYear = if (seasonType in listOf(1, 4)) year else releaseDate
             if (selectedYear != "-1") names.add(PgcConstants.getYearName(seasonType, selectedYear) ?: selectedYear)
             names.add(PgcConstants.getOrderName(seasonType, order) ?: "排序")
+            if (sort != 0) names.add(PgcConstants.getSortName(seasonType, order, sort) ?: "升序")
             return if (names.isEmpty()) "筛选" else names.joinToString(" · ")
         }
 
@@ -168,6 +169,31 @@ object PgcConstants {
 
     fun getOrderName(seasonType: Int, order: Int): String? {
         return getOrderItems(seasonType).find { it.second == order }?.first
+    }
+
+    fun getSortItems(seasonType: Int, order: Int): List<Pair<String, Int>> {
+        val supportsAscending =
+            when (seasonType) {
+                1, 4 -> order in setOf(0, 2, 3, 5)
+                2 -> order in setOf(0, 2, 6)
+                3 -> order in setOf(0, 1, 2, 6)
+                5 -> order in setOf(0, 1, 2, 3)
+                7 -> order in setOf(0, 1, 2, 6)
+                else -> order in setOf(0, 1, 2, 3, 5, 6)
+            }
+        return if (!supportsAscending) {
+            listOf("默认" to 0)
+        } else {
+            // B 站接口的 order.sort 返回 0,1；这里按字段语义展示，值原样透传。
+            when (order) {
+                0, 5, 6 -> listOf("从新到旧" to 0, "从旧到新" to 1)
+                else -> listOf("从高到低" to 0, "从低到高" to 1)
+            }
+        }
+    }
+
+    fun getSortName(seasonType: Int, order: Int, sort: Int): String? {
+        return getSortItems(seasonType, order).find { it.second == sort }?.first
     }
 
     fun getAreaItems(seasonType: Int): List<Pair<String, String>> {
@@ -411,6 +437,12 @@ class PgcCategoryFragment : Fragment(), RefreshKeyHandler {
         binding.btnFilter.setOnClickListener {
             showFilterDialog()
         }
+        binding.btnSideFilter.setOnClickListener {
+            showFilterDialog()
+        }
+        binding.btnSideRefresh.setOnClickListener {
+            refreshFromShortcut()
+        }
         updateFilterButtonText()
     }
 
@@ -551,6 +583,10 @@ class PgcCategoryFragment : Fragment(), RefreshKeyHandler {
     }
 
     override fun handleRefreshKey(): Boolean {
+        return refreshFromShortcut()
+    }
+
+    private fun refreshFromShortcut(): Boolean {
         val b = _binding ?: return false
         if (!isResumed) return false
         if (b.swipeRefresh.isRefreshing) return true
