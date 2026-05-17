@@ -67,10 +67,10 @@
                         android:textColor="?attr/blblOnPageBackdrop"/>
 
                     <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btn_movies_filter"
+                        android:id="@+id/btn_movies_more"
                         android:layout_width="wrap_content"
                         android:layout_height="32dp"
-                        android:text="@string/cinema_filter"
+                        android:text="@string/cinema_more"
                         android:textSize="12sp"
                         android:textColor="?attr/blblAccent"
                         app:cornerRadius="16dp"
@@ -82,7 +82,7 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_movies"
                     android:layout_width="match_parent"
-                    android:layout_height="180dp"/>
+                    android:layout_height="wrap_content"/>
 
             </LinearLayout>
 
@@ -111,10 +111,10 @@
                         android:textColor="?attr/blblOnPageBackdrop"/>
 
                     <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btn_tv_filter"
+                        android:id="@+id/btn_tv_more"
                         android:layout_width="wrap_content"
                         android:layout_height="32dp"
-                        android:text="@string/cinema_filter"
+                        android:text="@string/cinema_more"
                         android:textSize="12sp"
                         android:textColor="?attr/blblAccent"
                         app:cornerRadius="16dp"
@@ -126,7 +126,7 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_tv"
                     android:layout_width="match_parent"
-                    android:layout_height="180dp"/>
+                    android:layout_height="wrap_content"/>
 
             </LinearLayout>
 
@@ -155,10 +155,10 @@
                         android:textColor="?attr/blblOnPageBackdrop"/>
 
                     <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btn_documentary_filter"
+                        android:id="@+id/btn_documentary_more"
                         android:layout_width="wrap_content"
                         android:layout_height="32dp"
-                        android:text="@string/cinema_filter"
+                        android:text="@string/cinema_more"
                         android:textSize="12sp"
                         android:textColor="?attr/blblAccent"
                         app:cornerRadius="16dp"
@@ -170,7 +170,7 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_documentary"
                     android:layout_width="match_parent"
-                    android:layout_height="180dp"/>
+                    android:layout_height="wrap_content"/>
 
             </LinearLayout>
 
@@ -199,10 +199,10 @@
                         android:textColor="?attr/blblOnPageBackdrop"/>
 
                     <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btn_variety_filter"
+                        android:id="@+id/btn_variety_more"
                         android:layout_width="wrap_content"
                         android:layout_height="32dp"
-                        android:text="@string/cinema_filter"
+                        android:text="@string/cinema_more"
                         android:textSize="12sp"
                         android:textColor="?attr/blblAccent"
                         app:cornerRadius="16dp"
@@ -214,7 +214,7 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_variety"
                     android:layout_width="match_parent"
-                    android:layout_height="180dp"/>
+                    android:layout_height="wrap_content"/>
 
             </LinearLayout>
 

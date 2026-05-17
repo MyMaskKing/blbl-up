@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import blbl.cat3399.R
@@ -46,10 +47,14 @@ class BangumiHomeFragment : Fragment(), RefreshKeyHandler {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        setupHotSection()
-        setupSections()
         setupSectionClickListeners()
         binding.swipeRefresh.setOnRefreshListener { refreshAll() }
+        
+        // 延迟加载数据，确保视图完全初始化
+        view.post {
+            setupHotSection()
+            setupSections()
+        }
     }
 
     private fun setupHotSection() {
@@ -123,13 +128,13 @@ class BangumiHomeFragment : Fragment(), RefreshKeyHandler {
     private fun updateSectionView(section: BangumiSection) {
         _binding?.let { b ->
             when (section.seasonType) {
-                1 -> setupHorizontalList(b.rvBangumi, section)
-                4 -> setupHorizontalList(b.rvChinese, section)
+                1 -> setupVerticalGridList(b.rvBangumi, section)
+                4 -> setupVerticalGridList(b.rvChinese, section)
             }
         }
     }
 
-    private fun setupHorizontalList(recyclerView: RecyclerView, section: BangumiSection) {
+    private fun setupVerticalGridList(recyclerView: RecyclerView, section: BangumiSection) {
         if (recyclerView.adapter != null) return
 
         val adapter = PgcHorizontalAdapter { season ->
@@ -138,13 +143,14 @@ class BangumiHomeFragment : Fragment(), RefreshKeyHandler {
         adapter.submit(section.items)
 
         recyclerView.adapter = adapter
-        recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        // 使用4列网格布局
+        recyclerView.layoutManager = GridLayoutManager(context, 4)
         recyclerView.setHasFixedSize(true)
     }
 
     private fun setupSectionClickListeners() {
-        binding.btnBangumiFilter.setOnClickListener { openCategoryPage(1) }
-        binding.btnChineseFilter.setOnClickListener { openCategoryPage(4) }
+        binding.btnBangumiMore.setOnClickListener { openCategoryPage(1) }
+        binding.btnChineseMore.setOnClickListener { openCategoryPage(4) }
 
         binding.tvBangumiTitle.setOnClickListener { openCategoryPage(1) }
         binding.tvChineseTitle.setOnClickListener { openCategoryPage(4) }

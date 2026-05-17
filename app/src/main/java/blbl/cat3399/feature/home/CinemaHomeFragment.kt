@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import blbl.cat3399.R
@@ -47,10 +48,14 @@ class CinemaHomeFragment : Fragment(), RefreshKeyHandler {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        setupHotSection()
-        setupSections()
         setupSectionClickListeners()
         binding.swipeRefresh.setOnRefreshListener { refreshAll() }
+        
+        // 延迟加载数据，确保视图完全初始化
+        view.post {
+            setupHotSection()
+            setupSections()
+        }
     }
 
     private fun setupHotSection() {
@@ -126,15 +131,15 @@ class CinemaHomeFragment : Fragment(), RefreshKeyHandler {
     private fun updateSectionView(section: CinemaSection) {
         _binding?.let { b ->
             when (section.seasonType) {
-                2 -> setupHorizontalList(b.rvMovies, section)
-                5 -> setupHorizontalList(b.rvTv, section)
-                3 -> setupHorizontalList(b.rvDocumentary, section)
-                7 -> setupHorizontalList(b.rvVariety, section)
+                2 -> setupVerticalGridList(b.rvMovies, section)
+                5 -> setupVerticalGridList(b.rvTv, section)
+                3 -> setupVerticalGridList(b.rvDocumentary, section)
+                7 -> setupVerticalGridList(b.rvVariety, section)
             }
         }
     }
 
-    private fun setupHorizontalList(recyclerView: RecyclerView, section: CinemaSection) {
+    private fun setupVerticalGridList(recyclerView: RecyclerView, section: CinemaSection) {
         if (recyclerView.adapter != null) return
 
         val adapter = PgcHorizontalAdapter { season ->
@@ -143,15 +148,16 @@ class CinemaHomeFragment : Fragment(), RefreshKeyHandler {
         adapter.submit(section.items)
 
         recyclerView.adapter = adapter
-        recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        // 使用4列网格布局
+        recyclerView.layoutManager = GridLayoutManager(context, 4)
         recyclerView.setHasFixedSize(true)
     }
 
     private fun setupSectionClickListeners() {
-        binding.btnMoviesFilter.setOnClickListener { openCategoryPage(2) }
-        binding.btnTvFilter.setOnClickListener { openCategoryPage(5) }
-        binding.btnDocumentaryFilter.setOnClickListener { openCategoryPage(3) }
-        binding.btnVarietyFilter.setOnClickListener { openCategoryPage(7) }
+        binding.btnMoviesMore.setOnClickListener { openCategoryPage(2) }
+        binding.btnTvMore.setOnClickListener { openCategoryPage(5) }
+        binding.btnDocumentaryMore.setOnClickListener { openCategoryPage(3) }
+        binding.btnVarietyMore.setOnClickListener { openCategoryPage(7) }
 
         binding.tvMoviesTitle.setOnClickListener { openCategoryPage(2) }
         binding.tvTvTitle.setOnClickListener { openCategoryPage(5) }

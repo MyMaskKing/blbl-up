@@ -23,6 +23,7 @@
     <string name="cinema_documentary">纪录片热播</string>
     <string name="cinema_variety">综艺热播</string>
     <string name="cinema_filter">筛选</string>
+    <string name="cinema_more">更多</string>
     <string name="cinema_cover_placeholder">封面</string>
 
     <string name="my_tab_history">历史</string>
