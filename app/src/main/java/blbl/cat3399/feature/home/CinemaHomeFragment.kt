@@ -16,6 +16,8 @@ import blbl.cat3399.core.image.ImageLoader
 import blbl.cat3399.core.image.ImageUrl
 import blbl.cat3399.core.log.AppLog
 import blbl.cat3399.core.model.BangumiSeason
+import blbl.cat3399.core.net.BiliClient
+import blbl.cat3399.core.ui.cloneInUserScale
 import blbl.cat3399.databinding.FragmentCinemaHomeBinding
 import blbl.cat3399.databinding.ItemPgcHorizontalBinding
 import blbl.cat3399.feature.category.PgcCategoryFragment
@@ -59,7 +61,7 @@ class CinemaHomeFragment : Fragment(), RefreshKeyHandler {
     }
 
     private fun initAdapters() {
-        val hotItemWidth = (resources.displayMetrics.density * 280).toInt()
+        val hotItemWidth = (resources.displayMetrics.density * 150).toInt()
 
         hotAdapter = PgcHorizontalAdapter(
             onItemClick = { season -> openBangumiDetail(season, 2) },
@@ -72,27 +74,29 @@ class CinemaHomeFragment : Fragment(), RefreshKeyHandler {
         moviesAdapter = PgcHorizontalAdapter(
             onItemClick = { season -> openBangumiDetail(season, 2) })
         binding.rvMovies.adapter = moviesAdapter
-        binding.rvMovies.layoutManager = GridLayoutManager(context, 3)
+        binding.rvMovies.layoutManager = GridLayoutManager(context, spanCountForPgc())
         binding.rvMovies.setHasFixedSize(true)
 
         tvAdapter = PgcHorizontalAdapter(
             onItemClick = { season -> openBangumiDetail(season, 5) })
         binding.rvTv.adapter = tvAdapter
-        binding.rvTv.layoutManager = GridLayoutManager(context, 3)
+        binding.rvTv.layoutManager = GridLayoutManager(context, spanCountForPgc())
         binding.rvTv.setHasFixedSize(true)
 
         documentaryAdapter = PgcHorizontalAdapter(
             onItemClick = { season -> openBangumiDetail(season, 3) })
         binding.rvDocumentary.adapter = documentaryAdapter
-        binding.rvDocumentary.layoutManager = GridLayoutManager(context, 3)
+        binding.rvDocumentary.layoutManager = GridLayoutManager(context, spanCountForPgc())
         binding.rvDocumentary.setHasFixedSize(true)
 
         varietyAdapter = PgcHorizontalAdapter(
             onItemClick = { season -> openBangumiDetail(season, 7) })
         binding.rvVariety.adapter = varietyAdapter
-        binding.rvVariety.layoutManager = GridLayoutManager(context, 3)
+        binding.rvVariety.layoutManager = GridLayoutManager(context, spanCountForPgc())
         binding.rvVariety.setHasFixedSize(true)
     }
+
+    private fun spanCountForPgc(): Int = BiliClient.prefs.pgcGridSpanCount.coerceIn(1, 6)
 
     private fun loadAllData() {
         sections = listOf(
@@ -235,7 +239,7 @@ class PgcHorizontalAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemPgcHorizontalBinding.inflate(
-            LayoutInflater.from(parent.context), parent, false,
+            LayoutInflater.from(parent.context).cloneInUserScale(parent.context), parent, false,
         )
         if (itemWidth > 0) {
             binding.root.layoutParams = RecyclerView.LayoutParams(

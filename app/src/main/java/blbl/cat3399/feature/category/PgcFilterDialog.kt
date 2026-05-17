@@ -169,7 +169,7 @@ class PgcFilterDialog(
                 }
             }
             FilterCategory.ORDER -> currentState.copy(order = value.toIntOrNull() ?: 0)
-            FilterCategory.STATUS -> currentState.copy(seasonStatus = value.toIntOrNull() ?: -1)
+            FilterCategory.STATUS -> currentState.copy(seasonStatus = value)
             FilterCategory.FINISH -> currentState.copy(isFinish = value.toIntOrNull() ?: -1)
         }
         buildItems()
@@ -179,7 +179,7 @@ class PgcFilterDialog(
         val items = mutableListOf<FilterItem>()
 
         items += FilterItem.Header("地区")
-        items += PgcConstants.getAreaItems().map { (label, value) ->
+        items += PgcConstants.getAreaItems(currentState.seasonType).map { (label, value) ->
             FilterItem.Option(FilterCategory.AREA, label, value, currentState.area == value)
         }
 
@@ -204,8 +204,8 @@ class PgcFilterDialog(
         }
 
         items += FilterItem.Header("付费状态")
-        items += PgcConstants.getStatusItems().map { (label, value) ->
-            FilterItem.Option(FilterCategory.STATUS, label, value.toString(), currentState.seasonStatus == value)
+        items += PgcConstants.getStatusItems(currentState.seasonType).map { (label, value) ->
+            FilterItem.Option(FilterCategory.STATUS, label, value, currentState.seasonStatus == value)
         }
 
         items += FilterItem.Header("完结状态")

@@ -34,50 +34,29 @@ data class PgcFilterState(
     val spokenLanguageType: Int = -1,
     val seasonVersion: Int = -1,
     val isFinish: Int = -1,
-    val seasonStatus: Int = -1,
+    val seasonStatus: String = "-1",
     val year: String = "-1",
     val releaseDate: String = "-1",
-    val order: Int = -1,
+    // 分类页默认按播放量排序，避免进入页面时落到按时间排序的列表。
+    val order: Int = 2,
     val sort: Int = 0,
 ) {
     val displayName: String
         get() {
             val names = mutableListOf<String>()
-            if (area != "-1") names.add(PgcConstants.PGC_AREA_NAMES[area] ?: "地区")
+            if (area != "-1") names.add(PgcConstants.getAreaName(seasonType, area) ?: "地区")
             if (styleId != "-1") names.add(PgcConstants.getStyleName(seasonType, styleId) ?: "题材")
-            if (year != "-1") names.add(year)
-            if (order != -1) names.add(PgcConstants.PGC_ORDER_NAMES[order] ?: "排序")
+            val selectedYear = if (seasonType in listOf(1, 4)) year else releaseDate
+            if (selectedYear != "-1") names.add(PgcConstants.getYearName(seasonType, selectedYear) ?: selectedYear)
+            names.add(PgcConstants.getOrderName(seasonType, order) ?: "排序")
             return if (names.isEmpty()) "筛选" else names.joinToString(" · ")
         }
 
-    fun getEffectiveOrder(): Int {
-        if (order != -1) return order
-        return if (seasonType in listOf(1, 4)) 5 else 6
-    }
+    fun getEffectiveOrder(): Int = order
 }
 
 object PgcConstants {
-    val PGC_AREA_NAMES = mapOf(
-        "1" to "中国大陆",
-        "2" to "日本",
-        "3" to "美国",
-        "4" to "英国",
-        "6" to "中国香港",
-        "7" to "中国台湾",
-        "8" to "韩国",
-        "9" to "法国",
-        "10" to "泰国",
-    )
-    val PGC_ORDER_NAMES = mapOf(
-        0 to "更新时间",
-        1 to "弹幕数量",
-        2 to "播放数量",
-        3 to "追剧人数",
-        4 to "最高评分",
-        5 to "开播时间",
-        6 to "上映时间",
-    )
-
+    // 下列筛选值按 B 站 PGC condition 接口维护，逗号组合值需要原样透传。
     fun getStyles(seasonType: Int): List<Pair<String, String>> {
         return when (seasonType) {
             1 -> listOf(
@@ -148,61 +127,140 @@ object PgcConstants {
     }
 
     fun getOrderItems(seasonType: Int): List<Pair<String, Int>> {
-        val base = listOf(
-            "更新时间" to 0,
-            "弹幕数量" to 1,
-            "播放数量" to 2,
-            "追剧人数" to 3,
-            "最高评分" to 4,
-        )
-        return if (seasonType in listOf(1, 4)) {
-            base + listOf("开播时间" to 5)
-        } else {
-            base + listOf("上映时间" to 6)
+        return when (seasonType) {
+            1, 4 -> listOf(
+                "追番人数" to 3,
+                "更新时间" to 0,
+                "最高评分" to 4,
+                "播放数量" to 2,
+                "开播时间" to 5,
+            )
+            2 -> listOf(
+                "播放数量" to 2,
+                "更新时间" to 0,
+                "上映时间" to 6,
+                "最高评分" to 4,
+            )
+            3 -> listOf(
+                "播放数量" to 2,
+                "最高评分" to 4,
+                "更新时间" to 0,
+                "上映时间" to 6,
+                "弹幕数量" to 1,
+            )
+            5 -> listOf(
+                "播放数量" to 2,
+                "更新时间" to 0,
+                "弹幕数量" to 1,
+                "最高评分" to 4,
+                "追剧人数" to 3,
+            )
+            7 -> listOf(
+                "最多播放" to 2,
+                "最近更新" to 0,
+                "最新上映" to 6,
+                "最高评分" to 4,
+                "弹幕数量" to 1,
+            )
+            else -> listOf("播放数量" to 2)
         }
     }
 
-    fun getAreaItems(): List<Pair<String, String>> {
-        return listOf(
-            "全部" to "-1",
-            "中国大陆" to "1",
-            "日本" to "2",
-            "美国" to "3",
-            "英国" to "4",
-            "中国香港" to "6",
-            "中国台湾" to "7",
-            "韩国" to "8",
-            "法国" to "9",
-            "泰国" to "10",
-        )
+    fun getOrderName(seasonType: Int, order: Int): String? {
+        return getOrderItems(seasonType).find { it.second == order }?.first
+    }
+
+    fun getAreaItems(seasonType: Int): List<Pair<String, String>> {
+        return when (seasonType) {
+            1 -> listOf(
+                "全部" to "-1",
+                "日本" to "2",
+                "美国" to "3",
+                "其他" to "1,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70",
+            )
+            2 -> listOf(
+                "全部" to "-1",
+                "中国大陆" to "1",
+                "中国港台" to "6,7",
+                "美国" to "3",
+                "日本" to "2",
+                "韩国" to "8",
+                "法国" to "9",
+                "英国" to "4",
+                "德国" to "15",
+                "泰国" to "10",
+                "意大利" to "35",
+                "西班牙" to "13",
+                "其他" to "5,11,12,14,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70",
+            )
+            5 -> listOf(
+                "全部" to "-1",
+                "中国" to "1,6,7",
+                "日本" to "2",
+                "美国" to "3",
+                "英国" to "4",
+                "其他" to "5,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70",
+            )
+            else -> listOf("全部" to "-1")
+        }
+    }
+
+    fun getAreaName(seasonType: Int, area: String): String? {
+        return getAreaItems(seasonType).find { it.second == area }?.first
     }
 
     fun getYearItems(seasonType: Int): List<Pair<String, String>> {
         val currentYear = java.util.Calendar.getInstance().get(java.util.Calendar.YEAR)
         val isAnimeOrGc = seasonType in listOf(1, 4)
-        return mutableListOf("全部" to "-1").apply {
-            for (year in currentYear downTo 2010) {
-                if (isAnimeOrGc) {
-                    add(year.toString() to "[${year},${year + 1})")
-                } else {
-                    add(year.toString() to "[${year}-01-01 00:00:00,${year + 1}-01-01 00:00:00)")
-                }
-            }
+        val items = mutableListOf("全部" to "-1")
+        for (year in currentYear downTo 2016) {
             if (isAnimeOrGc) {
-                add("2010年以前" to "[,2010)")
+                items += year.toString() to "[${year},${year + 1})"
             } else {
-                add("2010年以前" to "[,2010-01-01 00:00:00)")
+                items += year.toString() to "[${year}-01-01 00:00:00,${year + 1}-01-01 00:00:00)"
             }
+        }
+        return if (isAnimeOrGc) {
+            items + listOf(
+                "2015" to "[2015,2016)",
+                "2014-2010" to "[2010,2015)",
+                "2009-2005" to "[2005,2010)",
+                "2004-2000" to "[2000,2005)",
+                "90年代" to "[1990,2000)",
+                "80年代" to "[1980,1990)",
+                "更早" to "[,1980)",
+            )
+        } else {
+            items + listOf(
+                "2015-2010" to "[2010-01-01 00:00:00,2016-01-01 00:00:00)",
+                "2009-2005" to "[2005-01-01 00:00:00,2010-01-01 00:00:00)",
+                "2004-2000" to "[2000-01-01 00:00:00,2005-01-01 00:00:00)",
+                "90年代" to "[1990-01-01 00:00:00,2000-01-01 00:00:00)",
+                "80年代" to "[1980-01-01 00:00:00,1990-01-01 00:00:00)",
+                "更早" to "[,1980-01-01 00:00:00)",
+            )
         }
     }
 
-    fun getStatusItems(): List<Pair<String, Int>> {
-        return listOf(
-            "全部" to -1,
-            "免费" to 1,
-            "付费" to 2,
-            "大会员" to 4,
-        )
+    fun getYearName(seasonType: Int, year: String): String? {
+        return getYearItems(seasonType).find { it.second == year }?.first
+    }
+
+    fun getStatusItems(seasonType: Int): List<Pair<String, String>> {
+        return when (seasonType) {
+            1, 2, 4 -> listOf(
+                "全部" to "-1",
+                "免费" to "1",
+                "付费" to "2,6",
+                "大会员" to "4,6",
+            )
+            3, 5, 7 -> listOf(
+                "全部" to "-1",
+                "免费" to "1",
+                "大会员" to "4,6",
+            )
+            else -> listOf("全部" to "-1")
+        }
     }
 
     fun getFinishItems(): List<Pair<String, Int>> {
@@ -418,7 +476,7 @@ class PgcCategoryFragment : Fragment(), RefreshKeyHandler {
                         spokenLanguageType = filterState.spokenLanguageType.takeIf { it != -1 },
                         seasonVersion = filterState.seasonVersion.takeIf { it != -1 },
                         isFinish = filterState.isFinish.takeIf { it != -1 },
-                        seasonStatus = filterState.seasonStatus.takeIf { it != -1 },
+                        seasonStatus = filterState.seasonStatus.takeIf { it != "-1" },
                         year = filterState.year.takeIf { it != "-1" },
                         releaseDate = filterState.releaseDate.takeIf { it != "-1" },
                         order = filterState.getEffectiveOrder(),

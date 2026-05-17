@@ -13,6 +13,7 @@ import blbl.cat3399.R
 import blbl.cat3399.core.api.BiliApi
 import blbl.cat3399.core.model.BangumiSeason
 import blbl.cat3399.core.log.AppLog
+import blbl.cat3399.core.net.BiliClient
 import blbl.cat3399.databinding.FragmentBangumiHomeBinding
 import blbl.cat3399.feature.category.PgcCategoryFragment
 import blbl.cat3399.feature.my.BangumiDetailActivity
@@ -53,7 +54,7 @@ class BangumiHomeFragment : Fragment(), RefreshKeyHandler {
     }
 
     private fun initAdapters() {
-        val hotItemWidth = (resources.displayMetrics.density * 280).toInt()
+        val hotItemWidth = (resources.displayMetrics.density * 150).toInt()
 
         hotAdapter = PgcHorizontalAdapter(
             onItemClick = { season -> openBangumiDetail(season, 1) },
@@ -66,15 +67,17 @@ class BangumiHomeFragment : Fragment(), RefreshKeyHandler {
         bangumiAdapter = PgcHorizontalAdapter(
             onItemClick = { season -> openBangumiDetail(season, 1) })
         binding.rvBangumi.adapter = bangumiAdapter
-        binding.rvBangumi.layoutManager = GridLayoutManager(context, 3)
+        binding.rvBangumi.layoutManager = GridLayoutManager(context, spanCountForPgc())
         binding.rvBangumi.setHasFixedSize(true)
 
         chineseAdapter = PgcHorizontalAdapter(
             onItemClick = { season -> openBangumiDetail(season, 4) })
         binding.rvChinese.adapter = chineseAdapter
-        binding.rvChinese.layoutManager = GridLayoutManager(context, 3)
+        binding.rvChinese.layoutManager = GridLayoutManager(context, spanCountForPgc())
         binding.rvChinese.setHasFixedSize(true)
     }
+
+    private fun spanCountForPgc(): Int = BiliClient.prefs.pgcGridSpanCount.coerceIn(1, 6)
 
     private fun loadAllData() {
         sections = listOf(

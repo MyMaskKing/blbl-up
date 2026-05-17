@@ -1,35 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="4dp">
+    android:layout_margin="5dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:stateListAnimator="@animator/blbl_focus_scale"
+    app:cardBackgroundColor="@android:color/transparent"
+    app:cardCornerRadius="10dp"
+    app:cardElevation="0dp"
+    app:cardUseCompatPadding="false"
+    app:strokeColor="?attr/blblFocusStrokeColor"
+    app:strokeWidth="2dp">
 
-    <ImageView
-        android:id="@+id/iv_cover"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="180dp"
-        android:scaleType="centerCrop"
-        android:background="?attr/blblContentBackground"/>
+        android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/tv_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="13sp"
-        android:textColor="?attr/blblOnPageBackdrop"
-        android:maxLines="2"
-        android:ellipsize="end"
-        android:layout_marginTop="8dp"/>
+        <ImageView
+            android:id="@+id/iv_cover"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            app:layout_constraintDimensionRatio="12:17"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/tv_desc"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="11sp"
-        android:textColor="?attr/blblOnPageBackdropSecondary"
-        android:maxLines="1"
-        android:ellipsize="end"/>
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="6dp"
+            android:ellipsize="end"
+            android:lines="2"
+            android:maxLines="2"
+            android:textColor="?attr/colorOnSurface"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/iv_cover" />
 
-</LinearLayout>
+        <TextView
+            android:id="@+id/tv_desc"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="6dp"
+            android:layout_marginBottom="6dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="?android:attr/textColorSecondary"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_title" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>

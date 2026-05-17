@@ -1325,7 +1325,7 @@ object BiliApi {
         spokenLanguageType: Int? = null,
         seasonVersion: Int? = null,
         isFinish: Int? = null,
-        seasonStatus: Int? = null,
+        seasonStatus: String? = null,
         year: String? = null,
         releaseDate: String? = null,
         order: Int = 0,
@@ -1345,7 +1345,7 @@ object BiliApi {
         params["area"] = area?.takeIf { it.isNotBlank() && it != "-1" } ?: "-1"
         params["style_id"] = styleId?.takeIf { it.isNotBlank() && it != "-1" } ?: "-1"
         params["is_finish"] = (isFinish ?: -1).toString()
-        params["season_status"] = (seasonStatus ?: -1).toString()
+        params["season_status"] = seasonStatus?.takeIf { it.isNotBlank() && it != "-1" } ?: "-1"
         params["year"] = year?.takeIf { it.isNotBlank() && it != "-1" } ?: "-1"
         params["release_date"] = releaseDate?.takeIf { it.isNotBlank() && it != "-1" } ?: "-1"
         params["order"] = order.toString()

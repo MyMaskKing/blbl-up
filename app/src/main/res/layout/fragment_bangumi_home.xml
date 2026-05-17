@@ -37,7 +37,7 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvHot"
                     android:layout_width="match_parent"
-                    android:layout_height="180dp"/>
+                    android:layout_height="250dp"/>
 
             </LinearLayout>
 
