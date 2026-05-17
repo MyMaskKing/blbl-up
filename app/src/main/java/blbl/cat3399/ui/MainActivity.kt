@@ -191,8 +191,6 @@ class MainActivity : BaseActivity(), SidebarFocusHost {
         )
 
         refreshSidebarUser()
-        showFirstLaunchDisclaimerIfNeeded()
-        maybeStartAutoUpdateCheck()
     }
 
     private fun resolveLaunchNavId(): Int {
@@ -219,8 +217,7 @@ class MainActivity : BaseActivity(), SidebarFocusHost {
             }
         }
         showLastCrashPromptIfNeeded()
-        showIjkKernelUpdatePromptIfNeeded()
-        showAutoUpdatePromptIfReady()
+        // 按需求隐藏更新检测相关弹窗（含内核更新提示）。
     }
 
     override fun onPause() {
@@ -916,6 +913,8 @@ class MainActivity : BaseActivity(), SidebarFocusHost {
     }
 
     private fun showIjkKernelUpdatePromptIfNeeded() {
+        // 按需求隐藏更新检测相关弹窗，统一在此直接禁用该链路。
+        return
         if (ijkKernelPromptShown) {
             showAutoUpdatePromptIfReady()
             return

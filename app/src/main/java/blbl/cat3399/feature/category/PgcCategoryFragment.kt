@@ -324,7 +324,7 @@ class PgcCategoryFragment : Fragment(), RefreshKeyHandler {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val initialSeasonType = arguments?.getInt("seasonType", 1) ?: 1
+        val initialSeasonType = arguments?.getInt("seasonType", 2) ?: 2
         filterState = PgcFilterState(seasonType = initialSeasonType)
         setupAdapter()
         setupTabs()
@@ -355,8 +355,8 @@ class PgcCategoryFragment : Fragment(), RefreshKeyHandler {
 
     private fun setupTabs() {
         val tabLayout = binding.tabLayout
-        tabLayout.addTab(tabLayout.newTab().setText("番剧").setTag(1))
         tabLayout.addTab(tabLayout.newTab().setText("电影").setTag(2))
+        tabLayout.addTab(tabLayout.newTab().setText("番剧").setTag(1))
         tabLayout.addTab(tabLayout.newTab().setText("纪录片").setTag(3))
         tabLayout.addTab(tabLayout.newTab().setText("国创").setTag(4))
         tabLayout.addTab(tabLayout.newTab().setText("电视剧").setTag(5))

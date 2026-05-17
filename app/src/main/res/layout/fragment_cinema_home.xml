@@ -1,225 +1,240 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/swipe_refresh"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/blblPageBackdrop">
 
-    <ScrollView
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingHorizontal="16dp"
-            android:paddingVertical="12dp">
+            android:layout_height="match_parent">
 
-            <!-- 正在热播 -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_marginBottom="20dp">
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="12dp">
 
-                <TextView
-                    android:id="@+id/tv_hot_title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/cinema_hot"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:textColor="?attr/blblOnPageBackdrop"
-                    android:layout_marginBottom="12dp"/>
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv_hot"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-
-            </LinearLayout>
-
-            <!-- 电影热播 -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginBottom="20dp">
-
+                <!-- 正在热播 -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:layout_marginBottom="12dp">
+                    android:layout_marginBottom="20dp"
+                    android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/tv_movies_title"
-                        android:layout_width="0dp"
+                        android:id="@+id/tv_hot_title"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/cinema_movies"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:textColor="?attr/blblOnPageBackdrop"/>
+                        android:layout_marginBottom="12dp"
+                        android:text="@string/cinema_hot"
+                        android:textColor="?attr/blblOnPageBackdrop"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
 
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btn_movies_more"
-                        android:layout_width="wrap_content"
-                        android:layout_height="32dp"
-                        android:text="@string/cinema_more"
-                        android:textSize="12sp"
-                        android:textColor="?attr/blblAccent"
-                        app:cornerRadius="16dp"
-                        app:backgroundTint="?attr/blblContentBackground"
-                        style="@style/Widget.MaterialComponents.Button.TextButton"/>
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_hot"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
 
                 </LinearLayout>
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv_movies"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-
-            </LinearLayout>
-
-            <!-- 电视剧热播 -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginBottom="20dp">
-
+                <!-- 电影热播 -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:layout_marginBottom="12dp">
+                    android:layout_marginBottom="20dp"
+                    android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/tv_tv_title"
-                        android:layout_width="0dp"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/cinema_tv"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:textColor="?attr/blblOnPageBackdrop"/>
+                        android:layout_marginBottom="12dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
 
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btn_tv_more"
-                        android:layout_width="wrap_content"
-                        android:layout_height="32dp"
-                        android:text="@string/cinema_more"
-                        android:textSize="12sp"
-                        android:textColor="?attr/blblAccent"
-                        app:cornerRadius="16dp"
-                        app:backgroundTint="?attr/blblContentBackground"
-                        style="@style/Widget.MaterialComponents.Button.TextButton"/>
+                        <TextView
+                            android:id="@+id/tv_movies_title"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/cinema_movies"
+                            android:textColor="?attr/blblOnPageBackdrop"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_movies_more"
+                            style="@style/Widget.MaterialComponents.Button.TextButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="32dp"
+                            android:text="@string/cinema_more"
+                            android:textColor="?attr/blblAccent"
+                            android:textSize="12sp"
+                            app:backgroundTint="?attr/blblContentBackground"
+                            app:cornerRadius="16dp" />
+
+                    </LinearLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_movies"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
 
                 </LinearLayout>
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv_tv"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-
-            </LinearLayout>
-
-            <!-- 纪录片热播 -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginBottom="20dp">
-
+                <!-- 电视剧热播 -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:layout_marginBottom="12dp">
+                    android:layout_marginBottom="20dp"
+                    android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/tv_documentary_title"
-                        android:layout_width="0dp"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/cinema_documentary"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:textColor="?attr/blblOnPageBackdrop"/>
+                        android:layout_marginBottom="12dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
 
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btn_documentary_more"
-                        android:layout_width="wrap_content"
-                        android:layout_height="32dp"
-                        android:text="@string/cinema_more"
-                        android:textSize="12sp"
-                        android:textColor="?attr/blblAccent"
-                        app:cornerRadius="16dp"
-                        app:backgroundTint="?attr/blblContentBackground"
-                        style="@style/Widget.MaterialComponents.Button.TextButton"/>
+                        <TextView
+                            android:id="@+id/tv_tv_title"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/cinema_tv"
+                            android:textColor="?attr/blblOnPageBackdrop"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_tv_more"
+                            style="@style/Widget.MaterialComponents.Button.TextButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="32dp"
+                            android:text="@string/cinema_more"
+                            android:textColor="?attr/blblAccent"
+                            android:textSize="12sp"
+                            app:backgroundTint="?attr/blblContentBackground"
+                            app:cornerRadius="16dp" />
+
+                    </LinearLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_tv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
 
                 </LinearLayout>
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv_documentary"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-
-            </LinearLayout>
-
-            <!-- 综艺热播 -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginBottom="20dp">
-
+                <!-- 纪录片热播 -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:layout_marginBottom="12dp">
+                    android:layout_marginBottom="20dp"
+                    android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/tv_variety_title"
-                        android:layout_width="0dp"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/cinema_variety"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:textColor="?attr/blblOnPageBackdrop"/>
+                        android:layout_marginBottom="12dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
 
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btn_variety_more"
-                        android:layout_width="wrap_content"
-                        android:layout_height="32dp"
-                        android:text="@string/cinema_more"
-                        android:textSize="12sp"
-                        android:textColor="?attr/blblAccent"
-                        app:cornerRadius="16dp"
-                        app:backgroundTint="?attr/blblContentBackground"
-                        style="@style/Widget.MaterialComponents.Button.TextButton"/>
+                        <TextView
+                            android:id="@+id/tv_documentary_title"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/cinema_documentary"
+                            android:textColor="?attr/blblOnPageBackdrop"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_documentary_more"
+                            style="@style/Widget.MaterialComponents.Button.TextButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="32dp"
+                            android:text="@string/cinema_more"
+                            android:textColor="?attr/blblAccent"
+                            android:textSize="12sp"
+                            app:backgroundTint="?attr/blblContentBackground"
+                            app:cornerRadius="16dp" />
+
+                    </LinearLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_documentary"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
 
                 </LinearLayout>
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv_variety"
+                <!-- 综艺热播 -->
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/tv_variety_title"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/cinema_variety"
+                            android:textColor="?attr/blblOnPageBackdrop"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_variety_more"
+                            style="@style/Widget.MaterialComponents.Button.TextButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="32dp"
+                            android:text="@string/cinema_more"
+                            android:textColor="?attr/blblAccent"
+                            android:textSize="12sp"
+                            app:backgroundTint="?attr/blblContentBackground"
+                            app:cornerRadius="16dp" />
+
+                    </LinearLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_variety"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
 
             </LinearLayout>
 
-        </LinearLayout>
+        </ScrollView>
 
-    </ScrollView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_side_refresh"
+        android:layout_width="88dp"
+        android:layout_height="56dp"
+        android:layout_gravity="center_vertical|end"
+        android:layout_marginEnd="8dp"
+        android:text="刷新"
+        android:textSize="13sp"
+        app:cornerRadius="12dp" />
+
+</FrameLayout>

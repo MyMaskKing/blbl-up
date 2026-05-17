@@ -55,6 +55,7 @@ class CinemaHomeFragment : Fragment(), RefreshKeyHandler {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         setupSectionClickListeners()
         binding.swipeRefresh.setOnRefreshListener { refreshAll() }
+        binding.btnSideRefresh.setOnClickListener { triggerRefresh() }
         initAdapters()
         loadAllData()
     }
@@ -207,6 +208,11 @@ class CinemaHomeFragment : Fragment(), RefreshKeyHandler {
     }
 
     override fun handleRefreshKey(): Boolean {
+        return triggerRefresh()
+    }
+
+    private fun triggerRefresh(): Boolean {
+        if (!isAdded) return false
         if (binding.swipeRefresh.isRefreshing) return true
         binding.swipeRefresh.isRefreshing = true
         refreshAll()
