@@ -81,7 +81,7 @@ class PgcFilterDialog(
     }
 
     private fun setupYearSpinner() {
-        val currentYear = java.time.Year.now().value
+        val currentYear = java.util.Calendar.getInstance().get(java.util.Calendar.YEAR)
         val yearItems =
             mutableListOf("全部" to "-1").apply {
                 for (year in currentYear downTo 2010) {
@@ -275,7 +275,7 @@ class PgcFilterDialog(
         val areaPosition = areaItems.indexOfFirst { it.second == currentState.area }
         if (areaPosition >= 0) binding.spinnerArea.setSelection(areaPosition, false)
 
-        val currentYear = java.time.Year.now().value
+        val currentYear = java.util.Calendar.getInstance().get(java.util.Calendar.YEAR)
         val yearItems =
             mutableListOf("全部" to "-1").apply {
                 for (year in currentYear downTo 2010) {
