@@ -158,17 +158,20 @@ class PgcFilterDialog(
     private fun createOptionButton(text: String): Button {
         val button = Button(context)
         val params = LinearLayout.LayoutParams(
+            0,
             ViewGroup.LayoutParams.WRAP_CONTENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT,
+            1f
         )
-        params.rightMargin = 16
-        params.bottomMargin = 12
+        params.rightMargin = 12
+        params.bottomMargin = 16
         button.layoutParams = params
         button.text = text
-        button.textSize = 18f
-        button.setPadding(24, 12, 24, 12)
+        button.textSize = 24f
+        button.setPadding(20, 24, 20, 24)
         button.isAllCaps = false
-        button.setBackgroundResource(R.drawable.blbl_button_selector)
+        button.background = context.getDrawable(R.drawable.blbl_button_selector)
+        button.isFocusable = true
+        button.isFocusableInTouchMode = true
         return button
     }
 
@@ -189,7 +192,7 @@ class PgcFilterDialog(
     }
 
     private fun updateStyleButtons(selectedValue: Int) {
-        val items = PgcConstants.getStyles(initialState.seasonType)
+        val items = PgcConstants.getStyles(currentState.seasonType)
         items.forEachIndexed { index, (_, value) ->
             allStyleButtons[index].apply {
                 isSelected = value == selectedValue

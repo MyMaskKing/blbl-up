@@ -177,7 +177,6 @@ class BangumiHomeFragment : Fragment(), RefreshKeyHandler {
         hotAdapter?.submit(hotItems)
         loadHotSection()
         
-        loadedSeasonTypes.clear()
         sections.forEach { section ->
             section.items.clear()
         }
