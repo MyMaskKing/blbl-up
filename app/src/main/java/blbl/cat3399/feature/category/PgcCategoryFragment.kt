@@ -332,7 +332,8 @@ class PgcCategoryFragment : Fragment(), RefreshKeyHandler {
         setupSwipeRefresh()
         setupFilterButton()
         selectTabForSeasonType(initialSeasonType)
-        // selectTab 内部已触发 onTabSelected → resetAndLoad，无需再调 maybeTriggerInitialLoad
+        // 默认首个 tab 已经处于选中态时不会触发 onTabSelected，这里补一次首屏加载兜底。
+        maybeTriggerInitialLoad()
     }
 
     private fun selectTabForSeasonType(seasonType: Int) {
@@ -340,7 +341,6 @@ class PgcCategoryFragment : Fragment(), RefreshKeyHandler {
         for (i in 0 until tabLayout.tabCount) {
             val tab = tabLayout.getTabAt(i)
             if (tab?.tag == seasonType) {
-                initialLoadTriggered = true
                 tab.select()
                 return
             }

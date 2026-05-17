@@ -74,14 +74,23 @@ class HomeFragment : Fragment(), VideoGridTabSwitchFocusHost, BackPressHandler {
         return page.handleRefreshKey()
     }
 
-    private fun refreshCurrentHomePage(): Boolean {
+    private fun refreshCurrentHomePage(attemptsLeft: Int = 8): Boolean {
         val b = _binding ?: return false
         val tab = tabs.getOrNull(b.viewPager.currentItem) ?: return false
         // 仅对首页的番剧/影视/分类三个页签触发自动刷新，避免影响其他页签行为。
         if (tab.key !in setOf(HomeTabs.KEY_BANGUMI, HomeTabs.KEY_CINEMA, HomeTabs.KEY_PGC_CATEGORY)) return false
         b.viewPager.post {
             if (_binding === b) {
-                refreshCurrentPageFromTabReselect()
+                val refreshed = refreshCurrentPageFromTabReselect()
+                if (!refreshed && attemptsLeft > 0) {
+                    // 切页时子 Fragment 可能尚未进入 resumed，短暂重试避免丢掉这次刷新。
+                    b.viewPager.postDelayedIfAlive(
+                        delayMillis = 32L,
+                        isAlive = { _binding === b },
+                    ) {
+                        refreshCurrentHomePage(attemptsLeft - 1)
+                    }
+                }
             }
         }
         return true

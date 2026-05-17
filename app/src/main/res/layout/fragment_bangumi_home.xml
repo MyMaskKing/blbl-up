@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefresh"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
 
         <ScrollView
             android:layout_width="match_parent"
@@ -142,14 +144,19 @@
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_side_refresh"
-        android:layout_width="88dp"
-        android:layout_height="56dp"
-        android:layout_gravity="center_vertical|end"
-        android:layout_marginEnd="8dp"
-        android:text="刷新"
-        android:textSize="13sp"
-        app:cornerRadius="12dp" />
+    <FrameLayout
+        android:layout_width="104dp"
+        android:layout_height="match_parent">
 
-</FrameLayout>
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_side_refresh"
+            android:layout_width="88dp"
+            android:layout_height="56dp"
+            android:layout_gravity="center"
+            android:text="刷新"
+            android:textSize="13sp"
+            app:cornerRadius="12dp" />
+
+    </FrameLayout>
+
+</LinearLayout>
