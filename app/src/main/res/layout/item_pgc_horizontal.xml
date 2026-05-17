@@ -1,32 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="120dp"
+    android:layout_width="140dp"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="8dp">
 
-    <LinearLayout
+    <ImageView
+        android:id="@+id/iv_cover"
         android:layout_width="match_parent"
-        android:layout_height="160dp"
-        android:background="?attr/blblContentBackground"
-        android:padding="4dp"
-        android:gravity="center">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/cinema_cover_placeholder"
-            android:textSize="12sp"
-            android:textColor="?attr/blblOnPageBackdropSecondary"/>
-
-    </LinearLayout>
+        android:layout_height="180dp"
+        android:scaleType="centerCrop"
+        android:background="?attr/blblContentBackground"/>
 
     <TextView
         android:id="@+id/tv_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="12sp"
+        android:textSize="13sp"
         android:textColor="?attr/blblOnPageBackdrop"
         android:maxLines="2"
         android:ellipsize="end"
@@ -36,7 +27,7 @@
         android:id="@+id/tv_desc"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="10sp"
+        android:textSize="11sp"
         android:textColor="?attr/blblOnPageBackdropSecondary"
         android:maxLines="1"
         android:ellipsize="end"/>

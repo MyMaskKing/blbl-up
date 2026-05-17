@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import blbl.cat3399.R
 import blbl.cat3399.core.api.BiliApi
+import blbl.cat3399.core.image.ImageLoader
+import blbl.cat3399.core.image.ImageUrl
 import blbl.cat3399.core.log.AppLog
 import blbl.cat3399.core.model.BangumiSeason
 import blbl.cat3399.databinding.FragmentBangumiHomeBinding
@@ -33,6 +35,10 @@ class BangumiHomeFragment : Fragment(), RefreshKeyHandler {
 
     private var sections = listOf<BangumiSection>()
     private val loadedSeasonTypes = mutableSetOf<Int>()
+    
+    // 正在热播数据
+    private var hotItems = mutableListOf<BangumiSeason>()
+    private var hotAdapter: PgcHorizontalAdapter? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentBangumiHomeBinding.inflate(inflater, container, false)
@@ -40,9 +46,41 @@ class BangumiHomeFragment : Fragment(), RefreshKeyHandler {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        setupHotSection()
         setupSections()
         setupSectionClickListeners()
         binding.swipeRefresh.setOnRefreshListener { refreshAll() }
+    }
+
+    private fun setupHotSection() {
+        hotAdapter = PgcHorizontalAdapter { season ->
+            openBangumiDetail(season, 1) // 默认当作番剧类型打开
+        }
+        binding.rvHot.adapter = hotAdapter
+        binding.rvHot.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        binding.rvHot.setHasFixedSize(true)
+        loadHotSection()
+    }
+
+    private fun loadHotSection() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            try {
+                // 加载番剧热播内容
+                val result = BiliApi.pgcSeasonIndex(
+                    seasonType = 1,
+                    page = 1,
+                    pageSize = 15,
+                    order = 2, // 播放数量排序
+                    sort = 0,
+                )
+                hotItems.clear()
+                hotItems.addAll(result.items)
+                hotAdapter?.submit(hotItems)
+            } catch (t: Throwable) {
+                if (t is CancellationException) throw t
+                AppLog.e("BangumiHome", "load hot section failed", t)
+            }
+        }
     }
 
     private fun setupSections() {
@@ -113,8 +151,7 @@ class BangumiHomeFragment : Fragment(), RefreshKeyHandler {
     }
 
     private fun openCategoryPage(seasonType: Int) {
-        (parentFragment as? HomeFragment)?.let { homeFragment ->
-            homeFragment.childFragmentManager.beginTransaction()
+        requireActivity().supportFragmentManager.beginTransaction()
                 .replace(R.id.main_container, PgcCategoryFragment().apply {
                     arguments = Bundle().apply {
                         putInt("seasonType", seasonType)
@@ -122,7 +159,6 @@ class BangumiHomeFragment : Fragment(), RefreshKeyHandler {
                 })
                 .addToBackStack(null)
                 .commit()
-        }
     }
 
     private fun openBangumiDetail(season: BangumiSeason, seasonType: Int) {
@@ -135,6 +171,10 @@ class BangumiHomeFragment : Fragment(), RefreshKeyHandler {
     }
 
     private fun refreshAll() {
+        hotItems.clear()
+        hotAdapter?.submit(hotItems)
+        loadHotSection()
+        
         loadedSeasonTypes.clear()
         sections.forEach { section ->
             section.items.clear()

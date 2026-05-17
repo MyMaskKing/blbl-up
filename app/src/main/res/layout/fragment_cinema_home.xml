@@ -23,7 +23,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_marginBottom="24dp">
+                android:layout_marginBottom="20dp">
 
                 <TextView
                     android:id="@+id/tv_hot_title"
@@ -35,22 +35,10 @@
                     android:textColor="?attr/blblOnPageBackdrop"
                     android:layout_marginBottom="12dp"/>
 
-                <!-- 热播横幅区域 -->
-                <LinearLayout
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_hot"
                     android:layout_width="match_parent"
-                    android:layout_height="180dp"
-                    android:background="?attr/blblContentBackground"
-                    android:padding="16dp"
-                    android:gravity="center">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/cinema_hot_banner"
-                        android:textSize="16sp"
-                        android:textColor="?attr/blblOnPageBackdropSecondary"/>
-
-                </LinearLayout>
+                    android:layout_height="180dp"/>
 
             </LinearLayout>
 

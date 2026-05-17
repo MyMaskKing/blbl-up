@@ -17,6 +17,30 @@
             android:orientation="vertical"
             android:padding="16dp">
 
+            <!-- 正在热播 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="20dp">
+
+                <TextView
+                    android:id="@+id/tvHotTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="正在热播"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:textColor="?attr/blblOnPageBackdrop"
+                    android:layout_marginBottom="12dp"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvHot"
+                    android:layout_width="match_parent"
+                    android:layout_height="180dp"/>
+
+            </LinearLayout>
+
             <!-- 番剧区域 -->
             <LinearLayout
                 android:layout_width="match_parent"

@@ -3,9 +3,11 @@ package blbl.cat3399.feature.category
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.LinearLayout
 import androidx.core.view.updatePadding
 import blbl.cat3399.R
 import blbl.cat3399.databinding.DialogPgcFilterBinding
@@ -28,7 +30,14 @@ class PgcFilterDialog(
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        window?.setBackgroundDrawableResource(R.color.blbl_surface)
+        window?.apply {
+            setBackgroundDrawableResource(R.color.blbl_surface)
+            // 设置对话框尺寸为屏幕的95%宽度和90%高度，适合TV版显示
+            val width = (context.resources.displayMetrics.widthPixels * 0.95).toInt()
+            val height = (context.resources.displayMetrics.heightPixels * 0.9).toInt()
+            setLayout(width, height)
+            setGravity(Gravity.CENTER)
+        }
         binding = DialogPgcFilterBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -86,12 +95,11 @@ class PgcFilterDialog(
         items.forEach { (label, value) ->
             val button = createOptionButton(label)
             button.setOnClickListener {
-                currentState =
-                    if (currentState.seasonType in listOf(1, 4)) {
-                        currentState.copy(year = value)
-                    } else {
-                        currentState.copy(releaseDate = value)
-                    }
+                if (initialState.seasonType in listOf(1, 4)) {
+                    currentState = currentState.copy(year = value)
+                } else {
+                    currentState = currentState.copy(releaseDate = value)
+                }
                 updateYearButtons(value)
             }
             container.addView(button)
@@ -149,17 +157,18 @@ class PgcFilterDialog(
 
     private fun createOptionButton(text: String): Button {
         val button = Button(context)
-        val params = ViewGroup.MarginLayoutParams(
+        val params = LinearLayout.LayoutParams(
             ViewGroup.LayoutParams.WRAP_CONTENT,
             ViewGroup.LayoutParams.WRAP_CONTENT,
         )
-        params.rightMargin = 8
-        params.bottomMargin = 8
+        params.rightMargin = 16
+        params.bottomMargin = 12
         button.layoutParams = params
         button.text = text
-        button.textSize = 13f
-        button.setPadding(16, 8, 16, 8)
+        button.textSize = 18f
+        button.setPadding(24, 12, 24, 12)
         button.isAllCaps = false
+        button.setBackgroundResource(R.drawable.blbl_button_selector)
         return button
     }
 
