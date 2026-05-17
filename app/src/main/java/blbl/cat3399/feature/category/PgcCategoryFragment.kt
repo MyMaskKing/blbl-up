@@ -401,6 +401,8 @@ class PgcCategoryFragment : Fragment(), RefreshKeyHandler {
                         }
 
                         override fun onRightEdge() {
+                            // TV 遥控器从列表最右侧继续按右键时，进入右侧快捷按钮区。
+                            binding.btnSideFilter.requestFocus()
                         }
 
                         override fun canLoadMore(): Boolean = hasNext && !isLoadingMore

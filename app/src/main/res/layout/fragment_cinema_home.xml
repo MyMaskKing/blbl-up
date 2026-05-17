@@ -76,10 +76,13 @@
                             style="@style/Widget.MaterialComponents.Button.TextButton"
                             android:layout_width="wrap_content"
                             android:layout_height="32dp"
+                            android:background="@drawable/blbl_button_selector"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:textColor="@color/blbl_button_text_selector"
                             android:text="@string/cinema_more"
-                            android:textColor="?attr/blblAccent"
                             android:textSize="12sp"
-                            app:backgroundTint="?attr/blblContentBackground"
+                            app:backgroundTint="@android:color/transparent"
                             app:cornerRadius="16dp" />
 
                     </LinearLayout>
@@ -120,10 +123,13 @@
                             style="@style/Widget.MaterialComponents.Button.TextButton"
                             android:layout_width="wrap_content"
                             android:layout_height="32dp"
+                            android:background="@drawable/blbl_button_selector"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:textColor="@color/blbl_button_text_selector"
                             android:text="@string/cinema_more"
-                            android:textColor="?attr/blblAccent"
                             android:textSize="12sp"
-                            app:backgroundTint="?attr/blblContentBackground"
+                            app:backgroundTint="@android:color/transparent"
                             app:cornerRadius="16dp" />
 
                     </LinearLayout>
@@ -164,10 +170,13 @@
                             style="@style/Widget.MaterialComponents.Button.TextButton"
                             android:layout_width="wrap_content"
                             android:layout_height="32dp"
+                            android:background="@drawable/blbl_button_selector"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:textColor="@color/blbl_button_text_selector"
                             android:text="@string/cinema_more"
-                            android:textColor="?attr/blblAccent"
                             android:textSize="12sp"
-                            app:backgroundTint="?attr/blblContentBackground"
+                            app:backgroundTint="@android:color/transparent"
                             app:cornerRadius="16dp" />
 
                     </LinearLayout>
@@ -208,10 +217,13 @@
                             style="@style/Widget.MaterialComponents.Button.TextButton"
                             android:layout_width="wrap_content"
                             android:layout_height="32dp"
+                            android:background="@drawable/blbl_button_selector"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:textColor="@color/blbl_button_text_selector"
                             android:text="@string/cinema_more"
-                            android:textColor="?attr/blblAccent"
                             android:textSize="12sp"
-                            app:backgroundTint="?attr/blblContentBackground"
+                            app:backgroundTint="@android:color/transparent"
                             app:cornerRadius="16dp" />
 
                     </LinearLayout>

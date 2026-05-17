@@ -46,6 +46,8 @@ class CinemaHomeFragment : Fragment(), RefreshKeyHandler {
     private var tvAdapter: PgcHorizontalAdapter? = null
     private var documentaryAdapter: PgcHorizontalAdapter? = null
     private var varietyAdapter: PgcHorizontalAdapter? = null
+    // 避免初始加载和首页切 tab 自动刷新叠在一起，导致双请求和画面闪烁。
+    private var activeLoadCount: Int = 0
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentCinemaHomeBinding.inflate(inflater, container, false)
@@ -54,7 +56,7 @@ class CinemaHomeFragment : Fragment(), RefreshKeyHandler {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         setupSectionClickListeners()
-        binding.swipeRefresh.setOnRefreshListener { refreshAll() }
+        binding.swipeRefresh.setOnRefreshListener { triggerRefresh() }
         binding.btnSideRefresh.setOnClickListener { triggerRefresh() }
         initAdapters()
         loadAllData()
@@ -107,6 +109,7 @@ class CinemaHomeFragment : Fragment(), RefreshKeyHandler {
     }
 
     private fun loadHotSection() {
+        markLoadStarted()
         viewLifecycleOwner.lifecycleScope.launch {
             try {
                 val result = withContext(Dispatchers.IO) {
@@ -124,11 +127,14 @@ class CinemaHomeFragment : Fragment(), RefreshKeyHandler {
             } catch (t: Throwable) {
                 if (t is CancellationException) throw t
                 AppLog.e("CinemaHome", "load hot section failed", t)
+            } finally {
+                markLoadFinished()
             }
         }
     }
 
     private fun loadSection(section: CinemaSection) {
+        markLoadStarted()
         viewLifecycleOwner.lifecycleScope.launch {
             try {
                 val result = withContext(Dispatchers.IO) {
@@ -146,6 +152,8 @@ class CinemaHomeFragment : Fragment(), RefreshKeyHandler {
             } catch (t: Throwable) {
                 if (t is CancellationException) throw t
                 AppLog.e("CinemaHome", "load ${section.title} failed", t)
+            } finally {
+                markLoadFinished()
             }
         }
     }
@@ -196,15 +204,7 @@ class CinemaHomeFragment : Fragment(), RefreshKeyHandler {
     }
 
     private fun refreshAll() {
-        hotItems.clear()
-        hotAdapter?.submit(emptyList())
-        sections.forEach { it.items.clear() }
-        moviesAdapter?.submit(emptyList())
-        tvAdapter?.submit(emptyList())
-        documentaryAdapter?.submit(emptyList())
-        varietyAdapter?.submit(emptyList())
         loadAllData()
-        binding.swipeRefresh.isRefreshing = false
     }
 
     override fun handleRefreshKey(): Boolean {
@@ -213,13 +213,29 @@ class CinemaHomeFragment : Fragment(), RefreshKeyHandler {
 
     private fun triggerRefresh(): Boolean {
         if (!isAdded) return false
+        if (activeLoadCount > 0) {
+            binding.swipeRefresh.isRefreshing = false
+            return true
+        }
         if (binding.swipeRefresh.isRefreshing) return true
         binding.swipeRefresh.isRefreshing = true
         refreshAll()
         return true
     }
 
+    private fun markLoadStarted() {
+        activeLoadCount++
+    }
+
+    private fun markLoadFinished() {
+        activeLoadCount = (activeLoadCount - 1).coerceAtLeast(0)
+        if (activeLoadCount == 0) {
+            _binding?.swipeRefresh?.isRefreshing = false
+        }
+    }
+
     override fun onDestroyView() {
+        activeLoadCount = 0
         _binding = null
         super.onDestroyView()
     }
