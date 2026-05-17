@@ -60,6 +60,7 @@ object CustomPageTabRegistry {
     const val TYPE_MY_LIKE = "my_like"
     const val TYPE_LIVE_RECOMMEND = "live_recommend"
     const val TYPE_LIVE_FOLLOWING = "live_following"
+    const val TYPE_PGC_CATEGORY = "pgc_category"
 
     private data class GroupDescriptor(
         val key: String,
@@ -234,6 +235,7 @@ object CustomPageTabRegistry {
             add(CustomPageTabConfig(sourceType = TYPE_HOME_POPULAR))
             add(CustomPageTabConfig(sourceType = TYPE_HOME_BANGUMI))
             add(CustomPageTabConfig(sourceType = TYPE_HOME_CINEMA))
+            add(CustomPageTabConfig(sourceType = TYPE_PGC_CATEGORY))
             add(CustomPageTabConfig(sourceType = TYPE_CATEGORY_ALL))
             CategoryZones.defaultZones
                 .mapNotNull { zone ->
@@ -293,6 +295,16 @@ object CustomPageTabRegistry {
                     groupKey = GROUP_RECOMMEND,
                     itemOrder = 40,
                     createFragment = { PgcRecommendGridFragment.newCinema() },
+                )
+
+            TYPE_PGC_CATEGORY ->
+                Descriptor(
+                    stableKey = TYPE_PGC_CATEGORY,
+                    managerLabel = "分类-影视分类",
+                    tabTitle = "影视分类",
+                    groupKey = GROUP_CATEGORY,
+                    itemOrder = 5,
+                    createFragment = { blbl.cat3399.feature.category.PgcCategoryFragment() },
                 )
 
             TYPE_CATEGORY_ALL -> {
