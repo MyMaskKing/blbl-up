@@ -6,163 +6,31 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="?attr/blblPageBackdrop"
-    android:padding="24dp">
+    android:padding="16dp">
 
-    <ScrollView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvFilterOptions"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"/>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <!-- 地区 -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="地区"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="?attr/blblOnPageBackdrop"
-                android:layout_marginTop="12dp"
-                android:layout_marginBottom="12dp"/>
-
-            <LinearLayout
-                android:id="@+id/areaContainer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="start"
-                android:padding="4dp"
-                android:weightSum="6">
-            </LinearLayout>
-
-            <!-- 题材 -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="题材"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="?attr/blblOnPageBackdrop"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="12dp"/>
-
-            <LinearLayout
-                android:id="@+id/styleContainer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="start"
-                android:padding="4dp"
-                android:weightSum="6">
-            </LinearLayout>
-
-            <!-- 年份 -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="年份"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="?attr/blblOnPageBackdrop"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="12dp"/>
-
-            <LinearLayout
-                android:id="@+id/yearContainer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="start"
-                android:padding="4dp"
-                android:weightSum="6">
-            </LinearLayout>
-
-            <!-- 排序 -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="排序"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="?attr/blblOnPageBackdrop"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="12dp"/>
-
-            <LinearLayout
-                android:id="@+id/orderContainer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="start"
-                android:padding="4dp"
-                android:weightSum="6">
-            </LinearLayout>
-
-            <!-- 付费状态 -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="付费状态"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="?attr/blblOnPageBackdrop"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="12dp"/>
-
-            <LinearLayout
-                android:id="@+id/statusContainer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="start"
-                android:padding="4dp"
-                android:weightSum="6">
-            </LinearLayout>
-
-            <!-- 完结状态 -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="完结状态"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="?attr/blblOnPageBackdrop"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="12dp"/>
-
-            <LinearLayout
-                android:id="@+id/finishContainer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="start"
-                android:padding="4dp"
-                android:weightSum="6">
-            </LinearLayout>
-
-        </LinearLayout>
-
-    </ScrollView>
-
-    <!-- 底部按钮栏 -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:paddingTop="20dp">
+        android:paddingTop="12dp">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnReset"
             android:layout_width="0dp"
-            android:layout_height="64dp"
+            android:layout_height="72dp"
             android:layout_weight="1"
             android:text="重置"
-            android:textSize="18sp"
+            android:textSize="20sp"
             android:textColor="?attr/blblOnPageBackdrop"
             app:cornerRadius="12dp"
             style="@style/Widget.MaterialComponents.Button.TextButton"
@@ -171,10 +39,10 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnCancel"
             android:layout_width="0dp"
-            android:layout_height="64dp"
+            android:layout_height="72dp"
             android:layout_weight="1"
             android:text="取消"
-            android:textSize="18sp"
+            android:textSize="20sp"
             android:textColor="?attr/blblOnPageBackdropSecondary"
             app:cornerRadius="12dp"
             style="@style/Widget.MaterialComponents.Button.TextButton"
@@ -183,10 +51,10 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnApply"
             android:layout_width="0dp"
-            android:layout_height="64dp"
+            android:layout_height="72dp"
             android:layout_weight="1"
             android:text="确定"
-            android:textSize="18sp"
+            android:textSize="20sp"
             android:textColor="?attr/blblAccent"
             app:cornerRadius="12dp"
             app:backgroundTint="?attr/blblContentBackground"/>

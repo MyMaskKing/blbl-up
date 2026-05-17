@@ -2,301 +2,217 @@ package blbl.cat3399.feature.category
 
 import android.app.Dialog
 import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.LinearLayout
-import androidx.core.view.updatePadding
+import android.widget.TextView
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import blbl.cat3399.R
-import blbl.cat3399.databinding.DialogPgcFilterBinding
+
+private const val FILTER_GRID_COLUMNS = 5
+
+private const val VIEW_TYPE_HEADER = 0
+private const val VIEW_TYPE_OPTION = 1
+
+private sealed class FilterItem {
+    data class Header(val title: String) : FilterItem()
+    data class Option(
+        val category: FilterCategory,
+        val label: String,
+        val value: String,
+        var isSelected: Boolean,
+    ) : FilterItem()
+}
+
+private enum class FilterCategory { AREA, STYLE, YEAR, ORDER, STATUS, FINISH }
+
+private class FilterGridAdapter(
+    private val onOptionClick: (FilterCategory, String) -> Unit,
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+    private val items = mutableListOf<FilterItem>()
+
+    fun submit(newItems: List<FilterItem>) {
+        items.clear()
+        items.addAll(newItems)
+        notifyDataSetChanged()
+    }
+
+    override fun getItemViewType(position: Int): Int =
+        if (items[position] is FilterItem.Header) VIEW_TYPE_HEADER else VIEW_TYPE_OPTION
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return if (viewType == VIEW_TYPE_HEADER) {
+            val view = LayoutInflater.from(parent.context)
+                .inflate(R.layout.item_filter_header, parent, false)
+            HeaderViewHolder(view)
+        } else {
+            val view = LayoutInflater.from(parent.context)
+                .inflate(R.layout.item_filter_option, parent, false)
+            OptionViewHolder(view)
+        }
+    }
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        when (val item = items[position]) {
+            is FilterItem.Header -> (holder as HeaderViewHolder).bind(item)
+            is FilterItem.Option -> (holder as OptionViewHolder).bind(item)
+        }
+    }
+
+    override fun getItemCount(): Int = items.size
+
+    inner class HeaderViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        fun bind(header: FilterItem.Header) {
+            (itemView as TextView).text = header.title
+        }
+    }
+
+    inner class OptionViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        private val tv = view.findViewById<TextView>(R.id.tvOption)
+        private var currentCategory: FilterCategory = FilterCategory.AREA
+        private var currentValue: String = ""
+
+        init {
+            view.setOnClickListener {
+                onOptionClick(currentCategory, currentValue)
+            }
+        }
+
+        fun bind(option: FilterItem.Option) {
+            currentCategory = option.category
+            currentValue = option.value
+            tv.text = option.label
+            tv.isActivated = option.isSelected
+            tv.setTextColor(
+                if (option.isSelected) {
+                    tv.context.getColor(R.color.blbl_purple)
+                } else {
+                    Color.WHITE
+                }
+            )
+        }
+    }
+}
 
 class PgcFilterDialog(
     context: Context,
     private val initialState: PgcFilterState,
     private val onApply: (PgcFilterState) -> Unit,
 ) : Dialog(context, R.style.ThemeOverlay_Blbl_TransparentDialog) {
-    private lateinit var binding: DialogPgcFilterBinding
 
-    private var currentState = initialState
-
-    private val allAreaButtons = mutableListOf<Button>()
-    private val allStyleButtons = mutableListOf<Button>()
-    private val allYearButtons = mutableListOf<Button>()
-    private val allOrderButtons = mutableListOf<Button>()
-    private val allStatusButtons = mutableListOf<Button>()
-    private val allFinishButtons = mutableListOf<Button>()
+    private lateinit var rvOptions: RecyclerView
+    private lateinit var adapter: FilterGridAdapter
+    private var currentState: PgcFilterState = initialState
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window?.apply {
             setBackgroundDrawableResource(R.color.blbl_surface)
-            // 设置对话框尺寸为全屏，适合TV版显示，手机上也使用全屏
             val width = context.resources.displayMetrics.widthPixels
             val height = context.resources.displayMetrics.heightPixels
             setLayout(width, height)
             setGravity(Gravity.CENTER)
         }
-        binding = DialogPgcFilterBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        setContentView(R.layout.dialog_pgc_filter)
 
-        setupAllOptions()
+        rvOptions = findViewById(R.id.rvFilterOptions)
+        initRecyclerView()
+        buildItems()
         setupButtons()
-        restoreState()
     }
 
-    private fun setupAllOptions() {
-        setupAreaOptions()
-        setupStyleOptions()
-        setupYearOptions()
-        setupOrderOptions()
-        setupStatusOptions()
-        setupFinishOptions()
-    }
-
-    private fun setupAreaOptions() {
-        val container = binding.areaContainer
-        val items = PgcConstants.getAreaItems()
-        allAreaButtons.clear()
-
-        items.forEach { (label, value) ->
-            val button = createOptionButton(label)
-            button.setOnClickListener {
-                currentState = currentState.copy(area = value)
-                updateAreaButtons(value)
-            }
-            container.addView(button)
-            allAreaButtons.add(button)
-        }
-    }
-
-    private fun setupStyleOptions() {
-        val container = binding.styleContainer
-        val items = PgcConstants.getStyles(currentState.seasonType)
-        allStyleButtons.clear()
-
-        items.forEach { (label, value) ->
-            val button = createOptionButton(label)
-            button.setOnClickListener {
-                currentState = currentState.copy(styleId = value)
-                updateStyleButtons(value)
-            }
-            container.addView(button)
-            allStyleButtons.add(button)
-        }
-    }
-
-    private fun setupYearOptions() {
-        val container = binding.yearContainer
-        val items = PgcConstants.getYearItems()
-        allYearButtons.clear()
-
-        items.forEach { (label, value) ->
-            val button = createOptionButton(label)
-            button.setOnClickListener {
-                if (initialState.seasonType in listOf(1, 4)) {
-                    currentState = currentState.copy(year = value)
+    private fun initRecyclerView() {
+        val gridLayout = GridLayoutManager(context, FILTER_GRID_COLUMNS)
+        gridLayout.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+            override fun getSpanSize(position: Int): Int {
+                return if (adapter.getItemViewType(position) == VIEW_TYPE_HEADER) {
+                    FILTER_GRID_COLUMNS
                 } else {
-                    currentState = currentState.copy(releaseDate = value)
+                    1
                 }
-                updateYearButtons(value)
-            }
-            container.addView(button)
-            allYearButtons.add(button)
-        }
-    }
-
-    private fun setupOrderOptions() {
-        val container = binding.orderContainer
-        val items = PgcConstants.getOrderItems(initialState.seasonType)
-        allOrderButtons.clear()
-
-        items.forEach { (label, value) ->
-            val button = createOptionButton(label)
-            button.setOnClickListener {
-                currentState = currentState.copy(order = value)
-                updateOrderButtons(value)
-            }
-            container.addView(button)
-            allOrderButtons.add(button)
-        }
-    }
-
-    private fun setupStatusOptions() {
-        val container = binding.statusContainer
-        val items = PgcConstants.getStatusItems()
-        allStatusButtons.clear()
-
-        items.forEach { (label, value) ->
-            val button = createOptionButton(label)
-            button.setOnClickListener {
-                currentState = currentState.copy(seasonStatus = value)
-                updateStatusButtons(value)
-            }
-            container.addView(button)
-            allStatusButtons.add(button)
-        }
-    }
-
-    private fun setupFinishOptions() {
-        val container = binding.finishContainer
-        val items = PgcConstants.getFinishItems()
-        allFinishButtons.clear()
-
-        items.forEach { (label, value) ->
-            val button = createOptionButton(label)
-            button.setOnClickListener {
-                currentState = currentState.copy(isFinish = value)
-                updateFinishButtons(value)
-            }
-            container.addView(button)
-            allFinishButtons.add(button)
-        }
-    }
-
-    private fun createOptionButton(text: String): Button {
-        val button = Button(context)
-        val params = LinearLayout.LayoutParams(
-            0,
-            ViewGroup.LayoutParams.WRAP_CONTENT,
-            1f
-        )
-        params.rightMargin = 12
-        params.bottomMargin = 16
-        button.layoutParams = params
-        button.text = text
-        button.textSize = 24f
-        button.setPadding(20, 24, 20, 24)
-        button.isAllCaps = false
-        button.background = context.getDrawable(R.drawable.blbl_button_selector)
-        button.isFocusable = true
-        button.isFocusableInTouchMode = true
-        return button
-    }
-
-    private fun updateAreaButtons(selectedValue: String) {
-        val items = PgcConstants.getAreaItems()
-        items.forEachIndexed { index, (_, value) ->
-            allAreaButtons[index].apply {
-                isSelected = value == selectedValue
-                setTextColor(
-                    if (value == selectedValue) {
-                        context.getColor(R.color.blbl_purple)
-                    } else {
-                        context.getColor(R.color.blbl_text_secondary)
-                    }
-                )
             }
         }
+        rvOptions.layoutManager = gridLayout
+        adapter = FilterGridAdapter { category, value ->
+            onFilterOptionClick(category, value)
+        }
+        rvOptions.adapter = adapter
+        rvOptions.itemAnimator = null
     }
 
-    private fun updateStyleButtons(selectedValue: Int) {
-        val items = PgcConstants.getStyles(currentState.seasonType)
-        items.forEachIndexed { index, (_, value) ->
-            allStyleButtons[index].apply {
-                isSelected = value == selectedValue
-                setTextColor(
-                    if (value == selectedValue) {
-                        context.getColor(R.color.blbl_purple)
-                    } else {
-                        context.getColor(R.color.blbl_text_secondary)
-                    }
-                )
+    private fun onFilterOptionClick(category: FilterCategory, value: String) {
+        currentState = when (category) {
+            FilterCategory.AREA -> currentState.copy(area = value)
+            FilterCategory.STYLE -> currentState.copy(styleId = value.toIntOrNull() ?: -1)
+            FilterCategory.YEAR -> {
+                if (currentState.seasonType in listOf(1, 4)) {
+                    currentState.copy(year = value)
+                } else {
+                    currentState.copy(releaseDate = value)
+                }
             }
+            FilterCategory.ORDER -> currentState.copy(order = value.toIntOrNull() ?: 0)
+            FilterCategory.STATUS -> currentState.copy(seasonStatus = value.toIntOrNull() ?: -1)
+            FilterCategory.FINISH -> currentState.copy(isFinish = value.toIntOrNull() ?: -1)
         }
+        buildItems()
     }
 
-    private fun updateYearButtons(selectedValue: String) {
-        val items = PgcConstants.getYearItems()
-        items.forEachIndexed { index, (_, value) ->
-            allYearButtons[index].apply {
-                isSelected = value == selectedValue
-                setTextColor(
-                    if (value == selectedValue) {
-                        context.getColor(R.color.blbl_purple)
-                    } else {
-                        context.getColor(R.color.blbl_text_secondary)
-                    }
-                )
-            }
-        }
-    }
+    private fun buildItems() {
+        val items = mutableListOf<FilterItem>()
 
-    private fun updateOrderButtons(selectedValue: Int) {
-        val items = PgcConstants.getOrderItems(initialState.seasonType)
-        items.forEachIndexed { index, (_, value) ->
-            allOrderButtons[index].apply {
-                isSelected = value == selectedValue
-                setTextColor(
-                    if (value == selectedValue) {
-                        context.getColor(R.color.blbl_purple)
-                    } else {
-                        context.getColor(R.color.blbl_text_secondary)
-                    }
-                )
-            }
+        items += FilterItem.Header("地区")
+        items += PgcConstants.getAreaItems().map { (label, value) ->
+            FilterItem.Option(FilterCategory.AREA, label, value, currentState.area == value)
         }
-    }
 
-    private fun updateStatusButtons(selectedValue: Int) {
-        val items = PgcConstants.getStatusItems()
-        items.forEachIndexed { index, (_, value) ->
-            allStatusButtons[index].apply {
-                isSelected = value == selectedValue
-                setTextColor(
-                    if (value == selectedValue) {
-                        context.getColor(R.color.blbl_purple)
-                    } else {
-                        context.getColor(R.color.blbl_text_secondary)
-                    }
-                )
-            }
+        items += FilterItem.Header("题材")
+        items += PgcConstants.getStyles(currentState.seasonType).map { (label, value) ->
+            FilterItem.Option(FilterCategory.STYLE, label, value.toString(), currentState.styleId == value)
         }
-    }
 
-    private fun updateFinishButtons(selectedValue: Int) {
-        val items = PgcConstants.getFinishItems()
-        items.forEachIndexed { index, (_, value) ->
-            allFinishButtons[index].apply {
-                isSelected = value == selectedValue
-                setTextColor(
-                    if (value == selectedValue) {
-                        context.getColor(R.color.blbl_purple)
-                    } else {
-                        context.getColor(R.color.blbl_text_secondary)
-                    }
-                )
-            }
+        items += FilterItem.Header("年份")
+        val yearValue = if (currentState.seasonType in listOf(1, 4)) {
+            currentState.year
+        } else {
+            currentState.releaseDate
         }
+        items += PgcConstants.getYearItems().map { (label, value) ->
+            FilterItem.Option(FilterCategory.YEAR, label, value, yearValue == value)
+        }
+
+        items += FilterItem.Header("排序")
+        items += PgcConstants.getOrderItems(initialState.seasonType).map { (label, value) ->
+            FilterItem.Option(FilterCategory.ORDER, label, value.toString(), currentState.order == value)
+        }
+
+        items += FilterItem.Header("付费状态")
+        items += PgcConstants.getStatusItems().map { (label, value) ->
+            FilterItem.Option(FilterCategory.STATUS, label, value.toString(), currentState.seasonStatus == value)
+        }
+
+        items += FilterItem.Header("完结状态")
+        items += PgcConstants.getFinishItems().map { (label, value) ->
+            FilterItem.Option(FilterCategory.FINISH, label, value.toString(), currentState.isFinish == value)
+        }
+
+        adapter.submit(items)
     }
 
     private fun setupButtons() {
-        binding.btnCancel.setOnClickListener { dismiss() }
-        binding.btnApply.setOnClickListener {
+        findViewById<View>(R.id.btnCancel).setOnClickListener { dismiss() }
+        findViewById<View>(R.id.btnApply).setOnClickListener {
             onApply(currentState)
             dismiss()
         }
-        binding.btnReset.setOnClickListener {
+        findViewById<View>(R.id.btnReset).setOnClickListener {
             currentState = PgcFilterState(seasonType = initialState.seasonType)
-            restoreState()
+            buildItems()
         }
-    }
-
-    private fun restoreState() {
-        updateAreaButtons(currentState.area)
-        updateStyleButtons(currentState.styleId)
-
-        val yearValue =
-            if (currentState.seasonType in listOf(1, 4)) {
-                currentState.year
-            } else {
-                currentState.releaseDate
-            }
-        updateYearButtons(yearValue)
-
-        updateOrderButtons(currentState.order)
-        updateStatusButtons(currentState.seasonStatus)
-        updateFinishButtons(currentState.isFinish)
     }
 }

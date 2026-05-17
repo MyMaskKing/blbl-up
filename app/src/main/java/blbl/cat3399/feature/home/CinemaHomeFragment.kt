@@ -16,14 +16,15 @@ import blbl.cat3399.core.image.ImageLoader
 import blbl.cat3399.core.image.ImageUrl
 import blbl.cat3399.core.log.AppLog
 import blbl.cat3399.core.model.BangumiSeason
-import blbl.cat3399.core.net.BiliClient
 import blbl.cat3399.databinding.FragmentCinemaHomeBinding
 import blbl.cat3399.databinding.ItemPgcHorizontalBinding
 import blbl.cat3399.feature.category.PgcCategoryFragment
 import blbl.cat3399.feature.my.BangumiDetailActivity
 import blbl.cat3399.ui.RefreshKeyHandler
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class CinemaHomeFragment : Fragment(), RefreshKeyHandler {
     private var _binding: FragmentCinemaHomeBinding? = null
@@ -36,10 +37,14 @@ class CinemaHomeFragment : Fragment(), RefreshKeyHandler {
     )
 
     private var sections = listOf<CinemaSection>()
-    
-    // 正在热播数据
+
     private var hotItems = mutableListOf<BangumiSeason>()
     private var hotAdapter: PgcHorizontalAdapter? = null
+
+    private var moviesAdapter: PgcHorizontalAdapter? = null
+    private var tvAdapter: PgcHorizontalAdapter? = null
+    private var documentaryAdapter: PgcHorizontalAdapter? = null
+    private var varietyAdapter: PgcHorizontalAdapter? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentCinemaHomeBinding.inflate(inflater, container, false)
@@ -49,35 +54,65 @@ class CinemaHomeFragment : Fragment(), RefreshKeyHandler {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         setupSectionClickListeners()
         binding.swipeRefresh.setOnRefreshListener { refreshAll() }
-        
-        // 延迟加载数据，确保视图完全初始化
-        view.post {
-            setupHotSection()
-            setupSections()
-        }
+        initAdapters()
+        loadAllData()
     }
 
-    private fun setupHotSection() {
-        hotAdapter = PgcHorizontalAdapter { season ->
-            openBangumiDetail(season, 2) // 默认当作电影类型打开
-        }
+    private fun initAdapters() {
+        val hotItemWidth = (resources.displayMetrics.density * 280).toInt()
+
+        hotAdapter = PgcHorizontalAdapter(
+            onItemClick = { season -> openBangumiDetail(season, 2) },
+            itemWidth = hotItemWidth,
+        )
         binding.rvHot.adapter = hotAdapter
         binding.rvHot.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         binding.rvHot.setHasFixedSize(true)
+
+        moviesAdapter = PgcHorizontalAdapter { season -> openBangumiDetail(season, 2) }
+        binding.rvMovies.adapter = moviesAdapter
+        binding.rvMovies.layoutManager = GridLayoutManager(context, 3)
+        binding.rvMovies.setHasFixedSize(true)
+
+        tvAdapter = PgcHorizontalAdapter { season -> openBangumiDetail(season, 5) }
+        binding.rvTv.adapter = tvAdapter
+        binding.rvTv.layoutManager = GridLayoutManager(context, 3)
+        binding.rvTv.setHasFixedSize(true)
+
+        documentaryAdapter = PgcHorizontalAdapter { season -> openBangumiDetail(season, 3) }
+        binding.rvDocumentary.adapter = documentaryAdapter
+        binding.rvDocumentary.layoutManager = GridLayoutManager(context, 3)
+        binding.rvDocumentary.setHasFixedSize(true)
+
+        varietyAdapter = PgcHorizontalAdapter { season -> openBangumiDetail(season, 7) }
+        binding.rvVariety.adapter = varietyAdapter
+        binding.rvVariety.layoutManager = GridLayoutManager(context, 3)
+        binding.rvVariety.setHasFixedSize(true)
+    }
+
+    private fun loadAllData() {
+        sections = listOf(
+            CinemaSection("电影热播", 2, mutableListOf()),
+            CinemaSection("电视剧热播", 5, mutableListOf()),
+            CinemaSection("纪录片热播", 3, mutableListOf()),
+            CinemaSection("综艺热播", 7, mutableListOf()),
+        )
         loadHotSection()
+        sections.forEach { loadSection(it) }
     }
 
     private fun loadHotSection() {
         viewLifecycleOwner.lifecycleScope.launch {
             try {
-                // 加载综合热播内容（包含电影、电视剧等）
-                val result = BiliApi.pgcSeasonIndex(
-                    seasonType = 2, // 电影作为主要来源
-                    page = 1,
-                    pageSize = 15,
-                    order = 2, // 播放数量排序
-                    sort = 0,
-                )
+                val result = withContext(Dispatchers.IO) {
+                    BiliApi.pgcSeasonIndex(
+                        seasonType = 2,
+                        page = 1,
+                        pageSize = 15,
+                        order = 2,
+                        sort = 0,
+                    )
+                }
                 hotItems.clear()
                 hotItems.addAll(result.items)
                 hotAdapter?.submit(hotItems)
@@ -88,35 +123,21 @@ class CinemaHomeFragment : Fragment(), RefreshKeyHandler {
         }
     }
 
-    private fun setupSections() {
-        sections = listOf(
-            CinemaSection("电影热播", 2, mutableListOf()),
-            CinemaSection("电视剧热播", 5, mutableListOf()),
-            CinemaSection("纪录片热播", 3, mutableListOf()),
-            CinemaSection("综艺热播", 7, mutableListOf()),
-        )
-        loadSections()
-    }
-
-    private fun loadSections() {
-        sections.forEach { section ->
-            loadSection(section)
-        }
-    }
-
     private fun loadSection(section: CinemaSection) {
         viewLifecycleOwner.lifecycleScope.launch {
             try {
-                val result = BiliApi.pgcSeasonIndex(
-                    seasonType = section.seasonType,
-                    page = 1,
-                    pageSize = 15,
-                    order = 6, // 上映时间排序
-                    sort = 0,
-                )
+                val result = withContext(Dispatchers.IO) {
+                    BiliApi.pgcSeasonIndex(
+                        seasonType = section.seasonType,
+                        page = 1,
+                        pageSize = 15,
+                        order = 6,
+                        sort = 0,
+                    )
+                }
                 section.items.clear()
                 section.items.addAll(result.items)
-                updateSectionView(section)
+                updateSectionAdapter(section)
             } catch (t: Throwable) {
                 if (t is CancellationException) throw t
                 AppLog.e("CinemaHome", "load ${section.title} failed", t)
@@ -124,29 +145,15 @@ class CinemaHomeFragment : Fragment(), RefreshKeyHandler {
         }
     }
 
-    private fun updateSectionView(section: CinemaSection) {
-        _binding?.let { b ->
-            when (section.seasonType) {
-                2 -> setupVerticalGridList(b.rvMovies, section)
-                5 -> setupVerticalGridList(b.rvTv, section)
-                3 -> setupVerticalGridList(b.rvDocumentary, section)
-                7 -> setupVerticalGridList(b.rvVariety, section)
-            }
+    private fun updateSectionAdapter(section: CinemaSection) {
+        val adapter = when (section.seasonType) {
+            2 -> moviesAdapter
+            5 -> tvAdapter
+            3 -> documentaryAdapter
+            7 -> varietyAdapter
+            else -> return
         }
-    }
-
-    private fun setupVerticalGridList(recyclerView: RecyclerView, section: CinemaSection) {
-        if (recyclerView.adapter != null) return
-
-        val adapter = PgcHorizontalAdapter { season ->
-            openBangumiDetail(season, section.seasonType)
-        }
-        adapter.submit(section.items)
-
-        recyclerView.adapter = adapter
-        // 使用4列网格布局
-        recyclerView.layoutManager = GridLayoutManager(context, 4)
-        recyclerView.setHasFixedSize(true)
+        adapter?.submit(section.items)
     }
 
     private fun setupSectionClickListeners() {
@@ -183,17 +190,13 @@ class CinemaHomeFragment : Fragment(), RefreshKeyHandler {
 
     private fun refreshAll() {
         hotItems.clear()
-        hotAdapter?.submit(hotItems)
-        loadHotSection()
-        
-        sections.forEach { section ->
-            section.items.clear()
-        }
-        binding.rvMovies.adapter = null
-        binding.rvTv.adapter = null
-        binding.rvDocumentary.adapter = null
-        binding.rvVariety.adapter = null
-        loadSections()
+        hotAdapter?.submit(emptyList())
+        sections.forEach { it.items.clear() }
+        moviesAdapter?.submit(emptyList())
+        tvAdapter?.submit(emptyList())
+        documentaryAdapter?.submit(emptyList())
+        varietyAdapter?.submit(emptyList())
+        loadAllData()
         binding.swipeRefresh.isRefreshing = false
     }
 
@@ -216,6 +219,7 @@ class CinemaHomeFragment : Fragment(), RefreshKeyHandler {
 
 class PgcHorizontalAdapter(
     private val onItemClick: (BangumiSeason) -> Unit,
+    private val itemWidth: Int = 0,
 ) : RecyclerView.Adapter<PgcHorizontalAdapter.ViewHolder>() {
 
     private var items = emptyList<BangumiSeason>()
@@ -227,10 +231,13 @@ class PgcHorizontalAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemPgcHorizontalBinding.inflate(
-            LayoutInflater.from(parent.context),
-            parent,
-            false,
+            LayoutInflater.from(parent.context), parent, false,
         )
+        if (itemWidth > 0) {
+            binding.root.layoutParams = RecyclerView.LayoutParams(
+                itemWidth, ViewGroup.LayoutParams.WRAP_CONTENT
+            )
+        }
         return ViewHolder(binding)
     }
 

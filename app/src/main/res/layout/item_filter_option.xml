@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tvOption"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:textSize="20sp"
+    android:textColor="?attr/blblOnPageBackdropSecondary"
+    android:paddingTop="18dp"
+    android:paddingBottom="18dp"
+    android:paddingStart="8dp"
+    android:paddingEnd="8dp"
+    android:maxLines="1"
+    android:ellipsize="end"
+    android:focusable="true"
+    android:clickable="true"
+    android:background="@drawable/blbl_button_selector"/>

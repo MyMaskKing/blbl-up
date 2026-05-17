@@ -9,20 +9,18 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import blbl.cat3399.R
 import blbl.cat3399.core.api.BiliApi
-import blbl.cat3399.core.image.ImageLoader
-import blbl.cat3399.core.image.ImageUrl
-import blbl.cat3399.core.log.AppLog
 import blbl.cat3399.core.model.BangumiSeason
+import blbl.cat3399.core.log.AppLog
 import blbl.cat3399.databinding.FragmentBangumiHomeBinding
-import blbl.cat3399.databinding.ItemPgcHorizontalBinding
 import blbl.cat3399.feature.category.PgcCategoryFragment
 import blbl.cat3399.feature.my.BangumiDetailActivity
 import blbl.cat3399.ui.RefreshKeyHandler
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class BangumiHomeFragment : Fragment(), RefreshKeyHandler {
     private var _binding: FragmentBangumiHomeBinding? = null
@@ -35,10 +33,12 @@ class BangumiHomeFragment : Fragment(), RefreshKeyHandler {
     )
 
     private var sections = listOf<BangumiSection>()
-    
-    // 正在热播数据
+
     private var hotItems = mutableListOf<BangumiSeason>()
     private var hotAdapter: PgcHorizontalAdapter? = null
+
+    private var bangumiAdapter: PgcHorizontalAdapter? = null
+    private var chineseAdapter: PgcHorizontalAdapter? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentBangumiHomeBinding.inflate(inflater, container, false)
@@ -48,35 +48,53 @@ class BangumiHomeFragment : Fragment(), RefreshKeyHandler {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         setupSectionClickListeners()
         binding.swipeRefresh.setOnRefreshListener { refreshAll() }
-        
-        // 延迟加载数据，确保视图完全初始化
-        view.post {
-            setupHotSection()
-            setupSections()
-        }
+        initAdapters()
+        loadAllData()
     }
 
-    private fun setupHotSection() {
-        hotAdapter = PgcHorizontalAdapter { season ->
-            openBangumiDetail(season, 1) // 默认当作番剧类型打开
-        }
+    private fun initAdapters() {
+        val hotItemWidth = (resources.displayMetrics.density * 280).toInt()
+
+        hotAdapter = PgcHorizontalAdapter(
+            onItemClick = { season -> openBangumiDetail(season, 1) },
+            itemWidth = hotItemWidth,
+        )
         binding.rvHot.adapter = hotAdapter
         binding.rvHot.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         binding.rvHot.setHasFixedSize(true)
+
+        bangumiAdapter = PgcHorizontalAdapter { season -> openBangumiDetail(season, 1) }
+        binding.rvBangumi.adapter = bangumiAdapter
+        binding.rvBangumi.layoutManager = GridLayoutManager(context, 3)
+        binding.rvBangumi.setHasFixedSize(true)
+
+        chineseAdapter = PgcHorizontalAdapter { season -> openBangumiDetail(season, 4) }
+        binding.rvChinese.adapter = chineseAdapter
+        binding.rvChinese.layoutManager = GridLayoutManager(context, 3)
+        binding.rvChinese.setHasFixedSize(true)
+    }
+
+    private fun loadAllData() {
+        sections = listOf(
+            BangumiSection("番剧热播", 1, mutableListOf()),
+            BangumiSection("国创热播", 4, mutableListOf()),
+        )
         loadHotSection()
+        sections.forEach { loadSection(it) }
     }
 
     private fun loadHotSection() {
         viewLifecycleOwner.lifecycleScope.launch {
             try {
-                // 加载番剧热播内容
-                val result = BiliApi.pgcSeasonIndex(
-                    seasonType = 1,
-                    page = 1,
-                    pageSize = 15,
-                    order = 2, // 播放数量排序
-                    sort = 0,
-                )
+                val result = withContext(Dispatchers.IO) {
+                    BiliApi.pgcSeasonIndex(
+                        seasonType = 1,
+                        page = 1,
+                        pageSize = 15,
+                        order = 2,
+                        sort = 0,
+                    )
+                }
                 hotItems.clear()
                 hotItems.addAll(result.items)
                 hotAdapter?.submit(hotItems)
@@ -87,33 +105,21 @@ class BangumiHomeFragment : Fragment(), RefreshKeyHandler {
         }
     }
 
-    private fun setupSections() {
-        sections = listOf(
-            BangumiSection("番剧热播", 1, mutableListOf()),
-            BangumiSection("国创热播", 4, mutableListOf()),
-        )
-        loadSections()
-    }
-
-    private fun loadSections() {
-        sections.forEach { section ->
-            loadSection(section)
-        }
-    }
-
     private fun loadSection(section: BangumiSection) {
         viewLifecycleOwner.lifecycleScope.launch {
             try {
-                val result = BiliApi.pgcSeasonIndex(
-                    seasonType = section.seasonType,
-                    page = 1,
-                    pageSize = 15,
-                    order = 5, // 开播时间排序
-                    sort = 0,
-                )
+                val result = withContext(Dispatchers.IO) {
+                    BiliApi.pgcSeasonIndex(
+                        seasonType = section.seasonType,
+                        page = 1,
+                        pageSize = 15,
+                        order = 5,
+                        sort = 0,
+                    )
+                }
                 section.items.clear()
                 section.items.addAll(result.items)
-                updateSectionView(section)
+                updateSectionAdapter(section)
             } catch (t: Throwable) {
                 if (t is CancellationException) throw t
                 AppLog.e("BangumiHome", "load ${section.title} failed", t)
@@ -121,46 +127,31 @@ class BangumiHomeFragment : Fragment(), RefreshKeyHandler {
         }
     }
 
-    private fun updateSectionView(section: BangumiSection) {
-        _binding?.let { b ->
-            when (section.seasonType) {
-                1 -> setupVerticalGridList(b.rvBangumi, section)
-                4 -> setupVerticalGridList(b.rvChinese, section)
-            }
+    private fun updateSectionAdapter(section: BangumiSection) {
+        val adapter = when (section.seasonType) {
+            1 -> bangumiAdapter
+            4 -> chineseAdapter
+            else -> return
         }
-    }
-
-    private fun setupVerticalGridList(recyclerView: RecyclerView, section: BangumiSection) {
-        if (recyclerView.adapter != null) return
-
-        val adapter = PgcHorizontalAdapter { season ->
-            openBangumiDetail(season, section.seasonType)
-        }
-        adapter.submit(section.items)
-
-        recyclerView.adapter = adapter
-        // 使用4列网格布局
-        recyclerView.layoutManager = GridLayoutManager(context, 4)
-        recyclerView.setHasFixedSize(true)
+        adapter?.submit(section.items)
     }
 
     private fun setupSectionClickListeners() {
         binding.btnBangumiMore.setOnClickListener { openCategoryPage(1) }
         binding.btnChineseMore.setOnClickListener { openCategoryPage(4) }
-
         binding.tvBangumiTitle.setOnClickListener { openCategoryPage(1) }
         binding.tvChineseTitle.setOnClickListener { openCategoryPage(4) }
     }
 
     private fun openCategoryPage(seasonType: Int) {
         requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.main_container, PgcCategoryFragment().apply {
-                    arguments = Bundle().apply {
-                        putInt("seasonType", seasonType)
-                    }
-                })
-                .addToBackStack(null)
-                .commit()
+            .replace(R.id.main_container, PgcCategoryFragment().apply {
+                arguments = Bundle().apply {
+                    putInt("seasonType", seasonType)
+                }
+            })
+            .addToBackStack(null)
+            .commit()
     }
 
     private fun openBangumiDetail(season: BangumiSeason, seasonType: Int) {
@@ -174,15 +165,11 @@ class BangumiHomeFragment : Fragment(), RefreshKeyHandler {
 
     private fun refreshAll() {
         hotItems.clear()
-        hotAdapter?.submit(hotItems)
-        loadHotSection()
-        
-        sections.forEach { section ->
-            section.items.clear()
-        }
-        binding.rvBangumi.adapter = null
-        binding.rvChinese.adapter = null
-        loadSections()
+        hotAdapter?.submit(emptyList())
+        sections.forEach { it.items.clear() }
+        bangumiAdapter?.submit(emptyList())
+        chineseAdapter?.submit(emptyList())
+        loadAllData()
         binding.swipeRefresh.isRefreshing = false
     }
 

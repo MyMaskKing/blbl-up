@@ -224,12 +224,26 @@ class PgcCategoryFragment : Fragment(), RefreshKeyHandler {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        val initialSeasonType = arguments?.getInt("seasonType", 1) ?: 1
+        filterState = PgcFilterState(seasonType = initialSeasonType)
         setupAdapter()
         setupTabs()
         setupRecyclerView()
         setupSwipeRefresh()
         setupFilterButton()
+        selectTabForSeasonType(initialSeasonType)
         maybeTriggerInitialLoad()
+    }
+
+    private fun selectTabForSeasonType(seasonType: Int) {
+        val tabLayout = binding.tabLayout
+        for (i in 0 until tabLayout.tabCount) {
+            val tab = tabLayout.getTabAt(i)
+            if (tab?.tag == seasonType) {
+                tab.select()
+                return
+            }
+        }
     }
 
     private fun setupAdapter() {
