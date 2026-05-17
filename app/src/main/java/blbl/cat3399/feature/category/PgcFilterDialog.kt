@@ -4,10 +4,9 @@ import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.TextView
+import android.widget.Button
+import androidx.core.view.updatePadding
 import blbl.cat3399.R
 import blbl.cat3399.databinding.DialogPgcFilterBinding
 
@@ -20,230 +19,244 @@ class PgcFilterDialog(
 
     private var currentState = initialState
 
+    private val allAreaButtons = mutableListOf<Button>()
+    private val allStyleButtons = mutableListOf<Button>()
+    private val allYearButtons = mutableListOf<Button>()
+    private val allOrderButtons = mutableListOf<Button>()
+    private val allStatusButtons = mutableListOf<Button>()
+    private val allFinishButtons = mutableListOf<Button>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window?.setBackgroundDrawableResource(R.color.blbl_surface)
         binding = DialogPgcFilterBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setupAreaSpinner()
-        setupYearSpinner()
-        setupOrderSpinner()
-        setupSeasonStatusSpinner()
-        setupFinishSpinner()
+        setupAllOptions()
         setupButtons()
-
         restoreState()
     }
 
-    private fun setupAreaSpinner() {
-        val areaItems =
-            listOf(
-                "全部" to "-1",
-                "中国大陆" to "1",
-                "日本" to "2",
-                "美国" to "3",
-                "英国" to "4",
-                "中国香港" to "6",
-                "中国台湾" to "7",
-                "韩国" to "8",
-                "法国" to "9",
-                "泰国" to "10",
-            )
-
-        val adapter =
-            object : ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, areaItems.map { it.first }) {
-                override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
-                    val view = super.getDropDownView(position, convertView, parent)
-                    view.findViewById<TextView>(android.R.id.text1)?.apply {
-                        textSize = 16f
-                        setPadding(32, 24, 32, 24)
-                    }
-                    return view
-                }
-            }
-
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        binding.spinnerArea.adapter = adapter
-
-        binding.spinnerArea.onItemSelectedListener =
-            object : android.widget.AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(
-                    parent: android.widget.AdapterView<*>?,
-                    view: View?,
-                    position: Int,
-                    id: Long,
-                ) {
-                    currentState = currentState.copy(area = areaItems[position].second)
-                }
-
-                override fun onNothingSelected(parent: android.widget.AdapterView<*>?) {}
-            }
+    private fun setupAllOptions() {
+        setupAreaOptions()
+        setupStyleOptions()
+        setupYearOptions()
+        setupOrderOptions()
+        setupStatusOptions()
+        setupFinishOptions()
     }
 
-    private fun setupYearSpinner() {
-        val currentYear = java.util.Calendar.getInstance().get(java.util.Calendar.YEAR)
-        val yearItems =
-            mutableListOf("全部" to "-1").apply {
-                for (year in currentYear downTo 2010) {
-                    add(year.toString() to year.toString())
-                }
-                add("2010年以前" to "[2010,2015)")
+    private fun setupAreaOptions() {
+        val container = binding.areaContainer
+        val items = PgcConstants.getAreaItems()
+        allAreaButtons.clear()
+
+        items.forEach { (label, value) ->
+            val button = createOptionButton(label)
+            button.setOnClickListener {
+                currentState = currentState.copy(area = value)
+                updateAreaButtons(value)
             }
-
-        val adapter =
-            object : ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, yearItems.map { it.first }) {
-                override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
-                    val view = super.getDropDownView(position, convertView, parent)
-                    view.findViewById<TextView>(android.R.id.text1)?.apply {
-                        textSize = 16f
-                        setPadding(32, 24, 32, 24)
-                    }
-                    return view
-                }
-            }
-
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        binding.spinnerYear.adapter = adapter
-
-        binding.spinnerYear.onItemSelectedListener =
-            object : android.widget.AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(
-                    parent: android.widget.AdapterView<*>?,
-                    view: View?,
-                    position: Int,
-                    id: Long,
-                ) {
-                    val value = yearItems[position].second
-                    currentState =
-                        if (currentState.seasonType in listOf(1, 4)) {
-                            currentState.copy(year = value)
-                        } else {
-                            currentState.copy(releaseDate = value)
-                        }
-                }
-
-                override fun onNothingSelected(parent: android.widget.AdapterView<*>?) {}
-            }
+            container.addView(button)
+            allAreaButtons.add(button)
+        }
     }
 
-    private fun setupOrderSpinner() {
-        val orderItems =
-            listOf(
-                "更新时间" to 0,
-                "弹幕数量" to 1,
-                "播放数量" to 2,
-                "追剧人数" to 3,
-                "最高评分" to 4,
-                "开播时间" to 5,
-                "上映时间" to 6,
-            )
+    private fun setupStyleOptions() {
+        val container = binding.styleContainer
+        val items = PgcConstants.getStyles(initialState.seasonType)
+        allStyleButtons.clear()
 
-        val adapter =
-            object : ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, orderItems.map { it.first }) {
-                override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
-                    val view = super.getDropDownView(position, convertView, parent)
-                    view.findViewById<TextView>(android.R.id.text1)?.apply {
-                        textSize = 16f
-                        setPadding(32, 24, 32, 24)
-                    }
-                    return view
-                }
+        items.forEach { (label, value) ->
+            val button = createOptionButton(label)
+            button.setOnClickListener {
+                currentState = currentState.copy(styleId = value)
+                updateStyleButtons(value)
             }
-
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        binding.spinnerOrder.adapter = adapter
-
-        binding.spinnerOrder.onItemSelectedListener =
-            object : android.widget.AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(
-                    parent: android.widget.AdapterView<*>?,
-                    view: View?,
-                    position: Int,
-                    id: Long,
-                ) {
-                    currentState = currentState.copy(order = orderItems[position].second)
-                }
-
-                override fun onNothingSelected(parent: android.widget.AdapterView<*>?) {}
-            }
+            container.addView(button)
+            allStyleButtons.add(button)
+        }
     }
 
-    private fun setupSeasonStatusSpinner() {
-        val statusItems =
-            listOf(
-                "全部" to -1,
-                "免费" to 1,
-                "付费" to 2,
-                "大会员" to 4,
-            )
+    private fun setupYearOptions() {
+        val container = binding.yearContainer
+        val items = PgcConstants.getYearItems()
+        allYearButtons.clear()
 
-        val adapter =
-            object : ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, statusItems.map { it.first }) {
-                override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
-                    val view = super.getDropDownView(position, convertView, parent)
-                    view.findViewById<TextView>(android.R.id.text1)?.apply {
-                        textSize = 16f
-                        setPadding(32, 24, 32, 24)
+        items.forEach { (label, value) ->
+            val button = createOptionButton(label)
+            button.setOnClickListener {
+                currentState =
+                    if (currentState.seasonType in listOf(1, 4)) {
+                        currentState.copy(year = value)
+                    } else {
+                        currentState.copy(releaseDate = value)
                     }
-                    return view
-                }
+                updateYearButtons(value)
             }
-
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        binding.spinnerSeasonStatus.adapter = adapter
-
-        binding.spinnerSeasonStatus.onItemSelectedListener =
-            object : android.widget.AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(
-                    parent: android.widget.AdapterView<*>?,
-                    view: View?,
-                    position: Int,
-                    id: Long,
-                ) {
-                    currentState = currentState.copy(seasonStatus = statusItems[position].second)
-                }
-
-                override fun onNothingSelected(parent: android.widget.AdapterView<*>?) {}
-            }
+            container.addView(button)
+            allYearButtons.add(button)
+        }
     }
 
-    private fun setupFinishSpinner() {
-        val finishItems =
-            listOf(
-                "全部" to -1,
-                "连载中" to 0,
-                "已完结" to 1,
-            )
+    private fun setupOrderOptions() {
+        val container = binding.orderContainer
+        val items = PgcConstants.getOrderItems(initialState.seasonType)
+        allOrderButtons.clear()
 
-        val adapter =
-            object : ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, finishItems.map { it.first }) {
-                override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
-                    val view = super.getDropDownView(position, convertView, parent)
-                    view.findViewById<TextView>(android.R.id.text1)?.apply {
-                        textSize = 16f
-                        setPadding(32, 24, 32, 24)
+        items.forEach { (label, value) ->
+            val button = createOptionButton(label)
+            button.setOnClickListener {
+                currentState = currentState.copy(order = value)
+                updateOrderButtons(value)
+            }
+            container.addView(button)
+            allOrderButtons.add(button)
+        }
+    }
+
+    private fun setupStatusOptions() {
+        val container = binding.statusContainer
+        val items = PgcConstants.getStatusItems()
+        allStatusButtons.clear()
+
+        items.forEach { (label, value) ->
+            val button = createOptionButton(label)
+            button.setOnClickListener {
+                currentState = currentState.copy(seasonStatus = value)
+                updateStatusButtons(value)
+            }
+            container.addView(button)
+            allStatusButtons.add(button)
+        }
+    }
+
+    private fun setupFinishOptions() {
+        val container = binding.finishContainer
+        val items = PgcConstants.getFinishItems()
+        allFinishButtons.clear()
+
+        items.forEach { (label, value) ->
+            val button = createOptionButton(label)
+            button.setOnClickListener {
+                currentState = currentState.copy(isFinish = value)
+                updateFinishButtons(value)
+            }
+            container.addView(button)
+            allFinishButtons.add(button)
+        }
+    }
+
+    private fun createOptionButton(text: String): Button {
+        val button = Button(context)
+        val params = ViewGroup.MarginLayoutParams(
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+        )
+        params.rightMargin = 8
+        params.bottomMargin = 8
+        button.layoutParams = params
+        button.text = text
+        button.textSize = 13f
+        button.setPadding(16, 8, 16, 8)
+        button.isAllCaps = false
+        return button
+    }
+
+    private fun updateAreaButtons(selectedValue: String) {
+        val items = PgcConstants.getAreaItems()
+        items.forEachIndexed { index, (_, value) ->
+            allAreaButtons[index].apply {
+                isSelected = value == selectedValue
+                setTextColor(
+                    if (value == selectedValue) {
+                        context.getColor(R.color.blbl_accent)
+                    } else {
+                        context.getColor(R.color.blbl_on_page_backdrop)
                     }
-                    return view
-                }
+                )
             }
+        }
+    }
 
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        binding.spinnerFinish.adapter = adapter
-
-        binding.spinnerFinish.onItemSelectedListener =
-            object : android.widget.AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(
-                    parent: android.widget.AdapterView<*>?,
-                    view: View?,
-                    position: Int,
-                    id: Long,
-                ) {
-                    currentState = currentState.copy(isFinish = finishItems[position].second)
-                }
-
-                override fun onNothingSelected(parent: android.widget.AdapterView<*>?) {}
+    private fun updateStyleButtons(selectedValue: Int) {
+        val items = PgcConstants.getStyles(initialState.seasonType)
+        items.forEachIndexed { index, (_, value) ->
+            allStyleButtons[index].apply {
+                isSelected = value == selectedValue
+                setTextColor(
+                    if (value == selectedValue) {
+                        context.getColor(R.color.blbl_accent)
+                    } else {
+                        context.getColor(R.color.blbl_on_page_backdrop)
+                    }
+                )
             }
+        }
+    }
+
+    private fun updateYearButtons(selectedValue: String) {
+        val items = PgcConstants.getYearItems()
+        items.forEachIndexed { index, (_, value) ->
+            allYearButtons[index].apply {
+                isSelected = value == selectedValue
+                setTextColor(
+                    if (value == selectedValue) {
+                        context.getColor(R.color.blbl_accent)
+                    } else {
+                        context.getColor(R.color.blbl_on_page_backdrop)
+                    }
+                )
+            }
+        }
+    }
+
+    private fun updateOrderButtons(selectedValue: Int) {
+        val items = PgcConstants.getOrderItems(initialState.seasonType)
+        items.forEachIndexed { index, (_, value) ->
+            allOrderButtons[index].apply {
+                isSelected = value == selectedValue
+                setTextColor(
+                    if (value == selectedValue) {
+                        context.getColor(R.color.blbl_accent)
+                    } else {
+                        context.getColor(R.color.blbl_on_page_backdrop)
+                    }
+                )
+            }
+        }
+    }
+
+    private fun updateStatusButtons(selectedValue: Int) {
+        val items = PgcConstants.getStatusItems()
+        items.forEachIndexed { index, (_, value) ->
+            allStatusButtons[index].apply {
+                isSelected = value == selectedValue
+                setTextColor(
+                    if (value == selectedValue) {
+                        context.getColor(R.color.blbl_accent)
+                    } else {
+                        context.getColor(R.color.blbl_on_page_backdrop)
+                    }
+                )
+            }
+        }
+    }
+
+    private fun updateFinishButtons(selectedValue: Int) {
+        val items = PgcConstants.getFinishItems()
+        items.forEachIndexed { index, (_, value) ->
+            allFinishButtons[index].apply {
+                isSelected = value == selectedValue
+                setTextColor(
+                    if (value == selectedValue) {
+                        context.getColor(R.color.blbl_accent)
+                    } else {
+                        context.getColor(R.color.blbl_on_page_backdrop)
+                    }
+                )
+            }
+        }
     }
 
     private fun setupButtons() {
@@ -259,70 +272,19 @@ class PgcFilterDialog(
     }
 
     private fun restoreState() {
-        val areaAdapter = binding.spinnerArea.adapter as? ArrayAdapter<*> ?: return
-        val areaItems =
-            listOf(
-                "全部" to "-1",
-                "中国大陆" to "1",
-                "日本" to "2",
-                "美国" to "3",
-                "英国" to "4",
-                "中国香港" to "6",
-                "中国台湾" to "7",
-                "韩国" to "8",
-                "法国" to "9",
-                "泰国" to "10",
-            )
-        val areaPosition = areaItems.indexOfFirst { it.second == currentState.area }
-        if (areaPosition >= 0) binding.spinnerArea.setSelection(areaPosition, false)
+        updateAreaButtons(currentState.area)
+        updateStyleButtons(currentState.styleId)
 
-        val currentYear = java.util.Calendar.getInstance().get(java.util.Calendar.YEAR)
-        val yearItems =
-            mutableListOf("全部" to "-1").apply {
-                for (year in currentYear downTo 2010) {
-                    add(year.toString() to year.toString())
-                }
-                add("2010年以前" to "[2010,2015)")
-            }
         val yearValue =
             if (currentState.seasonType in listOf(1, 4)) {
                 currentState.year
             } else {
                 currentState.releaseDate
             }
-        val yearPosition = yearItems.indexOfFirst { it.second == yearValue }
-        if (yearPosition >= 0) binding.spinnerYear.setSelection(yearPosition, false)
+        updateYearButtons(yearValue)
 
-        val orderItems =
-            listOf(
-                "更新时间" to 0,
-                "弹幕数量" to 1,
-                "播放数量" to 2,
-                "追剧人数" to 3,
-                "最高评分" to 4,
-                "开播时间" to 5,
-                "上映时间" to 6,
-            )
-        val orderPosition = orderItems.indexOfFirst { it.second == currentState.order }
-        if (orderPosition >= 0) binding.spinnerOrder.setSelection(orderPosition, false)
-
-        val statusItems =
-            listOf(
-                "全部" to -1,
-                "免费" to 1,
-                "付费" to 2,
-                "大会员" to 4,
-            )
-        val statusPosition = statusItems.indexOfFirst { it.second == currentState.seasonStatus }
-        if (statusPosition >= 0) binding.spinnerSeasonStatus.setSelection(statusPosition, false)
-
-        val finishItems =
-            listOf(
-                "全部" to -1,
-                "连载中" to 0,
-                "已完结" to 1,
-            )
-        val finishPosition = finishItems.indexOfFirst { it.second == currentState.isFinish }
-        if (finishPosition >= 0) binding.spinnerFinish.setSelection(finishPosition, false)
+        updateOrderButtons(currentState.order)
+        updateStatusButtons(currentState.seasonStatus)
+        updateFinishButtons(currentState.isFinish)
     }
 }

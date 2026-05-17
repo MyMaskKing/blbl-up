@@ -72,6 +72,7 @@ data class PgcFilterState(
         get() {
             val names = mutableListOf<String>()
             if (area != "-1") names.add(PgcConstants.PGC_AREA_NAMES[area] ?: "地区")
+            if (styleId != -1) names.add(PgcConstants.getStyleName(seasonType, styleId) ?: "题材")
             if (year != "-1") names.add(year)
             if (order != -1) names.add(PgcConstants.PGC_ORDER_NAMES.getOrNull(order) ?: "排序")
             return if (names.isEmpty()) "筛选" else names.joinToString(" · ")
@@ -80,6 +81,148 @@ data class PgcFilterState(
     fun getEffectiveOrder(): Int {
         if (order != -1) return order
         return if (seasonType in listOf(1, 4)) 5 else 6
+    }
+}
+
+object PgcConstants {
+    val PGC_AREA_NAMES = mapOf(
+        "1" to "中国大陆",
+        "2" to "日本",
+        "3" to "美国",
+        "4" to "英国",
+        "6" to "中国香港",
+        "7" to "中国台湾",
+        "8" to "韩国",
+        "9" to "法国",
+        "10" to "泰国",
+    )
+    val PGC_ORDER_NAMES = mapOf(
+        0 to "更新时间",
+        1 to "弹幕数量",
+        2 to "播放数量",
+        3 to "追剧人数",
+        4 to "最高评分",
+        5 to "开播时间",
+        6 to "上映时间",
+    )
+
+    fun getStyles(seasonType: Int): List<Pair<String, Int>> {
+        return when (seasonType) {
+            1 -> listOf(
+                "全部" to -1,
+                "热血" to 2,
+                "战斗" to 3,
+                "青春" to 5,
+                "搞笑" to 6,
+                "日常" to 7,
+                "治愈" to 8,
+                "励志" to 10,
+                "恋爱" to 11,
+                "科幻" to 12,
+                "奇幻" to 13,
+                "悬疑" to 15,
+                "冒险" to 16,
+                "校园" to 17,
+                "魔法" to 20,
+                "动作" to 21,
+                "百合" to 24,
+                "运动" to 25,
+                "推理" to 26,
+                "偶像" to 27,
+                "音乐" to 28,
+                "竞技" to 30,
+            )
+            2, 3, 5, 7 -> listOf(
+                "全部" to -1,
+                "动作" to 104,
+                "喜剧" to 105,
+                "爱情" to 106,
+                "科幻" to 107,
+                "奇幻" to 108,
+                "悬疑" to 109,
+                "犯罪" to 110,
+                "恐怖" to 111,
+                "冒险" to 112,
+                "战争" to 113,
+                "动画" to 114,
+                "纪录片" to 115,
+                "历史" to 116,
+                "古装" to 117,
+                "运动" to 118,
+                "音乐" to 119,
+            )
+            4 -> listOf(
+                "全部" to -1,
+                "搞笑" to 51,
+                "日常" to 52,
+                "励志" to 53,
+                "治愈" to 54,
+                "古风" to 55,
+                "治愈" to 56,
+            )
+            else -> listOf("全部" to -1)
+        }
+    }
+
+    fun getStyleName(seasonType: Int, styleId: Int): String? {
+        return getStyles(seasonType).find { it.second == styleId }?.first
+    }
+
+    fun getOrderItems(seasonType: Int): List<Pair<String, Int>> {
+        val base = listOf(
+            "更新时间" to 0,
+            "弹幕数量" to 1,
+            "播放数量" to 2,
+            "追剧人数" to 3,
+            "最高评分" to 4,
+        )
+        return if (seasonType in listOf(1, 4)) {
+            base + listOf("开播时间" to 5)
+        } else {
+            base + listOf("上映时间" to 6)
+        }
+    }
+
+    fun getAreaItems(): List<Pair<String, String>> {
+        return listOf(
+            "全部" to "-1",
+            "中国大陆" to "1",
+            "日本" to "2",
+            "美国" to "3",
+            "英国" to "4",
+            "中国香港" to "6",
+            "中国台湾" to "7",
+            "韩国" to "8",
+            "法国" to "9",
+            "泰国" to "10",
+        )
+    }
+
+    fun getYearItems(): List<Pair<String, String>> {
+        val currentYear = java.util.Calendar.getInstance().get(java.util.Calendar.YEAR)
+        return mutableListOf("全部" to "-1").apply {
+            for (year in currentYear downTo 2010) {
+                add(year.toString() to year.toString())
+            }
+            add("2010年以前" to "[2010,2015)")
+        }
+    }
+
+    fun getStatusItems(): List<Pair<String, Int>> {
+        return listOf(
+            "全部" to -1,
+            "免费" to 1,
+            "付费" to 2,
+            "大会员" to 4,
+        )
+    }
+
+    fun getFinishItems(): List<Pair<String, Int>> {
+        return listOf(
+            "全部" to -1,
+            "连载中" to 0,
+            "已完结" to 1,
+        )
     }
 }
 

@@ -1,199 +1,192 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="24dp"
-    android:background="?attr/blblDialogSurface">
+    android:background="?attr/blblPageBackdrop"
+    android:padding="16dp">
 
-    <TextView
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="筛选"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:textColor="?attr/blblOnPageBackdrop"
-        android:layout_marginBottom="16dp" />
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="地区"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="?attr/blblOnPageBackdrop"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"/>
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fillViewport="false">
+
+                <LinearLayout
+                    android:id="@+id/areaContainer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical|start"
+                    android:padding="4dp">
+                </LinearLayout>
+
+            </HorizontalScrollView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="题材"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="?attr/blblOnPageBackdrop"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp"/>
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fillViewport="false">
+
+                <LinearLayout
+                    android:id="@+id/styleContainer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical|start"
+                    android:padding="4dp">
+                </LinearLayout>
+
+            </HorizontalScrollView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="年份"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="?attr/blblOnPageBackdrop"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp"/>
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fillViewport="false">
+
+                <LinearLayout
+                    android:id="@+id/yearContainer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical|start"
+                    android:padding="4dp">
+                </LinearLayout>
+
+            </HorizontalScrollView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="排序"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="?attr/blblOnPageBackdrop"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp"/>
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fillViewport="false">
+
+                <LinearLayout
+                    android:id="@+id/orderContainer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical|start"
+                    android:padding="4dp">
+                </LinearLayout>
+
+            </HorizontalScrollView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="付费状态"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="?attr/blblOnPageBackdrop"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp"/>
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fillViewport="false">
+
+                <LinearLayout
+                    android:id="@+id/statusContainer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical|start"
+                    android:padding="4dp">
+                </LinearLayout>
+
+            </HorizontalScrollView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="完结状态"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="?attr/blblOnPageBackdrop"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp"/>
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fillViewport="false">
+
+                <LinearLayout
+                    android:id="@+id/finishContainer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical|start"
+                    android:padding="4dp">
+                </LinearLayout>
+
+            </HorizontalScrollView>
+
+        </LinearLayout>
+
+    </ScrollView>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:layout_marginBottom="12dp">
-
-        <TextView
-            android:layout_width="80dp"
-            android:layout_height="wrap_content"
-            android:text="地区"
-            android:textSize="16sp"
-            android:textColor="?attr/blblOnPageBackdrop" />
-
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            app:cardBackgroundColor="?attr/blblContentBackground"
-            app:cardCornerRadius="8dp">
-
-            <Spinner
-                android:id="@+id/spinner_area"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingHorizontal="12dp"
-                android:paddingVertical="8dp"
-                android:background="?android:attr/selectableItemBackground"
-                android:spinnerMode="dropdown" />
-
-        </com.google.android.material.card.MaterialCardView>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:layout_marginBottom="12dp">
-
-        <TextView
-            android:layout_width="80dp"
-            android:layout_height="wrap_content"
-            android:text="年份"
-            android:textSize="16sp"
-            android:textColor="?attr/blblOnPageBackdrop" />
-
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            app:cardBackgroundColor="?attr/blblContentBackground"
-            app:cardCornerRadius="8dp">
-
-            <Spinner
-                android:id="@+id/spinner_year"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingHorizontal="12dp"
-                android:paddingVertical="8dp"
-                android:background="?android:attr/selectableItemBackground"
-                android:spinnerMode="dropdown" />
-
-        </com.google.android.material.card.MaterialCardView>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:layout_marginBottom="12dp">
-
-        <TextView
-            android:layout_width="80dp"
-            android:layout_height="wrap_content"
-            android:text="排序"
-            android:textSize="16sp"
-            android:textColor="?attr/blblOnPageBackdrop" />
-
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            app:cardBackgroundColor="?attr/blblContentBackground"
-            app:cardCornerRadius="8dp">
-
-            <Spinner
-                android:id="@+id/spinner_order"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingHorizontal="12dp"
-                android:paddingVertical="8dp"
-                android:background="?android:attr/selectableItemBackground"
-                android:spinnerMode="dropdown" />
-
-        </com.google.android.material.card.MaterialCardView>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:layout_marginBottom="12dp">
-
-        <TextView
-            android:layout_width="80dp"
-            android:layout_height="wrap_content"
-            android:text="付费"
-            android:textSize="16sp"
-            android:textColor="?attr/blblOnPageBackdrop" />
-
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            app:cardBackgroundColor="?attr/blblContentBackground"
-            app:cardCornerRadius="8dp">
-
-            <Spinner
-                android:id="@+id/spinner_season_status"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingHorizontal="12dp"
-                android:paddingVertical="8dp"
-                android:background="?android:attr/selectableItemBackground"
-                android:spinnerMode="dropdown" />
-
-        </com.google.android.material.card.MaterialCardView>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:layout_marginBottom="24dp">
-
-        <TextView
-            android:layout_width="80dp"
-            android:layout_height="wrap_content"
-            android:text="状态"
-            android:textSize="16sp"
-            android:textColor="?attr/blblOnPageBackdrop" />
-
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            app:cardBackgroundColor="?attr/blblContentBackground"
-            app:cardCornerRadius="8dp">
-
-            <Spinner
-                android:id="@+id/spinner_finish"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingHorizontal="12dp"
-                android:paddingVertical="8dp"
-                android:background="?android:attr/selectableItemBackground"
-                android:spinnerMode="dropdown" />
-
-        </com.google.android.material.card.MaterialCardView>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical">
+        android:paddingTop="16dp">
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_reset"
+            android:id="@+id/btnReset"
             android:layout_width="0dp"
             android:layout_height="48dp"
             android:layout_weight="1"
@@ -202,10 +195,10 @@
             android:textColor="?attr/blblOnPageBackdrop"
             app:cornerRadius="8dp"
             style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:layout_marginEnd="8dp" />
+            android:layout_marginEnd="8dp"/>
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_cancel"
+            android:id="@+id/btnCancel"
             android:layout_width="0dp"
             android:layout_height="48dp"
             android:layout_weight="1"
@@ -214,10 +207,10 @@
             android:textColor="?attr/blblOnPageBackdropSecondary"
             app:cornerRadius="8dp"
             style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:layout_marginEnd="8dp" />
+            android:layout_marginEnd="8dp"/>
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_apply"
+            android:id="@+id/btnApply"
             android:layout_width="0dp"
             android:layout_height="48dp"
             android:layout_weight="1"
@@ -225,7 +218,7 @@
             android:textSize="14sp"
             android:textColor="?attr/blblAccent"
             app:cornerRadius="8dp"
-            app:backgroundTint="?attr/blblContentBackground" />
+            app:backgroundTint="?attr/blblContentBackground"/>
 
     </LinearLayout>
 

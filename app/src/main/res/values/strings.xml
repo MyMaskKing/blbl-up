@@ -16,6 +16,15 @@
     <string name="tab_settings">设置</string>
     <string name="sidebar_login">登录</string>
 
+    <string name="cinema_hot">正在热播</string>
+    <string name="cinema_hot_banner">热播推荐横幅区域</string>
+    <string name="cinema_movies">电影热播</string>
+    <string name="cinema_tv">电视剧热播</string>
+    <string name="cinema_documentary">纪录片热播</string>
+    <string name="cinema_variety">综艺热播</string>
+    <string name="cinema_filter">筛选</string>
+    <string name="cinema_cover_placeholder">封面</string>
+
     <string name="my_tab_history">历史</string>
     <string name="my_tab_fav">收藏</string>
     <string name="my_tab_bangumi">追番</string>
