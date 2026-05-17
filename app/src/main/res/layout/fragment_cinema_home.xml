@@ -43,7 +43,8 @@
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rv_hot"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:focusable="true" />
 
                 </LinearLayout>
 
@@ -90,7 +91,8 @@
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rv_movies"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:focusable="true" />
 
                 </LinearLayout>
 
@@ -137,7 +139,8 @@
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rv_tv"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:focusable="true" />
 
                 </LinearLayout>
 
@@ -184,7 +187,8 @@
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rv_documentary"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:focusable="true" />
 
                 </LinearLayout>
 
@@ -231,7 +235,8 @@
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rv_variety"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:focusable="true" />
 
                 </LinearLayout>
 

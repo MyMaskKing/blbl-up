@@ -8,11 +8,14 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import blbl.cat3399.R
 import blbl.cat3399.core.api.BiliApi
 import blbl.cat3399.core.model.BangumiSeason
 import blbl.cat3399.core.log.AppLog
 import blbl.cat3399.core.net.BiliClient
+import blbl.cat3399.core.ui.TabContentFocusTarget
+import blbl.cat3399.core.ui.requestFocusAdapterPositionReliable
 import blbl.cat3399.databinding.FragmentBangumiHomeBinding
 import blbl.cat3399.feature.category.PgcCategoryFragment
 import blbl.cat3399.feature.my.BangumiDetailActivity
@@ -22,7 +25,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class BangumiHomeFragment : Fragment(), RefreshKeyHandler {
+class BangumiHomeFragment : Fragment(), RefreshKeyHandler, TabContentFocusTarget {
     private var _binding: FragmentBangumiHomeBinding? = null
     private val binding get() = _binding!!
 
@@ -51,8 +54,36 @@ class BangumiHomeFragment : Fragment(), RefreshKeyHandler {
         setupSectionClickListeners()
         binding.swipeRefresh.setOnRefreshListener { triggerRefresh() }
         binding.btnSideRefresh.setOnClickListener { triggerRefresh() }
+        setupFocusOrder()
         initAdapters()
         loadAllData()
+    }
+
+    private fun setupFocusOrder() {
+        binding.tvBangumiTitle.setOnKeyListener { _, keyCode, event ->
+            if (event.action == android.view.KeyEvent.ACTION_DOWN && keyCode == android.view.KeyEvent.KEYCODE_DPAD_DOWN) {
+                return@setOnKeyListener focusFirstInRecycler(binding.rvBangumi)
+            }
+            false
+        }
+        binding.btnBangumiMore.setOnKeyListener { _, keyCode, event ->
+            if (event.action == android.view.KeyEvent.ACTION_DOWN && keyCode == android.view.KeyEvent.KEYCODE_DPAD_DOWN) {
+                return@setOnKeyListener focusFirstInRecycler(binding.rvBangumi)
+            }
+            false
+        }
+        binding.tvChineseTitle.setOnKeyListener { _, keyCode, event ->
+            if (event.action == android.view.KeyEvent.ACTION_DOWN && keyCode == android.view.KeyEvent.KEYCODE_DPAD_DOWN) {
+                return@setOnKeyListener focusFirstInRecycler(binding.rvChinese)
+            }
+            false
+        }
+        binding.btnChineseMore.setOnKeyListener { _, keyCode, event ->
+            if (event.action == android.view.KeyEvent.ACTION_DOWN && keyCode == android.view.KeyEvent.KEYCODE_DPAD_DOWN) {
+                return@setOnKeyListener focusFirstInRecycler(binding.rvChinese)
+            }
+            false
+        }
     }
 
     private fun initAdapters() {
@@ -181,6 +212,34 @@ class BangumiHomeFragment : Fragment(), RefreshKeyHandler {
 
     override fun handleRefreshKey(): Boolean {
         return triggerRefresh()
+    }
+
+    override fun requestFocusPrimaryItemFromTab(): Boolean {
+        return focusFirstHotItem()
+    }
+
+    override fun requestFocusPrimaryItemFromContentSwitch(): Boolean {
+        return focusFirstHotItem()
+    }
+
+    private fun focusFirstHotItem(): Boolean {
+        val b = _binding ?: return false
+        if (!isResumed) return false
+        return focusFirstInRecycler(b.rvHot)
+    }
+
+    private fun focusFirstInRecycler(recycler: RecyclerView): Boolean {
+        if ((recycler.adapter?.itemCount ?: 0) > 0) {
+            recycler.requestFocusAdapterPositionReliable(
+                position = 0,
+                smoothScroll = false,
+                isAlive = { _binding != null && isResumed },
+                onFocused = {},
+            )
+        } else {
+            recycler.requestFocus()
+        }
+        return true
     }
 
     private fun triggerRefresh(): Boolean {

@@ -16,7 +16,9 @@ import blbl.cat3399.core.image.ImageUrl
 import blbl.cat3399.core.log.AppLog
 import blbl.cat3399.core.model.BangumiSeason
 import blbl.cat3399.core.net.BiliClient
+import blbl.cat3399.core.ui.TabContentFocusTarget
 import blbl.cat3399.core.ui.cloneInUserScale
+import blbl.cat3399.core.ui.requestFocusAdapterPositionReliable
 import blbl.cat3399.databinding.FragmentCinemaHomeBinding
 import blbl.cat3399.databinding.ItemPgcHorizontalBinding
 import blbl.cat3399.feature.category.PgcCategoryFragment
@@ -27,7 +29,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class CinemaHomeFragment : Fragment(), RefreshKeyHandler {
+class CinemaHomeFragment : Fragment(), RefreshKeyHandler, TabContentFocusTarget {
     private var _binding: FragmentCinemaHomeBinding? = null
     private val binding get() = _binding!!
 
@@ -58,8 +60,22 @@ class CinemaHomeFragment : Fragment(), RefreshKeyHandler {
         setupSectionClickListeners()
         binding.swipeRefresh.setOnRefreshListener { triggerRefresh() }
         binding.btnSideRefresh.setOnClickListener { triggerRefresh() }
+        setupFocusOrder()
         initAdapters()
         loadAllData()
+    }
+
+    private fun setupFocusOrder() {
+        fun focusOnDown(target: RecyclerView): View.OnKeyListener = View.OnKeyListener { _, keyCode, event ->
+            if (event.action == android.view.KeyEvent.ACTION_DOWN && keyCode == android.view.KeyEvent.KEYCODE_DPAD_DOWN) {
+                return@OnKeyListener focusFirstInRecycler(target)
+            }
+            false
+        }
+        binding.btnMoviesMore.setOnKeyListener(focusOnDown(binding.rvMovies))
+        binding.btnTvMore.setOnKeyListener(focusOnDown(binding.rvTv))
+        binding.btnDocumentaryMore.setOnKeyListener(focusOnDown(binding.rvDocumentary))
+        binding.btnVarietyMore.setOnKeyListener(focusOnDown(binding.rvVariety))
     }
 
     private fun initAdapters() {
@@ -209,6 +225,34 @@ class CinemaHomeFragment : Fragment(), RefreshKeyHandler {
 
     override fun handleRefreshKey(): Boolean {
         return triggerRefresh()
+    }
+
+    override fun requestFocusPrimaryItemFromTab(): Boolean {
+        return focusFirstHotItem()
+    }
+
+    override fun requestFocusPrimaryItemFromContentSwitch(): Boolean {
+        return focusFirstHotItem()
+    }
+
+    private fun focusFirstHotItem(): Boolean {
+        val b = _binding ?: return false
+        if (!isResumed) return false
+        return focusFirstInRecycler(b.rvHot)
+    }
+
+    private fun focusFirstInRecycler(recycler: RecyclerView): Boolean {
+        if ((recycler.adapter?.itemCount ?: 0) > 0) {
+            recycler.requestFocusAdapterPositionReliable(
+                position = 0,
+                smoothScroll = false,
+                isAlive = { _binding != null && isResumed },
+                onFocused = {},
+            )
+        } else {
+            recycler.requestFocus()
+        }
+        return true
     }
 
     private fun triggerRefresh(): Boolean {

@@ -17,6 +17,7 @@ import blbl.cat3399.core.model.BangumiSeason
 import blbl.cat3399.core.net.BiliClient
 import blbl.cat3399.core.ui.AppToast
 import blbl.cat3399.core.ui.DpadGridController
+import blbl.cat3399.core.ui.TabContentFocusTarget
 import blbl.cat3399.core.ui.postIfAlive
 import blbl.cat3399.core.ui.requestFocusAdapterPositionReliable
 import blbl.cat3399.core.ui.requestFocusFirstItemOrSelfAfterRefresh
@@ -298,7 +299,7 @@ object PgcConstants {
     }
 }
 
-class PgcCategoryFragment : Fragment(), RefreshKeyHandler {
+class PgcCategoryFragment : Fragment(), RefreshKeyHandler, TabContentFocusTarget {
     private var _binding: FragmentPgcCategoryBinding? = null
     private val binding get() = _binding!!
 
@@ -376,6 +377,22 @@ class PgcCategoryFragment : Fragment(), RefreshKeyHandler {
                 override fun onTabReselected(tab: com.google.android.material.tabs.TabLayout.Tab?) {}
             },
         )
+        installInnerTabFocusOrder()
+    }
+
+    private fun installInnerTabFocusOrder() {
+        val tabLayout = binding.tabLayout
+        tabLayout.postIfAlive(isAlive = { _binding != null }) {
+            val tabStrip = tabLayout.getChildAt(0) as? ViewGroup ?: return@postIfAlive
+            for (i in 0 until tabStrip.childCount) {
+                tabStrip.getChildAt(i).setOnKeyListener { _, keyCode, event ->
+                    if (event.action == android.view.KeyEvent.ACTION_DOWN && keyCode == android.view.KeyEvent.KEYCODE_DPAD_DOWN) {
+                        return@setOnKeyListener requestFocusPrimaryItemFromTab()
+                    }
+                    false
+                }
+            }
+        }
     }
 
     private fun setupRecyclerView() {
@@ -439,11 +456,29 @@ class PgcCategoryFragment : Fragment(), RefreshKeyHandler {
         binding.btnFilter.setOnClickListener {
             showFilterDialog()
         }
+        binding.btnFilter.setOnKeyListener { _, keyCode, event ->
+            if (event.action == android.view.KeyEvent.ACTION_DOWN && keyCode == android.view.KeyEvent.KEYCODE_DPAD_DOWN) {
+                return@setOnKeyListener requestFocusPrimaryItemFromTab()
+            }
+            false
+        }
         binding.btnSideFilter.setOnClickListener {
             showFilterDialog()
         }
+        binding.btnSideFilter.setOnKeyListener { _, keyCode, event ->
+            if (event.action == android.view.KeyEvent.ACTION_DOWN && keyCode == android.view.KeyEvent.KEYCODE_DPAD_LEFT) {
+                return@setOnKeyListener requestFocusPrimaryItemFromTab()
+            }
+            false
+        }
         binding.btnSideRefresh.setOnClickListener {
             refreshFromShortcut()
+        }
+        binding.btnSideRefresh.setOnKeyListener { _, keyCode, event ->
+            if (event.action == android.view.KeyEvent.ACTION_DOWN && keyCode == android.view.KeyEvent.KEYCODE_DPAD_LEFT) {
+                return@setOnKeyListener requestFocusPrimaryItemFromTab()
+            }
+            false
         }
         updateFilterButtonText()
     }
@@ -586,6 +621,30 @@ class PgcCategoryFragment : Fragment(), RefreshKeyHandler {
 
     override fun handleRefreshKey(): Boolean {
         return refreshFromShortcut()
+    }
+
+    override fun requestFocusPrimaryItemFromTab(): Boolean {
+        return focusFirstCategoryItem()
+    }
+
+    override fun requestFocusPrimaryItemFromContentSwitch(): Boolean {
+        return focusFirstCategoryItem()
+    }
+
+    private fun focusFirstCategoryItem(): Boolean {
+        val b = _binding ?: return false
+        if (!isResumed) return false
+        if (!::adapter.isInitialized || adapter.itemCount <= 0) {
+            b.recyclerView.requestFocus()
+            return true
+        }
+        b.recyclerView.requestFocusAdapterPositionReliable(
+            position = 0,
+            smoothScroll = false,
+            isAlive = { _binding != null && isResumed },
+            onFocused = { lastFocusedAdapterPosition = 0 },
+        )
+        return true
     }
 
     private fun refreshFromShortcut(): Boolean {
