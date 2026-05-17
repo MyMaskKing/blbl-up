@@ -31,6 +31,8 @@ class HomeFragment : Fragment(), VideoGridTabSwitchFocusHost, BackPressHandler {
     private var pageCallback: androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback? = null
     private var tabs: List<HomeTabSpec> = emptyList()
     private var hasSkippedInitialResumeRefresh: Boolean = false
+    private var pendingAutoRefreshPosition: Int? = null
+    private var viewPagerScrollState: Int = androidx.viewpager2.widget.ViewPager2.SCROLL_STATE_IDLE
     private var pendingFocusFirstCardFromContentSwitch: Boolean = false
     private var pendingFocusFirstCardFromBackToTab0: Boolean = false
     private var pendingBackToTab0RequestToken: Int = 0
@@ -96,6 +98,22 @@ class HomeFragment : Fragment(), VideoGridTabSwitchFocusHost, BackPressHandler {
         return true
     }
 
+    private fun requestAutoRefreshWhenPageIdle(position: Int) {
+        val b = _binding ?: return
+        val tab = tabs.getOrNull(position) ?: return
+        if (tab.key !in setOf(HomeTabs.KEY_BANGUMI, HomeTabs.KEY_CINEMA, HomeTabs.KEY_PGC_CATEGORY)) return
+        pendingAutoRefreshPosition = position
+        b.viewPager.postDelayedIfAlive(
+            delayMillis = 120L,
+            isAlive = { _binding === b && pendingAutoRefreshPosition == position },
+        ) {
+            if (viewPagerScrollState == androidx.viewpager2.widget.ViewPager2.SCROLL_STATE_IDLE && b.viewPager.currentItem == position) {
+                pendingAutoRefreshPosition = null
+                refreshCurrentHomePage()
+            }
+        }
+    }
+
     private fun focusSelectedTab(): Boolean {
         val b = _binding ?: return false
         return b.tabLayout.requestFocusSelectedTab(fallbackPosition = b.viewPager.currentItem) { _binding != null }
@@ -124,10 +142,8 @@ class HomeFragment : Fragment(), VideoGridTabSwitchFocusHost, BackPressHandler {
                 override fun onPageSelected(position: Int) {
                     val tab = tabs.getOrNull(position)
                     AppLog.d("Home", "page selected pos=$position key=${tab?.key} t=${SystemClock.uptimeMillis()}")
-                    // 进入页签立即刷新，解决遥控器场景下必须手动下拉才能刷新的问题。
-                    if (tab?.key in setOf(HomeTabs.KEY_BANGUMI, HomeTabs.KEY_CINEMA, HomeTabs.KEY_PGC_CATEGORY)) {
-                        refreshCurrentHomePage()
-                    }
+                    // 等切页动画停稳后再刷新，避免 ViewPager 切换和列表重绘同时发生造成割裂感。
+                    requestAutoRefreshWhenPageIdle(position)
                     if (pendingFocusFirstCardFromBackToTab0) {
                         maybeRequestTab0FocusFromBackToTab0()
                     } else if (pendingFocusFirstCardFromContentSwitch) {
@@ -135,6 +151,15 @@ class HomeFragment : Fragment(), VideoGridTabSwitchFocusHost, BackPressHandler {
                             pendingFocusFirstCardFromContentSwitch = false
                         }
                     }
+                }
+
+                override fun onPageScrollStateChanged(state: Int) {
+                    viewPagerScrollState = state
+                    if (state != androidx.viewpager2.widget.ViewPager2.SCROLL_STATE_IDLE) return
+                    val position = pendingAutoRefreshPosition ?: return
+                    if (_binding?.viewPager?.currentItem != position) return
+                    pendingAutoRefreshPosition = null
+                    refreshCurrentHomePage()
                 }
             }
         binding.viewPager.registerOnPageChangeCallback(pageCallback!!)

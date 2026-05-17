@@ -26,38 +26,53 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnReset"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="0dp"
             android:layout_height="72dp"
+            android:layout_marginEnd="12dp"
             android:layout_weight="1"
+            android:background="?attr/blblFocusBgRound"
+            android:clickable="true"
+            android:focusable="true"
+            android:nextFocusRight="@id/btnCancel"
             android:text="重置"
+            android:textColor="@color/blbl_button_text_selector"
             android:textSize="20sp"
-            android:textColor="?attr/blblOnPageBackdrop"
-            app:cornerRadius="12dp"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:layout_marginEnd="12dp"/>
+            app:backgroundTint="@null"
+            app:cornerRadius="12dp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnCancel"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="0dp"
             android:layout_height="72dp"
+            android:layout_marginEnd="12dp"
             android:layout_weight="1"
+            android:background="?attr/blblFocusBgRound"
+            android:clickable="true"
+            android:focusable="true"
+            android:nextFocusLeft="@id/btnReset"
+            android:nextFocusRight="@id/btnApply"
             android:text="取消"
+            android:textColor="@color/blbl_button_text_selector"
             android:textSize="20sp"
-            android:textColor="?attr/blblOnPageBackdropSecondary"
-            app:cornerRadius="12dp"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:layout_marginEnd="12dp"/>
+            app:backgroundTint="@null"
+            app:cornerRadius="12dp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnApply"
             android:layout_width="0dp"
             android:layout_height="72dp"
             android:layout_weight="1"
+            android:background="?attr/blblFocusBgRound"
+            android:clickable="true"
+            android:focusable="true"
+            android:nextFocusLeft="@id/btnCancel"
             android:text="确定"
+            android:textColor="@color/blbl_button_text_selector"
             android:textSize="20sp"
-            android:textColor="?attr/blblAccent"
             app:cornerRadius="12dp"
-            app:backgroundTint="?attr/blblContentBackground"/>
+            app:backgroundTint="@null" />
 
     </LinearLayout>
 

@@ -36,14 +36,14 @@
                     android:id="@+id/btn_filter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/blbl_button_selector"
+                    android:background="?attr/blblFocusBgRound"
                     android:clickable="true"
                     android:focusable="true"
                     android:nextFocusRight="@id/btn_side_filter"
                     android:text="筛选"
                     android:textColor="@color/blbl_button_text_selector"
                     android:textSize="14sp"
-                    app:backgroundTint="@android:color/transparent"
+                    app:backgroundTint="@null"
                     app:cornerRadius="8dp" />
 
             </LinearLayout>
@@ -90,7 +90,7 @@
             android:id="@+id/btn_side_filter"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:background="@drawable/blbl_button_selector"
+            android:background="?attr/blblFocusBgRound"
             android:clickable="true"
             android:ellipsize="end"
             android:focusable="true"
@@ -100,7 +100,7 @@
             android:text="筛选"
             android:textColor="@color/blbl_button_text_selector"
             android:textSize="13sp"
-            app:backgroundTint="@android:color/transparent"
+            app:backgroundTint="@null"
             app:cornerRadius="12dp" />
 
         <com.google.android.material.button.MaterialButton
@@ -108,7 +108,7 @@
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:layout_marginTop="10dp"
-            android:background="@drawable/blbl_button_selector"
+            android:background="?attr/blblFocusBgRound"
             android:clickable="true"
             android:focusable="true"
             android:nextFocusLeft="@id/recycler_view"
@@ -116,7 +116,7 @@
             android:text="刷新"
             android:textColor="@color/blbl_button_text_selector"
             android:textSize="13sp"
-            app:backgroundTint="@android:color/transparent"
+            app:backgroundTint="@null"
             app:cornerRadius="12dp" />
 
     </LinearLayout>
