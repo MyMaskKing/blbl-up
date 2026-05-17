@@ -46,7 +46,7 @@ data class PgcFilterState(
             if (area != "-1") names.add(PgcConstants.PGC_AREA_NAMES[area] ?: "地区")
             if (styleId != -1) names.add(PgcConstants.getStyleName(seasonType, styleId) ?: "题材")
             if (year != "-1") names.add(year)
-            if (order != -1) names.add(PgcConstants.PGC_ORDER_NAMES.getOrNull(order) ?: "排序")
+            if (order != -1) names.add(PgcConstants.PGC_ORDER_NAMES[order] ?: "排序")
             return if (names.isEmpty()) "筛选" else names.joinToString(" · ")
         }
 
@@ -251,7 +251,7 @@ class PgcCategoryFragment : Fragment(), RefreshKeyHandler {
             object : com.google.android.material.tabs.TabLayout.OnTabSelectedListener {
                 override fun onTabSelected(tab: com.google.android.material.tabs.TabLayout.Tab?) {
                     val seasonType = tab?.tag as? Int ?: 1
-                    filterState = filterState.copy(seasonType = seasonType)
+                    filterState = PgcFilterState(seasonType = seasonType)
                     resetAndLoad()
                 }
 

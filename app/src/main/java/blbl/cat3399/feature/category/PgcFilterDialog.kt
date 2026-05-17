@@ -170,9 +170,9 @@ class PgcFilterDialog(
                 isSelected = value == selectedValue
                 setTextColor(
                     if (value == selectedValue) {
-                        context.getColor(R.color.blbl_accent)
+                        context.getColor(R.color.blbl_purple)
                     } else {
-                        context.getColor(R.color.blbl_on_page_backdrop)
+                        context.getColor(R.color.blbl_text_secondary)
                     }
                 )
             }
@@ -186,9 +186,9 @@ class PgcFilterDialog(
                 isSelected = value == selectedValue
                 setTextColor(
                     if (value == selectedValue) {
-                        context.getColor(R.color.blbl_accent)
+                        context.getColor(R.color.blbl_purple)
                     } else {
-                        context.getColor(R.color.blbl_on_page_backdrop)
+                        context.getColor(R.color.blbl_text_secondary)
                     }
                 )
             }
@@ -202,9 +202,9 @@ class PgcFilterDialog(
                 isSelected = value == selectedValue
                 setTextColor(
                     if (value == selectedValue) {
-                        context.getColor(R.color.blbl_accent)
+                        context.getColor(R.color.blbl_purple)
                     } else {
-                        context.getColor(R.color.blbl_on_page_backdrop)
+                        context.getColor(R.color.blbl_text_secondary)
                     }
                 )
             }
@@ -218,9 +218,9 @@ class PgcFilterDialog(
                 isSelected = value == selectedValue
                 setTextColor(
                     if (value == selectedValue) {
-                        context.getColor(R.color.blbl_accent)
+                        context.getColor(R.color.blbl_purple)
                     } else {
-                        context.getColor(R.color.blbl_on_page_backdrop)
+                        context.getColor(R.color.blbl_text_secondary)
                     }
                 )
             }
@@ -234,9 +234,9 @@ class PgcFilterDialog(
                 isSelected = value == selectedValue
                 setTextColor(
                     if (value == selectedValue) {
-                        context.getColor(R.color.blbl_accent)
+                        context.getColor(R.color.blbl_purple)
                     } else {
-                        context.getColor(R.color.blbl_on_page_backdrop)
+                        context.getColor(R.color.blbl_text_secondary)
                     }
                 )
             }
@@ -250,9 +250,9 @@ class PgcFilterDialog(
                 isSelected = value == selectedValue
                 setTextColor(
                     if (value == selectedValue) {
-                        context.getColor(R.color.blbl_accent)
+                        context.getColor(R.color.blbl_purple)
                     } else {
-                        context.getColor(R.color.blbl_on_page_backdrop)
+                        context.getColor(R.color.blbl_text_secondary)
                     }
                 )
             }

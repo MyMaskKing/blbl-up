@@ -25,7 +25,7 @@ object HomeTabs {
         listOf(
             HomeTabSpec(KEY_RECOMMEND, R.string.tab_recommend) { VideoGridFragment.newRecommend() },
             HomeTabSpec(KEY_POPULAR, R.string.tab_popular) { VideoGridFragment.newPopular() },
-            HomeTabSpec(KEY_BANGUMI, R.string.tab_bangumi) { PgcRecommendGridFragment.newBangumi() },
+            HomeTabSpec(KEY_BANGUMI, R.string.tab_bangumi) { BangumiHomeFragment.newInstance() },
             HomeTabSpec(KEY_CINEMA, R.string.tab_cinema) { CinemaHomeFragment() },
             HomeTabSpec(KEY_PGC_CATEGORY, R.string.tab_category) { PgcCategoryFragment() },
         )
