@@ -82,55 +82,40 @@ object PgcConstants {
         return when (seasonType) {
             1 -> listOf(
                 "全部" to -1,
-                "热血" to 2,
-                "战斗" to 3,
-                "青春" to 5,
-                "搞笑" to 6,
-                "日常" to 7,
-                "治愈" to 8,
-                "励志" to 10,
-                "恋爱" to 11,
-                "科幻" to 12,
-                "奇幻" to 13,
-                "悬疑" to 15,
-                "冒险" to 16,
-                "校园" to 17,
-                "魔法" to 20,
-                "动作" to 21,
-                "百合" to 24,
-                "运动" to 25,
-                "推理" to 26,
-                "偶像" to 27,
-                "音乐" to 28,
-                "竞技" to 30,
+                "热血" to 2, "战斗" to 3, "青春" to 5, "搞笑" to 6,
+                "日常" to 7, "治愈" to 8, "励志" to 10, "恋爱" to 11,
+                "科幻" to 12, "奇幻" to 13, "悬疑" to 15, "冒险" to 16,
+                "校园" to 17, "魔法" to 20, "动作" to 21, "百合" to 24,
+                "运动" to 25, "推理" to 26, "偶像" to 27, "音乐" to 28, "竞技" to 30,
             )
-            2, 3, 5, 7 -> listOf(
+            2 -> listOf(
                 "全部" to -1,
-                "动作" to 104,
-                "喜剧" to 105,
-                "爱情" to 106,
-                "科幻" to 107,
-                "奇幻" to 108,
-                "悬疑" to 109,
-                "犯罪" to 110,
-                "恐怖" to 111,
-                "冒险" to 112,
-                "战争" to 113,
-                "动画" to 114,
-                "纪录片" to 115,
-                "历史" to 116,
-                "古装" to 117,
-                "运动" to 118,
-                "音乐" to 119,
+                "动作" to 104, "喜剧" to 105, "爱情" to 106, "科幻" to 107,
+                "奇幻" to 108, "悬疑" to 109, "犯罪" to 110, "恐怖" to 111,
+                "冒险" to 112, "战争" to 113, "动画" to 114, "历史" to 116,
+                "古装" to 117, "运动" to 118, "音乐" to 119,
+            )
+            3 -> listOf(
+                "全部" to -1,
+                "历史" to 25, "美食" to 39, "文化" to 19, "科技" to 27,
+                "探索" to 29, "宇宙" to 1201, "宠物" to 1202, "社会" to 1203,
+                "动物" to 989, "自然" to 34, "医学" to 1204, "军事" to 988,
+                "灾难" to 1205, "旅行" to 31,
             )
             4 -> listOf(
                 "全部" to -1,
-                "搞笑" to 51,
-                "日常" to 52,
-                "励志" to 53,
-                "治愈" to 54,
-                "古风" to 55,
-                "治愈" to 56,
+                "搞笑" to 51, "日常" to 52, "励志" to 53, "治愈" to 54, "古风" to 55,
+            )
+            5 -> listOf(
+                "全部" to -1,
+                "爱情" to 106, "喜剧" to 105, "动作" to 104, "悬疑" to 109,
+                "奇幻" to 108, "古装" to 117, "都市" to 101, "剧情" to 102,
+                "战争" to 113, "历史" to 116,
+            )
+            7 -> listOf(
+                "全部" to -1,
+                "真人秀" to 201, "搞笑" to 202, "音乐" to 203, "美食" to 204,
+                "旅行" to 205, "竞技" to 206, "访谈" to 207, "生活" to 208,
             )
             else -> listOf("全部" to -1)
         }
@@ -241,7 +226,7 @@ class PgcCategoryFragment : Fragment(), RefreshKeyHandler {
         setupSwipeRefresh()
         setupFilterButton()
         selectTabForSeasonType(initialSeasonType)
-        maybeTriggerInitialLoad()
+        // selectTab 内部已触发 onTabSelected → resetAndLoad，无需再调 maybeTriggerInitialLoad
     }
 
     private fun selectTabForSeasonType(seasonType: Int) {
@@ -249,6 +234,7 @@ class PgcCategoryFragment : Fragment(), RefreshKeyHandler {
         for (i in 0 until tabLayout.tabCount) {
             val tab = tabLayout.getTabAt(i)
             if (tab?.tag == seasonType) {
+                initialLoadTriggered = true
                 tab.select()
                 return
             }
@@ -275,6 +261,8 @@ class PgcCategoryFragment : Fragment(), RefreshKeyHandler {
                 override fun onTabSelected(tab: com.google.android.material.tabs.TabLayout.Tab?) {
                     val seasonType = tab?.tag as? Int ?: 1
                     filterState = PgcFilterState(seasonType = seasonType)
+                    updateFilterButtonText()
+                    initialLoadTriggered = true
                     resetAndLoad()
                 }
 
