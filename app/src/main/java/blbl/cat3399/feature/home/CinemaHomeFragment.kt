@@ -14,9 +14,6 @@ import blbl.cat3399.core.api.BiliApi
 import blbl.cat3399.core.log.AppLog
 import blbl.cat3399.core.model.BangumiSeason
 import blbl.cat3399.core.net.BiliClient
-import blbl.cat3399.core.ui.AppToast
-import blbl.cat3399.core.ui.DpadHorizontalController
-import blbl.cat3399.core.ui.postIfAlive
 import blbl.cat3399.databinding.FragmentCinemaHomeBinding
 import blbl.cat3399.databinding.ItemPgcHorizontalBinding
 import blbl.cat3399.feature.category.PgcCategoryFragment
@@ -33,7 +30,6 @@ class CinemaHomeFragment : Fragment(), RefreshKeyHandler {
         val title: String,
         val seasonType: Int,
         val items: MutableList<BangumiSeason>,
-        var dpadController: DpadHorizontalController? = null,
     )
 
     private var sections = listOf<CinemaSection>()
@@ -111,11 +107,6 @@ class CinemaHomeFragment : Fragment(), RefreshKeyHandler {
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         recyclerView.setHasFixedSize(true)
-
-        section.dpadController = DpadHorizontalController(
-            recyclerView = recyclerView,
-            config = DpadHorizontalController.Config(isEnabled = { _binding != null && isResumed }),
-        ).also { it.install() }
     }
 
     private fun setupSectionClickListeners() {
@@ -173,7 +164,6 @@ class CinemaHomeFragment : Fragment(), RefreshKeyHandler {
     }
 
     override fun onDestroyView() {
-        sections.forEach { it.dpadController?.release() }
         _binding = null
         super.onDestroyView()
     }
@@ -223,8 +213,7 @@ class PgcHorizontalAdapter(
 
         fun bind(season: BangumiSeason) {
             binding.tvTitle.text = season.title
-            binding.tvDesc.text = season.desc
-            // TODO: Load cover image
+            binding.tvDesc.text = season.badge ?: ""
         }
     }
 }

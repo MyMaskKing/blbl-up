@@ -27,34 +27,6 @@ import blbl.cat3399.ui.RefreshKeyHandler
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 
-object PgcConstants {
-    val PGC_AREA_NAMES =
-        mapOf(
-            "-1" to "全部",
-            "1" to "中国大陆",
-            "2" to "日本",
-            "3" to "美国",
-            "4" to "英国",
-            "5" to "加拿大",
-            "6" to "中国香港",
-            "7" to "中国台湾",
-            "8" to "韩国",
-            "9" to "法国",
-            "10" to "泰国",
-        )
-
-    val PGC_ORDER_NAMES =
-        listOf(
-            "更新时间",
-            "弹幕数量",
-            "播放数量",
-            "追剧人数",
-            "最高评分",
-            "开播时间",
-            "上映时间",
-        )
-}
-
 data class PgcFilterState(
     val seasonType: Int = 1,
     val area: String = "-1",
