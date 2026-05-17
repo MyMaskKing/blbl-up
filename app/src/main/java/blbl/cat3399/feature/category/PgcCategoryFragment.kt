@@ -170,13 +170,22 @@ object PgcConstants {
         )
     }
 
-    fun getYearItems(): List<Pair<String, String>> {
+    fun getYearItems(seasonType: Int): List<Pair<String, String>> {
         val currentYear = java.util.Calendar.getInstance().get(java.util.Calendar.YEAR)
+        val isAnimeOrGc = seasonType in listOf(1, 4)
         return mutableListOf("全部" to "-1").apply {
             for (year in currentYear downTo 2010) {
-                add(year.toString() to year.toString())
+                if (isAnimeOrGc) {
+                    add(year.toString() to "[${year},${year + 1})")
+                } else {
+                    add(year.toString() to "[${year}-01-01 00:00:00,${year + 1}-01-01 00:00:00)")
+                }
             }
-            add("2010年以前" to "[2010,2015)")
+            if (isAnimeOrGc) {
+                add("2010年以前" to "[,2010)")
+            } else {
+                add("2010年以前" to "[,2010-01-01 00:00:00)")
+            }
         }
     }
 

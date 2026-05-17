@@ -113,9 +113,21 @@ class PgcFilterDialog(
         super.onCreate(savedInstanceState)
         window?.apply {
             setBackgroundDrawableResource(R.color.blbl_surface)
-            val width = context.resources.displayMetrics.widthPixels
-            val height = context.resources.displayMetrics.heightPixels
-            setLayout(width, height)
+            // 沉浸式全屏，隐藏状态栏和导航栏
+            decorView.systemUiVisibility = (
+                android.view.View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                    or android.view.View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    or android.view.View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                    or android.view.View.SYSTEM_UI_FLAG_FULLSCREEN
+                    or android.view.View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                    or android.view.View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                )
+            addFlags(android.view.WindowManager.LayoutParams.FLAG_FULLSCREEN)
+            addFlags(android.view.WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
+            setLayout(
+                android.view.WindowManager.LayoutParams.MATCH_PARENT,
+                android.view.WindowManager.LayoutParams.MATCH_PARENT,
+            )
             setGravity(Gravity.CENTER)
         }
         setContentView(R.layout.dialog_pgc_filter)
@@ -182,7 +194,7 @@ class PgcFilterDialog(
         } else {
             currentState.releaseDate
         }
-        items += PgcConstants.getYearItems().map { (label, value) ->
+        items += PgcConstants.getYearItems(currentState.seasonType).map { (label, value) ->
             FilterItem.Option(FilterCategory.YEAR, label, value, yearValue == value)
         }
 

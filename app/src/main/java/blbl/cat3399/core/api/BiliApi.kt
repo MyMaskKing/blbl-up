@@ -1336,14 +1336,18 @@ object BiliApi {
         params["type"] = "1"
         params["page"] = page.toString()
         params["pagesize"] = pageSize.toString()
-        area?.takeIf { it.isNotBlank() }?.let { params["area"] = it }
-        styleId?.takeIf { it != -1 }?.let { params["style_id"] = it.toString() }
-        spokenLanguageType?.takeIf { it != -1 }?.let { params["spoken_language_type"] = it.toString() }
-        seasonVersion?.takeIf { it != -1 }?.let { params["season_version"] = it.toString() }
-        isFinish?.takeIf { it != -1 }?.let { params["is_finish"] = it.toString() }
-        seasonStatus?.takeIf { it != -1 }?.let { params["season_status"] = it.toString() }
-        year?.takeIf { it.isNotBlank() && it != "-1" }?.let { params["year"] = it }
-        releaseDate?.takeIf { it.isNotBlank() && it != "-1" }?.let { params["release_date"] = it }
+        // 对齐B站Web前端：始终发送全部参数
+        params["st"] = seasonType.toString()
+        params["copyright"] = "-1"
+        params["season_version"] = (seasonVersion ?: -1).toString()
+        params["spoken_language_type"] = (spokenLanguageType ?: -1).toString()
+        params["season_month"] = "-1"
+        params["area"] = area?.takeIf { it.isNotBlank() && it != "-1" } ?: "-1"
+        params["style_id"] = (styleId ?: -1).toString()
+        params["is_finish"] = (isFinish ?: -1).toString()
+        params["season_status"] = (seasonStatus ?: -1).toString()
+        params["year"] = year?.takeIf { it.isNotBlank() && it != "-1" } ?: "-1"
+        params["release_date"] = releaseDate?.takeIf { it.isNotBlank() && it != "-1" } ?: "-1"
         params["order"] = order.toString()
         params["sort"] = sort.toString()
         val url = BiliClient.withQuery("https://api.bilibili.com/pgc/season/index/result", params)
