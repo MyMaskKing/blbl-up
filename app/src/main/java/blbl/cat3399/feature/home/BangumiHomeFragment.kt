@@ -57,7 +57,7 @@ class BangumiHomeFragment : Fragment(), RefreshKeyHandler, TabContentFocusTarget
         binding.btnSideRefresh.setOnKeyListener { _, keyCode, event ->
             if (event.action != android.view.KeyEvent.ACTION_DOWN) return@setOnKeyListener false
             when (keyCode) {
-                android.view.KeyEvent.KEYCODE_DPAD_LEFT -> focusFirstHotItem()
+                android.view.KeyEvent.KEYCODE_DPAD_LEFT -> focusNearestRightContentItem(binding.btnSideRefresh)
                 android.view.KeyEvent.KEYCODE_DPAD_RIGHT -> (parentFragment as? HomeFragment)?.requestFocusHomeTabByOffset(1) == true
                 else -> false
             }
@@ -285,6 +285,41 @@ class BangumiHomeFragment : Fragment(), RefreshKeyHandler, TabContentFocusTarget
                 else -> false
             }
         }
+    }
+
+    private fun focusNearestRightContentItem(anchor: View): Boolean {
+        val b = _binding ?: return false
+        val target = findNearestRightItem(
+            anchor = anchor,
+            recyclers = listOf(b.rvHot, b.rvBangumi, b.rvChinese),
+        )
+        if (target != null) return target.requestFocus()
+        return focusFirstHotItem()
+    }
+
+    private fun findNearestRightItem(anchor: View, recyclers: List<RecyclerView>): View? {
+        val anchorRect = android.graphics.Rect()
+        if (!anchor.getGlobalVisibleRect(anchorRect)) return null
+        val anchorCenterY = anchorRect.centerY()
+
+        var best: View? = null
+        var bestVerticalDistance = Int.MAX_VALUE
+        var bestRight = Int.MIN_VALUE
+        val childRect = android.graphics.Rect()
+
+        for (recycler in recyclers) {
+            for (i in 0 until recycler.childCount) {
+                val child = recycler.getChildAt(i) ?: continue
+                if (!child.isFocusable || !child.getGlobalVisibleRect(childRect)) continue
+                val verticalDistance = kotlin.math.abs(childRect.centerY() - anchorCenterY)
+                if (verticalDistance < bestVerticalDistance || (verticalDistance == bestVerticalDistance && childRect.right > bestRight)) {
+                    best = child
+                    bestVerticalDistance = verticalDistance
+                    bestRight = childRect.right
+                }
+            }
+        }
+        return best
     }
 
     private fun triggerRefresh(): Boolean {

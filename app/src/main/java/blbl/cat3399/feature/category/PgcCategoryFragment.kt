@@ -468,7 +468,7 @@ class PgcCategoryFragment : Fragment(), RefreshKeyHandler, TabContentFocusTarget
         binding.btnSideFilter.setOnKeyListener { _, keyCode, event ->
             if (event.action != android.view.KeyEvent.ACTION_DOWN) return@setOnKeyListener false
             when (keyCode) {
-                android.view.KeyEvent.KEYCODE_DPAD_LEFT -> return@setOnKeyListener focusFirstCategoryItem()
+                android.view.KeyEvent.KEYCODE_DPAD_LEFT -> return@setOnKeyListener focusNearestRightCategoryItem(binding.btnSideFilter)
                 android.view.KeyEvent.KEYCODE_DPAD_RIGHT ->
                     return@setOnKeyListener (parentFragment as? blbl.cat3399.feature.home.HomeFragment)
                         ?.requestFocusHomeTabByOffset(1) == true
@@ -481,7 +481,7 @@ class PgcCategoryFragment : Fragment(), RefreshKeyHandler, TabContentFocusTarget
         binding.btnSideRefresh.setOnKeyListener { _, keyCode, event ->
             if (event.action != android.view.KeyEvent.ACTION_DOWN) return@setOnKeyListener false
             when (keyCode) {
-                android.view.KeyEvent.KEYCODE_DPAD_LEFT -> return@setOnKeyListener focusFirstCategoryItem()
+                android.view.KeyEvent.KEYCODE_DPAD_LEFT -> return@setOnKeyListener focusNearestRightCategoryItem(binding.btnSideRefresh)
                 android.view.KeyEvent.KEYCODE_DPAD_RIGHT ->
                     return@setOnKeyListener (parentFragment as? blbl.cat3399.feature.home.HomeFragment)
                         ?.requestFocusHomeTabByOffset(1) == true
@@ -662,6 +662,36 @@ class PgcCategoryFragment : Fragment(), RefreshKeyHandler, TabContentFocusTarget
         val tab = b.tabLayout.getTabAt(position) ?: b.tabLayout.getTabAt(0) ?: return false
         tab.view.requestFocus()
         return true
+    }
+
+    private fun focusNearestRightCategoryItem(anchor: View): Boolean {
+        val b = _binding ?: return false
+        val target = findNearestRightItem(anchor, b.recyclerView)
+        if (target != null) return target.requestFocus()
+        return focusFirstCategoryItem()
+    }
+
+    private fun findNearestRightItem(anchor: View, recycler: RecyclerView): View? {
+        val anchorRect = android.graphics.Rect()
+        if (!anchor.getGlobalVisibleRect(anchorRect)) return null
+        val anchorCenterY = anchorRect.centerY()
+
+        var best: View? = null
+        var bestVerticalDistance = Int.MAX_VALUE
+        var bestRight = Int.MIN_VALUE
+        val childRect = android.graphics.Rect()
+
+        for (i in 0 until recycler.childCount) {
+            val child = recycler.getChildAt(i) ?: continue
+            if (!child.isFocusable || !child.getGlobalVisibleRect(childRect)) continue
+            val verticalDistance = kotlin.math.abs(childRect.centerY() - anchorCenterY)
+            if (verticalDistance < bestVerticalDistance || (verticalDistance == bestVerticalDistance && childRect.right > bestRight)) {
+                best = child
+                bestVerticalDistance = verticalDistance
+                bestRight = childRect.right
+            }
+        }
+        return best
     }
 
     private fun refreshFromShortcut(): Boolean {
