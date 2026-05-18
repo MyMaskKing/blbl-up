@@ -119,6 +119,22 @@ class HomeFragment : Fragment(), VideoGridTabSwitchFocusHost, BackPressHandler {
         return b.tabLayout.requestFocusSelectedTab(fallbackPosition = b.viewPager.currentItem) { _binding != null }
     }
 
+    fun requestFocusHomeTabByOffset(offset: Int): Boolean {
+        val b = _binding ?: return false
+        if (tabs.isEmpty()) return false
+        val target = (b.viewPager.currentItem + offset).coerceIn(0, tabs.lastIndex)
+        if (target != b.viewPager.currentItem) {
+            b.viewPager.setCurrentItem(target, false)
+        }
+        // 内容区走到左右边缘时，把焦点交回可见的首页 tab，避免焦点落到不可见位置。
+        val tabStrip = b.tabLayout.getChildAt(0) as? ViewGroup ?: return false
+        if (target !in 0 until tabStrip.childCount) return false
+        b.tabLayout.postIfAlive(isAlive = { _binding === b }) {
+            tabStrip.getChildAt(target)?.requestFocus()
+        }
+        return true
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root

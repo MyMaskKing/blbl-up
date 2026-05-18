@@ -387,7 +387,7 @@ class PgcCategoryFragment : Fragment(), RefreshKeyHandler, TabContentFocusTarget
             for (i in 0 until tabStrip.childCount) {
                 tabStrip.getChildAt(i).setOnKeyListener { _, keyCode, event ->
                     if (event.action == android.view.KeyEvent.ACTION_DOWN && keyCode == android.view.KeyEvent.KEYCODE_DPAD_DOWN) {
-                        return@setOnKeyListener requestFocusPrimaryItemFromTab()
+                        return@setOnKeyListener focusFirstCategoryItem()
                     }
                     false
                 }
@@ -409,12 +409,12 @@ class PgcCategoryFragment : Fragment(), RefreshKeyHandler, TabContentFocusTarget
                 callbacks =
                     object : DpadGridController.Callbacks {
                         override fun onTopEdge(): Boolean {
-                            binding.tabLayout.getTabAt(0)?.view?.requestFocus()
+                            focusSelectedInnerTab()
                             return true
                         }
 
                         override fun onLeftEdge(): Boolean {
-                            return false
+                            return (parentFragment as? blbl.cat3399.feature.home.HomeFragment)?.requestFocusHomeTabByOffset(-1) == true
                         }
 
                         override fun onRightEdge() {
@@ -458,7 +458,7 @@ class PgcCategoryFragment : Fragment(), RefreshKeyHandler, TabContentFocusTarget
         }
         binding.btnFilter.setOnKeyListener { _, keyCode, event ->
             if (event.action == android.view.KeyEvent.ACTION_DOWN && keyCode == android.view.KeyEvent.KEYCODE_DPAD_DOWN) {
-                return@setOnKeyListener requestFocusPrimaryItemFromTab()
+                return@setOnKeyListener focusFirstCategoryItem()
             }
             false
         }
@@ -466,8 +466,12 @@ class PgcCategoryFragment : Fragment(), RefreshKeyHandler, TabContentFocusTarget
             showFilterDialog()
         }
         binding.btnSideFilter.setOnKeyListener { _, keyCode, event ->
-            if (event.action == android.view.KeyEvent.ACTION_DOWN && keyCode == android.view.KeyEvent.KEYCODE_DPAD_LEFT) {
-                return@setOnKeyListener requestFocusPrimaryItemFromTab()
+            if (event.action != android.view.KeyEvent.ACTION_DOWN) return@setOnKeyListener false
+            when (keyCode) {
+                android.view.KeyEvent.KEYCODE_DPAD_LEFT -> return@setOnKeyListener focusFirstCategoryItem()
+                android.view.KeyEvent.KEYCODE_DPAD_RIGHT ->
+                    return@setOnKeyListener (parentFragment as? blbl.cat3399.feature.home.HomeFragment)
+                        ?.requestFocusHomeTabByOffset(1) == true
             }
             false
         }
@@ -475,8 +479,12 @@ class PgcCategoryFragment : Fragment(), RefreshKeyHandler, TabContentFocusTarget
             refreshFromShortcut()
         }
         binding.btnSideRefresh.setOnKeyListener { _, keyCode, event ->
-            if (event.action == android.view.KeyEvent.ACTION_DOWN && keyCode == android.view.KeyEvent.KEYCODE_DPAD_LEFT) {
-                return@setOnKeyListener requestFocusPrimaryItemFromTab()
+            if (event.action != android.view.KeyEvent.ACTION_DOWN) return@setOnKeyListener false
+            when (keyCode) {
+                android.view.KeyEvent.KEYCODE_DPAD_LEFT -> return@setOnKeyListener focusFirstCategoryItem()
+                android.view.KeyEvent.KEYCODE_DPAD_RIGHT ->
+                    return@setOnKeyListener (parentFragment as? blbl.cat3399.feature.home.HomeFragment)
+                        ?.requestFocusHomeTabByOffset(1) == true
             }
             false
         }
@@ -624,7 +632,7 @@ class PgcCategoryFragment : Fragment(), RefreshKeyHandler, TabContentFocusTarget
     }
 
     override fun requestFocusPrimaryItemFromTab(): Boolean {
-        return focusFirstCategoryItem()
+        return focusSelectedInnerTab()
     }
 
     override fun requestFocusPrimaryItemFromContentSwitch(): Boolean {
@@ -644,6 +652,15 @@ class PgcCategoryFragment : Fragment(), RefreshKeyHandler, TabContentFocusTarget
             isAlive = { _binding != null && isResumed },
             onFocused = { lastFocusedAdapterPosition = 0 },
         )
+        return true
+    }
+
+    private fun focusSelectedInnerTab(): Boolean {
+        val b = _binding ?: return false
+        if (!isResumed) return false
+        val position = b.tabLayout.selectedTabPosition.takeIf { it >= 0 } ?: 0
+        val tab = b.tabLayout.getTabAt(position) ?: b.tabLayout.getTabAt(0) ?: return false
+        tab.view.requestFocus()
         return true
     }
 

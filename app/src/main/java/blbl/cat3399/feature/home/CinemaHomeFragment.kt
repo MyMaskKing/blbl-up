@@ -60,6 +60,14 @@ class CinemaHomeFragment : Fragment(), RefreshKeyHandler, TabContentFocusTarget 
         setupSectionClickListeners()
         binding.swipeRefresh.setOnRefreshListener { triggerRefresh() }
         binding.btnSideRefresh.setOnClickListener { triggerRefresh() }
+        binding.btnSideRefresh.setOnKeyListener { _, keyCode, event ->
+            if (event.action != android.view.KeyEvent.ACTION_DOWN) return@setOnKeyListener false
+            when (keyCode) {
+                android.view.KeyEvent.KEYCODE_DPAD_LEFT -> focusFirstHotItem()
+                android.view.KeyEvent.KEYCODE_DPAD_RIGHT -> (parentFragment as? HomeFragment)?.requestFocusHomeTabByOffset(1) == true
+                else -> false
+            }
+        }
         setupFocusOrder()
         initAdapters()
         loadAllData()
@@ -81,31 +89,40 @@ class CinemaHomeFragment : Fragment(), RefreshKeyHandler, TabContentFocusTarget 
     private fun initAdapters() {
         hotAdapter = PgcHorizontalAdapter(
             onItemClick = { season -> openBangumiDetail(season, 2) },
+            onEdgeKey = { position, itemCount, keyCode -> handleHomeGridEdgeKey(position, itemCount, keyCode) },
         )
         binding.rvHot.adapter = hotAdapter
         binding.rvHot.layoutManager = GridLayoutManager(context, spanCountForPgc())
         binding.rvHot.setHasFixedSize(true)
 
         moviesAdapter = PgcHorizontalAdapter(
-            onItemClick = { season -> openBangumiDetail(season, 2) })
+            onItemClick = { season -> openBangumiDetail(season, 2) },
+            onEdgeKey = { position, itemCount, keyCode -> handleHomeGridEdgeKey(position, itemCount, keyCode) },
+        )
         binding.rvMovies.adapter = moviesAdapter
         binding.rvMovies.layoutManager = GridLayoutManager(context, spanCountForPgc())
         binding.rvMovies.setHasFixedSize(true)
 
         tvAdapter = PgcHorizontalAdapter(
-            onItemClick = { season -> openBangumiDetail(season, 5) })
+            onItemClick = { season -> openBangumiDetail(season, 5) },
+            onEdgeKey = { position, itemCount, keyCode -> handleHomeGridEdgeKey(position, itemCount, keyCode) },
+        )
         binding.rvTv.adapter = tvAdapter
         binding.rvTv.layoutManager = GridLayoutManager(context, spanCountForPgc())
         binding.rvTv.setHasFixedSize(true)
 
         documentaryAdapter = PgcHorizontalAdapter(
-            onItemClick = { season -> openBangumiDetail(season, 3) })
+            onItemClick = { season -> openBangumiDetail(season, 3) },
+            onEdgeKey = { position, itemCount, keyCode -> handleHomeGridEdgeKey(position, itemCount, keyCode) },
+        )
         binding.rvDocumentary.adapter = documentaryAdapter
         binding.rvDocumentary.layoutManager = GridLayoutManager(context, spanCountForPgc())
         binding.rvDocumentary.setHasFixedSize(true)
 
         varietyAdapter = PgcHorizontalAdapter(
-            onItemClick = { season -> openBangumiDetail(season, 7) })
+            onItemClick = { season -> openBangumiDetail(season, 7) },
+            onEdgeKey = { position, itemCount, keyCode -> handleHomeGridEdgeKey(position, itemCount, keyCode) },
+        )
         binding.rvVariety.adapter = varietyAdapter
         binding.rvVariety.layoutManager = GridLayoutManager(context, spanCountForPgc())
         binding.rvVariety.setHasFixedSize(true)
@@ -255,6 +272,18 @@ class CinemaHomeFragment : Fragment(), RefreshKeyHandler, TabContentFocusTarget 
         return true
     }
 
+    private fun handleHomeGridEdgeKey(position: Int, itemCount: Int, keyCode: Int): Boolean {
+        val spanCount = spanCountForPgc()
+        return when {
+            keyCode == android.view.KeyEvent.KEYCODE_DPAD_LEFT && position % spanCount == 0 ->
+                (parentFragment as? HomeFragment)?.requestFocusHomeTabByOffset(-1) == true
+            keyCode == android.view.KeyEvent.KEYCODE_DPAD_RIGHT &&
+                (position % spanCount == spanCount - 1 || position == itemCount - 1) ->
+                (parentFragment as? HomeFragment)?.requestFocusHomeTabByOffset(1) == true
+            else -> false
+        }
+    }
+
     private fun triggerRefresh(): Boolean {
         if (!isAdded) return false
         if (activeLoadCount > 0) {
@@ -291,6 +320,7 @@ class CinemaHomeFragment : Fragment(), RefreshKeyHandler, TabContentFocusTarget 
 
 class PgcHorizontalAdapter(
     private val onItemClick: (BangumiSeason) -> Unit,
+    private val onEdgeKey: ((position: Int, itemCount: Int, keyCode: Int) -> Boolean)? = null,
     private val itemWidth: Int = 0,
 ) : RecyclerView.Adapter<PgcHorizontalAdapter.ViewHolder>() {
 
@@ -324,6 +354,11 @@ class PgcHorizontalAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
 
         init {
+            binding.root.setOnKeyListener { _, keyCode, event ->
+                if (event.action != android.view.KeyEvent.ACTION_DOWN) return@setOnKeyListener false
+                val position = bindingAdapterPosition.takeIf { it != RecyclerView.NO_POSITION } ?: return@setOnKeyListener false
+                onEdgeKey?.invoke(position, itemCount, keyCode) == true
+            }
             binding.root.setOnClickListener {
                 if (adapterPosition != RecyclerView.NO_POSITION) {
                     onItemClick(items[adapterPosition])
