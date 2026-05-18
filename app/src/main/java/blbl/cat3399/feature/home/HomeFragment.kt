@@ -31,7 +31,6 @@ class HomeFragment : Fragment(), VideoGridTabSwitchFocusHost, BackPressHandler {
     private var pageCallback: androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback? = null
     private var tabs: List<HomeTabSpec> = emptyList()
     private var hasSkippedInitialResumeRefresh: Boolean = false
-    private var pendingAutoRefreshPosition: Int? = null
     private var viewPagerScrollState: Int = androidx.viewpager2.widget.ViewPager2.SCROLL_STATE_IDLE
     private var pendingFocusFirstCardFromContentSwitch: Boolean = false
     private var pendingFocusFirstCardFromBackToTab0: Boolean = false
@@ -74,44 +73,6 @@ class HomeFragment : Fragment(), VideoGridTabSwitchFocusHost, BackPressHandler {
     private fun refreshCurrentPageFromTabReselect(): Boolean {
         val page = findCurrentViewPagerChildFragmentAs<RefreshKeyHandler>(binding.viewPager) ?: return false
         return page.handleRefreshKey()
-    }
-
-    private fun refreshCurrentHomePage(attemptsLeft: Int = 8): Boolean {
-        val b = _binding ?: return false
-        val tab = tabs.getOrNull(b.viewPager.currentItem) ?: return false
-        // 仅对首页的番剧/影视/分类三个页签触发自动刷新，避免影响其他页签行为。
-        if (tab.key !in setOf(HomeTabs.KEY_BANGUMI, HomeTabs.KEY_CINEMA, HomeTabs.KEY_PGC_CATEGORY)) return false
-        b.viewPager.post {
-            if (_binding === b) {
-                val refreshed = refreshCurrentPageFromTabReselect()
-                if (!refreshed && attemptsLeft > 0) {
-                    // 切页时子 Fragment 可能尚未进入 resumed，短暂重试避免丢掉这次刷新。
-                    b.viewPager.postDelayedIfAlive(
-                        delayMillis = 32L,
-                        isAlive = { _binding === b },
-                    ) {
-                        refreshCurrentHomePage(attemptsLeft - 1)
-                    }
-                }
-            }
-        }
-        return true
-    }
-
-    private fun requestAutoRefreshWhenPageIdle(position: Int) {
-        val b = _binding ?: return
-        val tab = tabs.getOrNull(position) ?: return
-        if (tab.key !in setOf(HomeTabs.KEY_BANGUMI, HomeTabs.KEY_CINEMA, HomeTabs.KEY_PGC_CATEGORY)) return
-        pendingAutoRefreshPosition = position
-        b.viewPager.postDelayedIfAlive(
-            delayMillis = 120L,
-            isAlive = { _binding === b && pendingAutoRefreshPosition == position },
-        ) {
-            if (viewPagerScrollState == androidx.viewpager2.widget.ViewPager2.SCROLL_STATE_IDLE && b.viewPager.currentItem == position) {
-                pendingAutoRefreshPosition = null
-                refreshCurrentHomePage()
-            }
-        }
     }
 
     private fun focusSelectedTab(): Boolean {
@@ -158,8 +119,6 @@ class HomeFragment : Fragment(), VideoGridTabSwitchFocusHost, BackPressHandler {
                 override fun onPageSelected(position: Int) {
                     val tab = tabs.getOrNull(position)
                     AppLog.d("Home", "page selected pos=$position key=${tab?.key} t=${SystemClock.uptimeMillis()}")
-                    // 等切页动画停稳后再刷新，避免 ViewPager 切换和列表重绘同时发生造成割裂感。
-                    requestAutoRefreshWhenPageIdle(position)
                     if (pendingFocusFirstCardFromBackToTab0) {
                         maybeRequestTab0FocusFromBackToTab0()
                     } else if (pendingFocusFirstCardFromContentSwitch) {
@@ -171,11 +130,6 @@ class HomeFragment : Fragment(), VideoGridTabSwitchFocusHost, BackPressHandler {
 
                 override fun onPageScrollStateChanged(state: Int) {
                     viewPagerScrollState = state
-                    if (state != androidx.viewpager2.widget.ViewPager2.SCROLL_STATE_IDLE) return
-                    val position = pendingAutoRefreshPosition ?: return
-                    if (_binding?.viewPager?.currentItem != position) return
-                    pendingAutoRefreshPosition = null
-                    refreshCurrentHomePage()
                 }
             }
         binding.viewPager.registerOnPageChangeCallback(pageCallback!!)
@@ -185,8 +139,7 @@ class HomeFragment : Fragment(), VideoGridTabSwitchFocusHost, BackPressHandler {
         super.onResume()
         setTabs(HomeTabs.visibleTabs(BiliClient.prefs))
         if (hasSkippedInitialResumeRefresh) {
-            // 从其他页面返回首页时再次刷新当前页签，确保内容始终是最新。
-            refreshCurrentHomePage()
+            // 推荐/热门不会在每次回到首页时强制刷新；新增 PGC 页也保持一致，避免切 tab 卡顿。
         } else {
             hasSkippedInitialResumeRefresh = true
         }

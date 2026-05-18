@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
@@ -19,6 +20,7 @@ import blbl.cat3399.core.net.BiliClient
 import blbl.cat3399.core.ui.TabContentFocusTarget
 import blbl.cat3399.core.ui.cloneInUserScale
 import blbl.cat3399.core.ui.requestFocusAdapterPositionReliable
+import blbl.cat3399.core.util.pgcAccessBadgeTextOf
 import blbl.cat3399.databinding.FragmentCinemaHomeBinding
 import blbl.cat3399.databinding.ItemPgcHorizontalBinding
 import blbl.cat3399.feature.category.PgcCategoryFragment
@@ -50,6 +52,7 @@ class CinemaHomeFragment : Fragment(), RefreshKeyHandler, TabContentFocusTarget 
     private var varietyAdapter: PgcHorizontalAdapter? = null
     // 避免初始加载和首页切 tab 自动刷新叠在一起，导致双请求和画面闪烁。
     private var activeLoadCount: Int = 0
+    private var initialLoadTriggered: Boolean = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentCinemaHomeBinding.inflate(inflater, container, false)
@@ -70,7 +73,11 @@ class CinemaHomeFragment : Fragment(), RefreshKeyHandler, TabContentFocusTarget 
         }
         setupFocusOrder()
         initAdapters()
-        loadAllData()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        maybeTriggerInitialLoad()
     }
 
     private fun setupFocusOrder() {
@@ -247,6 +254,14 @@ class CinemaHomeFragment : Fragment(), RefreshKeyHandler, TabContentFocusTarget 
         loadAllData()
     }
 
+    private fun maybeTriggerInitialLoad() {
+        if (initialLoadTriggered) return
+        if (binding.swipeRefresh.isRefreshing) return
+        binding.swipeRefresh.isRefreshing = true
+        loadAllData()
+        initialLoadTriggered = true
+    }
+
     override fun handleRefreshKey(): Boolean {
         return triggerRefresh()
     }
@@ -364,6 +379,7 @@ class CinemaHomeFragment : Fragment(), RefreshKeyHandler, TabContentFocusTarget 
 
     override fun onDestroyView() {
         activeLoadCount = 0
+        initialLoadTriggered = false
         _binding = null
         super.onDestroyView()
     }
@@ -423,7 +439,12 @@ class PgcHorizontalAdapter(
 
         fun bind(season: BangumiSeason) {
             binding.tvTitle.text = season.title
-            binding.tvDesc.text = season.badge ?: ""
+            val accessBadge = pgcAccessBadgeTextOf(season.badgeEp, season.badge)
+            binding.tvAccessBadgeText.isVisible = accessBadge != null
+            binding.tvAccessBadgeText.text = accessBadge.orEmpty()
+            binding.tvDesc.text =
+                season.progressText?.takeIf { it.isNotBlank() }
+                    ?: season.badge?.takeIf { accessBadge == null }.orEmpty()
             ImageLoader.loadInto(binding.ivCover, ImageUrl.poster(season.coverUrl))
         }
     }

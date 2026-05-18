@@ -333,8 +333,6 @@ class PgcCategoryFragment : Fragment(), RefreshKeyHandler, TabContentFocusTarget
         setupSwipeRefresh()
         setupFilterButton()
         selectTabForSeasonType(initialSeasonType)
-        // 默认首个 tab 已经处于选中态时不会触发 onTabSelected，这里补一次首屏加载兜底。
-        maybeTriggerInitialLoad()
     }
 
     private fun selectTabForSeasonType(seasonType: Int) {
@@ -369,8 +367,13 @@ class PgcCategoryFragment : Fragment(), RefreshKeyHandler, TabContentFocusTarget
                     val seasonType = tab?.tag as? Int ?: 1
                     filterState = PgcFilterState(seasonType = seasonType)
                     updateFilterButtonText()
-                    initialLoadTriggered = true
-                    resetAndLoad()
+                    if (isResumed) {
+                        initialLoadTriggered = true
+                        resetAndLoad()
+                    } else {
+                        // 和首页推荐/热门一致，等页面真正可见后再首屏加载，减少 ViewPager 切换卡顿。
+                        initialLoadTriggered = false
+                    }
                 }
 
                 override fun onTabUnselected(tab: com.google.android.material.tabs.TabLayout.Tab?) {}
@@ -706,6 +709,7 @@ class PgcCategoryFragment : Fragment(), RefreshKeyHandler, TabContentFocusTarget
     override fun onResume() {
         super.onResume()
         (binding.recyclerView.layoutManager as? GridLayoutManager)?.spanCount = pgcGridSpanCount()
+        maybeTriggerInitialLoad()
     }
 
     override fun onDestroyView() {

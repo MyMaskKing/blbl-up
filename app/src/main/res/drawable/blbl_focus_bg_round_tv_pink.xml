@@ -17,7 +17,7 @@
                 android:right="1dp"
                 android:bottom="1dp">
                 <shape android:shape="rectangle">
-                    <solid android:color="@color/blbl_focus_fill" />
+                    <solid android:color="@color/blbl_accent_tv_pink_container" />
                     <stroke
                         android:width="2dp"
                         android:color="?attr/blblAccent" />
@@ -43,7 +43,7 @@
                 android:right="1dp"
                 android:bottom="1dp">
                 <shape android:shape="rectangle">
-                    <solid android:color="@color/blbl_focus_fill_pressed" />
+                    <solid android:color="@color/blbl_accent_tv_pink_pressed" />
                     <stroke
                         android:width="2dp"
                         android:color="?attr/blblAccent" />

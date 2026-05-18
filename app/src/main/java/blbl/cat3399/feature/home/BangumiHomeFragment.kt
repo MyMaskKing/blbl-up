@@ -44,6 +44,7 @@ class BangumiHomeFragment : Fragment(), RefreshKeyHandler, TabContentFocusTarget
     private var chineseAdapter: PgcHorizontalAdapter? = null
     // 避免初始加载和首页切 tab 自动刷新叠在一起，导致双请求和画面闪烁。
     private var activeLoadCount: Int = 0
+    private var initialLoadTriggered: Boolean = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentBangumiHomeBinding.inflate(inflater, container, false)
@@ -64,7 +65,11 @@ class BangumiHomeFragment : Fragment(), RefreshKeyHandler, TabContentFocusTarget
         }
         setupFocusOrder()
         initAdapters()
-        loadAllData()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        maybeTriggerInitialLoad()
     }
 
     private fun setupFocusOrder() {
@@ -230,6 +235,14 @@ class BangumiHomeFragment : Fragment(), RefreshKeyHandler, TabContentFocusTarget
         loadAllData()
     }
 
+    private fun maybeTriggerInitialLoad() {
+        if (initialLoadTriggered) return
+        if (binding.swipeRefresh.isRefreshing) return
+        binding.swipeRefresh.isRefreshing = true
+        loadAllData()
+        initialLoadTriggered = true
+    }
+
     override fun handleRefreshKey(): Boolean {
         return triggerRefresh()
     }
@@ -347,6 +360,7 @@ class BangumiHomeFragment : Fragment(), RefreshKeyHandler, TabContentFocusTarget
 
     override fun onDestroyView() {
         activeLoadCount = 0
+        initialLoadTriggered = false
         _binding = null
         super.onDestroyView()
     }
