@@ -75,8 +75,10 @@ class BangumiHomeFragment : Fragment(), RefreshKeyHandler, TabContentFocusTarget
             false
         }
         binding.btnBangumiMore.setOnKeyListener { _, keyCode, event ->
-            if (event.action == android.view.KeyEvent.ACTION_DOWN && keyCode == android.view.KeyEvent.KEYCODE_DPAD_DOWN) {
-                return@setOnKeyListener focusFirstInRecycler(binding.rvBangumi)
+            if (event.action != android.view.KeyEvent.ACTION_DOWN) return@setOnKeyListener false
+            when (keyCode) {
+                android.view.KeyEvent.KEYCODE_DPAD_DOWN -> return@setOnKeyListener focusFirstInRecycler(binding.rvBangumi)
+                android.view.KeyEvent.KEYCODE_DPAD_RIGHT -> return@setOnKeyListener binding.btnSideRefresh.requestFocus()
             }
             false
         }
@@ -87,8 +89,10 @@ class BangumiHomeFragment : Fragment(), RefreshKeyHandler, TabContentFocusTarget
             false
         }
         binding.btnChineseMore.setOnKeyListener { _, keyCode, event ->
-            if (event.action == android.view.KeyEvent.ACTION_DOWN && keyCode == android.view.KeyEvent.KEYCODE_DPAD_DOWN) {
-                return@setOnKeyListener focusFirstInRecycler(binding.rvChinese)
+            if (event.action != android.view.KeyEvent.ACTION_DOWN) return@setOnKeyListener false
+            when (keyCode) {
+                android.view.KeyEvent.KEYCODE_DPAD_DOWN -> return@setOnKeyListener focusFirstInRecycler(binding.rvChinese)
+                android.view.KeyEvent.KEYCODE_DPAD_RIGHT -> return@setOnKeyListener binding.btnSideRefresh.requestFocus()
             }
             false
         }
@@ -102,6 +106,7 @@ class BangumiHomeFragment : Fragment(), RefreshKeyHandler, TabContentFocusTarget
         binding.rvHot.adapter = hotAdapter
         binding.rvHot.layoutManager = GridLayoutManager(context, spanCountForPgc())
         binding.rvHot.setHasFixedSize(true)
+        installRecyclerEdgeFallback(binding.rvHot)
 
         bangumiAdapter = PgcHorizontalAdapter(
             onItemClick = { season -> openBangumiDetail(season, 1) },
@@ -110,6 +115,7 @@ class BangumiHomeFragment : Fragment(), RefreshKeyHandler, TabContentFocusTarget
         binding.rvBangumi.adapter = bangumiAdapter
         binding.rvBangumi.layoutManager = GridLayoutManager(context, spanCountForPgc())
         binding.rvBangumi.setHasFixedSize(true)
+        installRecyclerEdgeFallback(binding.rvBangumi)
 
         chineseAdapter = PgcHorizontalAdapter(
             onItemClick = { season -> openBangumiDetail(season, 4) },
@@ -118,6 +124,7 @@ class BangumiHomeFragment : Fragment(), RefreshKeyHandler, TabContentFocusTarget
         binding.rvChinese.adapter = chineseAdapter
         binding.rvChinese.layoutManager = GridLayoutManager(context, spanCountForPgc())
         binding.rvChinese.setHasFixedSize(true)
+        installRecyclerEdgeFallback(binding.rvChinese)
     }
 
     private fun spanCountForPgc(): Int = BiliClient.prefs.pgcGridSpanCount.coerceIn(1, 6)
@@ -262,8 +269,21 @@ class BangumiHomeFragment : Fragment(), RefreshKeyHandler, TabContentFocusTarget
                 (parentFragment as? HomeFragment)?.requestFocusHomeTabByOffset(-1) == true
             keyCode == android.view.KeyEvent.KEYCODE_DPAD_RIGHT &&
                 (position % spanCount == spanCount - 1 || position == itemCount - 1) ->
-                (parentFragment as? HomeFragment)?.requestFocusHomeTabByOffset(1) == true
+                binding.btnSideRefresh.requestFocus()
             else -> false
+        }
+    }
+
+    private fun installRecyclerEdgeFallback(recycler: RecyclerView) {
+        recycler.setOnKeyListener { _, keyCode, event ->
+            if (event.action != android.view.KeyEvent.ACTION_DOWN) return@setOnKeyListener false
+            if (!recycler.isFocused) return@setOnKeyListener false
+            // 空数据或加载中时焦点可能停在 RecyclerView 自身，也要保证右侧快捷按钮可进入。
+            when (keyCode) {
+                android.view.KeyEvent.KEYCODE_DPAD_LEFT -> (parentFragment as? HomeFragment)?.requestFocusHomeTabByOffset(-1) == true
+                android.view.KeyEvent.KEYCODE_DPAD_RIGHT -> binding.btnSideRefresh.requestFocus()
+                else -> false
+            }
         }
     }
 

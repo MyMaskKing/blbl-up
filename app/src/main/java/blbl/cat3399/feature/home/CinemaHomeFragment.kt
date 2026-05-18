@@ -75,8 +75,10 @@ class CinemaHomeFragment : Fragment(), RefreshKeyHandler, TabContentFocusTarget 
 
     private fun setupFocusOrder() {
         fun focusOnDown(target: RecyclerView): View.OnKeyListener = View.OnKeyListener { _, keyCode, event ->
-            if (event.action == android.view.KeyEvent.ACTION_DOWN && keyCode == android.view.KeyEvent.KEYCODE_DPAD_DOWN) {
-                return@OnKeyListener focusFirstInRecycler(target)
+            if (event.action != android.view.KeyEvent.ACTION_DOWN) return@OnKeyListener false
+            when (keyCode) {
+                android.view.KeyEvent.KEYCODE_DPAD_DOWN -> return@OnKeyListener focusFirstInRecycler(target)
+                android.view.KeyEvent.KEYCODE_DPAD_RIGHT -> return@OnKeyListener binding.btnSideRefresh.requestFocus()
             }
             false
         }
@@ -94,6 +96,7 @@ class CinemaHomeFragment : Fragment(), RefreshKeyHandler, TabContentFocusTarget 
         binding.rvHot.adapter = hotAdapter
         binding.rvHot.layoutManager = GridLayoutManager(context, spanCountForPgc())
         binding.rvHot.setHasFixedSize(true)
+        installRecyclerEdgeFallback(binding.rvHot)
 
         moviesAdapter = PgcHorizontalAdapter(
             onItemClick = { season -> openBangumiDetail(season, 2) },
@@ -102,6 +105,7 @@ class CinemaHomeFragment : Fragment(), RefreshKeyHandler, TabContentFocusTarget 
         binding.rvMovies.adapter = moviesAdapter
         binding.rvMovies.layoutManager = GridLayoutManager(context, spanCountForPgc())
         binding.rvMovies.setHasFixedSize(true)
+        installRecyclerEdgeFallback(binding.rvMovies)
 
         tvAdapter = PgcHorizontalAdapter(
             onItemClick = { season -> openBangumiDetail(season, 5) },
@@ -110,6 +114,7 @@ class CinemaHomeFragment : Fragment(), RefreshKeyHandler, TabContentFocusTarget 
         binding.rvTv.adapter = tvAdapter
         binding.rvTv.layoutManager = GridLayoutManager(context, spanCountForPgc())
         binding.rvTv.setHasFixedSize(true)
+        installRecyclerEdgeFallback(binding.rvTv)
 
         documentaryAdapter = PgcHorizontalAdapter(
             onItemClick = { season -> openBangumiDetail(season, 3) },
@@ -118,6 +123,7 @@ class CinemaHomeFragment : Fragment(), RefreshKeyHandler, TabContentFocusTarget 
         binding.rvDocumentary.adapter = documentaryAdapter
         binding.rvDocumentary.layoutManager = GridLayoutManager(context, spanCountForPgc())
         binding.rvDocumentary.setHasFixedSize(true)
+        installRecyclerEdgeFallback(binding.rvDocumentary)
 
         varietyAdapter = PgcHorizontalAdapter(
             onItemClick = { season -> openBangumiDetail(season, 7) },
@@ -126,6 +132,7 @@ class CinemaHomeFragment : Fragment(), RefreshKeyHandler, TabContentFocusTarget 
         binding.rvVariety.adapter = varietyAdapter
         binding.rvVariety.layoutManager = GridLayoutManager(context, spanCountForPgc())
         binding.rvVariety.setHasFixedSize(true)
+        installRecyclerEdgeFallback(binding.rvVariety)
     }
 
     private fun spanCountForPgc(): Int = BiliClient.prefs.pgcGridSpanCount.coerceIn(1, 6)
@@ -279,8 +286,21 @@ class CinemaHomeFragment : Fragment(), RefreshKeyHandler, TabContentFocusTarget 
                 (parentFragment as? HomeFragment)?.requestFocusHomeTabByOffset(-1) == true
             keyCode == android.view.KeyEvent.KEYCODE_DPAD_RIGHT &&
                 (position % spanCount == spanCount - 1 || position == itemCount - 1) ->
-                (parentFragment as? HomeFragment)?.requestFocusHomeTabByOffset(1) == true
+                binding.btnSideRefresh.requestFocus()
             else -> false
+        }
+    }
+
+    private fun installRecyclerEdgeFallback(recycler: RecyclerView) {
+        recycler.setOnKeyListener { _, keyCode, event ->
+            if (event.action != android.view.KeyEvent.ACTION_DOWN) return@setOnKeyListener false
+            if (!recycler.isFocused) return@setOnKeyListener false
+            // 空数据或加载中时焦点可能停在 RecyclerView 自身，也要保证右侧快捷按钮可进入。
+            when (keyCode) {
+                android.view.KeyEvent.KEYCODE_DPAD_LEFT -> (parentFragment as? HomeFragment)?.requestFocusHomeTabByOffset(-1) == true
+                android.view.KeyEvent.KEYCODE_DPAD_RIGHT -> binding.btnSideRefresh.requestFocus()
+                else -> false
+            }
         }
     }
 

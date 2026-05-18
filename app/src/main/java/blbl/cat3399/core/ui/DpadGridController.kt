@@ -179,7 +179,14 @@ internal class DpadGridController(
                     if (pendingFocusAfterLoadMoreAnchorPos != RecyclerView.NO_POSITION) {
                         clearPendingFocusAfterLoadMore()
                     }
-                    false
+                    when (keyCode) {
+                        KeyEvent.KEYCODE_DPAD_LEFT -> callbacks.onLeftEdge()
+                        KeyEvent.KEYCODE_DPAD_RIGHT -> {
+                            callbacks.onRightEdge()
+                            config.consumeRightEdge
+                        }
+                        else -> false
+                    }
                 }
 
                 else -> false
