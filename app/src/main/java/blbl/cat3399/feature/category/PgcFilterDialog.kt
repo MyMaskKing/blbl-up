@@ -2,8 +2,8 @@ package blbl.cat3399.feature.category
 
 import android.app.Dialog
 import android.content.Context
-import android.graphics.Color
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -77,6 +77,13 @@ private class FilterGridAdapter(
         private var currentCategory: FilterCategory = FilterCategory.AREA
         private var currentValue: String = ""
 
+        private val accentColor: Int = tv.context.getColor(R.color.blbl_purple)
+        private val defaultTextColor: Int = run {
+            val typedValue = TypedValue()
+            tv.context.theme.resolveAttribute(R.attr.blblOnPageBackdrop, typedValue, true)
+            typedValue.data
+        }
+
         init {
             view.setOnClickListener {
                 onOptionClick(currentCategory, currentValue)
@@ -89,11 +96,7 @@ private class FilterGridAdapter(
             tv.text = option.label
             tv.isActivated = option.isSelected
             tv.setTextColor(
-                if (option.isSelected) {
-                    tv.context.getColor(R.color.blbl_purple)
-                } else {
-                    Color.WHITE
-                }
+                if (option.isSelected) accentColor else defaultTextColor
             )
         }
     }
@@ -240,5 +243,9 @@ class PgcFilterDialog(
             currentState = PgcFilterState(seasonType = initialState.seasonType)
             buildItems()
         }
+        // 遥控器优化：弹窗打开时默认聚焦到「确定」按钮
+        findViewById<View>(R.id.btnApply).postDelayed({
+            findViewById<View>(R.id.btnApply).requestFocus()
+        }, 100)
     }
 }
