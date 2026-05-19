@@ -139,6 +139,9 @@ class PgcFilterDialog(
         initRecyclerView()
         buildItems()
         setupButtons()
+        rvOptions.postDelayed({
+            rvOptions.requestFocus()
+        }, 100)
     }
 
     private fun initRecyclerView() {
@@ -234,14 +237,16 @@ class PgcFilterDialog(
     }
 
     private fun setupButtons() {
+        val btnApply = findViewById<View>(R.id.btnApply)
         findViewById<View>(R.id.btnCancel).setOnClickListener { dismiss() }
-        findViewById<View>(R.id.btnApply).setOnClickListener {
+        btnApply.setOnClickListener {
             onApply(currentState)
             dismiss()
         }
         findViewById<View>(R.id.btnReset).setOnClickListener {
             currentState = PgcFilterState(seasonType = initialState.seasonType)
             buildItems()
+            btnApply.isSelected = false
         }
 
     }

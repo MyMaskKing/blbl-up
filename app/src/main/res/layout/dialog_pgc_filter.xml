@@ -39,6 +39,7 @@
             android:textColor="@color/blbl_button_text_selector"
             android:textSize="20sp"
             android:saveEnabled="false"
+            android:selected="false"
             app:cornerRadius="12dp"
             app:backgroundTint="@null" />
 
