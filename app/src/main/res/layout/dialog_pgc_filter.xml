@@ -15,6 +15,7 @@
         android:layout_weight="1"
         android:clipToPadding="false"
         android:paddingEnd="12dp"
+        android:descendantFocusability="afterDescendants"
         android:nextFocusRight="@id/btnApply"/>
 
     <LinearLayout

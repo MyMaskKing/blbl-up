@@ -94,7 +94,7 @@ private class FilterGridAdapter(
             currentCategory = option.category
             currentValue = option.value
             tv.text = option.label
-            tv.isActivated = option.isSelected
+            tv.isSelected = option.isSelected
             tv.setTextColor(
                 if (option.isSelected) accentColor else defaultTextColor
             )
