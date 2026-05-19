@@ -238,16 +238,24 @@ class PgcFilterDialog(
 
     private fun setupButtons() {
         val btnApply = findViewById<View>(R.id.btnApply)
-        findViewById<View>(R.id.btnCancel).setOnClickListener { dismiss() }
+        val btnReset = findViewById<View>(R.id.btnReset)
+        val btnCancel = findViewById<View>(R.id.btnCancel)
+        btnCancel.setOnClickListener { 
+            btnCancel.isSelected = false
+            dismiss() 
+        }
         btnApply.setOnClickListener {
+            btnApply.isSelected = false
             onApply(currentState)
             dismiss()
         }
-        findViewById<View>(R.id.btnReset).setOnClickListener {
+        btnReset.setOnClickListener {
+            btnReset.isSelected = false
             currentState = PgcFilterState(seasonType = initialState.seasonType)
             buildItems()
-            btnApply.isSelected = false
         }
-
+        btnApply.isSelected = false
+        btnReset.isSelected = false
+        btnCancel.isSelected = false
     }
 }
