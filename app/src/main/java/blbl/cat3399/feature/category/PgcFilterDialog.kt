@@ -260,8 +260,8 @@ class PgcFilterDialog(
         btnReset.setOnClickListener {
             clearActionButtonStates(actionButtons)
             currentState = PgcFilterState(seasonType = initialState.seasonType)
-            buildItems()
-            rvOptions.post { rvOptions.requestFocus() }
+            onApply(currentState)
+            dismiss()
         }
     }
 
