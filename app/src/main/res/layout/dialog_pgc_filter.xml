@@ -32,7 +32,6 @@
             android:background="?attr/blblFocusBgRound"
             android:clickable="true"
             android:focusable="true"
-            android:focusableInTouchMode="true"
             android:nextFocusLeft="@id/rvFilterOptions"
             android:nextFocusDown="@id/btnReset"
             android:text="确定"

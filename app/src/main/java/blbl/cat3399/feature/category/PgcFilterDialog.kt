@@ -240,22 +240,37 @@ class PgcFilterDialog(
         val btnApply = findViewById<View>(R.id.btnApply)
         val btnReset = findViewById<View>(R.id.btnReset)
         val btnCancel = findViewById<View>(R.id.btnCancel)
-        btnCancel.setOnClickListener { 
-            btnCancel.isSelected = false
+        val actionButtons = listOf(btnApply, btnReset, btnCancel)
+        actionButtons.forEach { button ->
+            button.isSelected = false
+            button.setOnFocusChangeListener { view, hasFocus ->
+                // Sync TV focus state to selected state for button selectors.
+                view.isSelected = hasFocus
+            }
+        }
+        btnCancel.setOnClickListener {
+            clearActionButtonStates(actionButtons)
             dismiss() 
         }
         btnApply.setOnClickListener {
-            btnApply.isSelected = false
+            clearActionButtonStates(actionButtons)
             onApply(currentState)
             dismiss()
         }
         btnReset.setOnClickListener {
-            btnReset.isSelected = false
+            clearActionButtonStates(actionButtons)
             currentState = PgcFilterState(seasonType = initialState.seasonType)
             buildItems()
+            rvOptions.post { rvOptions.requestFocus() }
         }
-        btnApply.isSelected = false
-        btnReset.isSelected = false
-        btnCancel.isSelected = false
+    }
+
+    private fun clearActionButtonStates(buttons: List<View>) {
+        buttons.forEach { button ->
+            button.isPressed = false
+            button.isSelected = false
+            button.clearFocus()
+            button.refreshDrawableState()
+        }
     }
 }
