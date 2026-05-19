@@ -243,9 +243,6 @@ class PgcFilterDialog(
             currentState = PgcFilterState(seasonType = initialState.seasonType)
             buildItems()
         }
-        // 遥控器优化：弹窗打开时默认聚焦到「确定」按钮
-        findViewById<View>(R.id.btnApply).postDelayed({
-            findViewById<View>(R.id.btnApply).requestFocus()
-        }, 100)
+
     }
 }
