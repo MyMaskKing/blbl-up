@@ -160,16 +160,10 @@ class CinemaHomeFragment : Fragment(), RefreshKeyHandler, TabContentFocusTarget 
         viewLifecycleOwner.lifecycleScope.launch {
             try {
                 val result = withContext(Dispatchers.IO) {
-                    BiliApi.pgcSeasonIndex(
-                        seasonType = 2,
-                        page = 1,
-                        pageSize = hotPageSize(),
-                        order = 2,
-                        sort = 0,
-                    )
+                    BiliApi.pgcSeasonRank(seasonType = 2).take(hotPageSize())
                 }
                 hotItems.clear()
-                hotItems.addAll(result.items)
+                hotItems.addAll(result)
                 hotAdapter?.submit(hotItems)
             } catch (t: Throwable) {
                 if (t is CancellationException) throw t

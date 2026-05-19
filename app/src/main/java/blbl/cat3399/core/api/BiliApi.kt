@@ -1310,6 +1310,71 @@ object BiliApi {
         return withContext(Dispatchers.Default) { parsePgcPageToBangumiSeasons(json) }
     }
 
+    suspend fun pgcSeasonRank(
+        seasonType: Int,
+        day: Int = 3,
+    ): List<BangumiSeason> {
+        val params = LinkedHashMap<String, String>()
+        params["season_type"] = seasonType.toString()
+        params["day"] = day.toString()
+        val url = BiliClient.withQuery("https://api.bilibili.com/pgc/season/rank/web/list", params)
+        val json = BiliClient.getJson(url)
+        val code = json.optInt("code", 0)
+        if (code != 0) {
+            val msg = json.optString("message", json.optString("msg", ""))
+            throw BiliApiException(apiCode = code, apiMessage = msg)
+        }
+        return withContext(Dispatchers.Default) { parsePgcSeasonRank(json) }
+    }
+
+    private fun parsePgcSeasonRank(json: JSONObject): List<BangumiSeason> {
+        val list = json.optJSONObject("data")?.optJSONArray("list") ?: JSONArray()
+        val out = ArrayList<BangumiSeason>(list.length())
+        val seen = HashSet<Long>(list.length() * 2)
+        for (i in 0 until list.length()) {
+            val obj = list.optJSONObject(i) ?: continue
+            val seasonId = obj.optLong("season_id").takeIf { it > 0 } ?: continue
+            if (!seen.add(seasonId)) continue
+            val rank = obj.optInt("rank").takeIf { it > 0 }
+            val rating = obj.optString("rating").trim().takeIf { it.isNotBlank() }
+            val playText = obj.optJSONObject("icon_font")?.optString("text")?.trim()?.takeIf { it.isNotBlank() }
+            val desc = obj.optString("desc").trim().takeIf { it.isNotBlank() }
+            val newEpIndexShow =
+                obj.optJSONObject("new_ep")
+                    ?.optString("index_show")
+                    ?.trim()
+                    ?.takeIf { it.isNotBlank() }
+            val progressText =
+                buildList {
+                    rank?.let { add("第${it}名") }
+                    rating?.let { add(it) }
+                    playText?.let { add(it) }
+                    if (playText == null) desc?.let { add(it) }
+                    if (playText == null && desc == null) newEpIndexShow?.let { add(it) }
+                }.joinToString(" · ").takeIf { it.isNotBlank() }
+
+            out.add(
+                BangumiSeason(
+                    seasonId = seasonId,
+                    seasonTypeName = obj.optInt("season_type", 0).takeIf { it > 0 }?.let(::pgcSeasonTypeName),
+                    title = obj.optString("title", ""),
+                    coverUrl = obj.optString("cover").trim().takeIf { it.isNotBlank() },
+                    badge =
+                        normalizeBadgeText(obj.optString("badge"))
+                            ?: normalizeBadgeText(obj.optJSONObject("badge_info")?.optString("text")),
+                    badgeEp = null,
+                    progressText = progressText,
+                    totalCount = null,
+                    lastEpIndex = null,
+                    lastEpId = null,
+                    newestEpIndex = null,
+                    isFinish = null,
+                ),
+            )
+        }
+        return out
+    }
+
     data class PgcSeasonIndexPage(
         val items: List<BangumiSeason>,
         val hasNext: Boolean,
