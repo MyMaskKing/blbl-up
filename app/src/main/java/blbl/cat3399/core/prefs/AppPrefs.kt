@@ -312,7 +312,7 @@ class AppPrefs(context: Context) {
         set(value) = prefs.edit().putFloat(KEY_DANMAKU_AREA, normalizeDanmakuArea(value)).apply()
 
     var playerPreferredQn: Int
-        get() = prefs.getInt(KEY_PLAYER_PREFERRED_QN, 80)
+        get() = prefs.getInt(KEY_PLAYER_PREFERRED_QN, 120) // 120代表4K
         set(value) = prefs.edit().putInt(KEY_PLAYER_PREFERRED_QN, value).apply()
 
     var playerPreferredQnPortrait: Int
