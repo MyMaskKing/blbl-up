@@ -1,4 +1,4 @@
-package blbl.cat3399.feature.settings
+﻿package blbl.cat3399.feature.settings
 
 import android.app.Activity
 import android.content.ActivityNotFoundException
@@ -676,6 +676,10 @@ class SettingsInteractionHandler(
                 val options =
                     listOf(
                         blbl.cat3399.core.prefs.AppPrefs.THEME_PRESET_DEFAULT to "默认",
+                        blbl.cat3399.core.prefs.AppPrefs.THEME_PRESET_DARK_PINK to "暗夜粉",
+                        blbl.cat3399.core.prefs.AppPrefs.THEME_PRESET_AMBER to "琥珀黄",
+                        blbl.cat3399.core.prefs.AppPrefs.THEME_PRESET_OLED_DARK to "OLED 纯黑",
+                        blbl.cat3399.core.prefs.AppPrefs.THEME_PRESET_OCEAN_BLUE to "深海蓝",
                         blbl.cat3399.core.prefs.AppPrefs.THEME_PRESET_TV_PINK to "小电视粉",
                         blbl.cat3399.core.prefs.AppPrefs.THEME_PRESET_TV_PINK_ILLUSTRATION to "经典",
                     )

@@ -1,4 +1,4 @@
-package blbl.cat3399.feature.settings
+﻿package blbl.cat3399.feature.settings
 
 import android.app.ActivityManager
 import android.content.Context
@@ -149,6 +149,10 @@ object SettingsText {
 
     fun themePresetText(prefValue: String): String =
         when (prefValue) {
+            blbl.cat3399.core.prefs.AppPrefs.THEME_PRESET_OLED_DARK -> "OLED 纯黑"
+            blbl.cat3399.core.prefs.AppPrefs.THEME_PRESET_OCEAN_BLUE -> "深海蓝"
+            blbl.cat3399.core.prefs.AppPrefs.THEME_PRESET_DARK_PINK -> "暗夜粉"
+            blbl.cat3399.core.prefs.AppPrefs.THEME_PRESET_AMBER -> "琥珀黄"
             blbl.cat3399.core.prefs.AppPrefs.THEME_PRESET_TV_PINK -> "小电视粉"
             blbl.cat3399.core.prefs.AppPrefs.THEME_PRESET_TV_PINK_ILLUSTRATION -> "经典"
             else -> "默认"

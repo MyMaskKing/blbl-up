@@ -1,4 +1,4 @@
-package blbl.cat3399.core.theme
+﻿package blbl.cat3399.core.theme
 
 import android.app.Activity
 import android.content.Context
@@ -44,6 +44,30 @@ object ThemePresets {
                 Spec(
                     baseThemeRes = R.style.Theme_Blbl_Base_TvPinkIllustration,
                     overlayRes = R.style.ThemeOverlay_Blbl_Accent_Classic,
+                )
+
+            AppPrefs.THEME_PRESET_OLED_DARK ->
+                Spec(
+                    baseThemeRes = R.style.Theme_Blbl_Base_OledDark,
+                    overlayRes = R.style.ThemeOverlay_Blbl_Accent_Violet,
+                )
+
+            AppPrefs.THEME_PRESET_OCEAN_BLUE ->
+                Spec(
+                    baseThemeRes = R.style.Theme_Blbl_Base_Dark,
+                    overlayRes = R.style.ThemeOverlay_Blbl_Accent_Blue,
+                )
+
+            AppPrefs.THEME_PRESET_DARK_PINK ->
+                Spec(
+                    baseThemeRes = R.style.Theme_Blbl_Base_Dark,
+                    overlayRes = R.style.ThemeOverlay_Blbl_Accent_TvPink,
+                )
+
+            AppPrefs.THEME_PRESET_AMBER ->
+                Spec(
+                    baseThemeRes = R.style.Theme_Blbl_Base_Dark,
+                    overlayRes = R.style.ThemeOverlay_Blbl_Accent_Amber,
                 )
 
             else ->

@@ -1,4 +1,4 @@
-package blbl.cat3399.core.prefs
+﻿package blbl.cat3399.core.prefs
 
 import android.content.Context
 import android.provider.Settings
@@ -998,6 +998,10 @@ class AppPrefs(context: Context) {
         const val THEME_PRESET_DEFAULT = "default"
         const val THEME_PRESET_TV_PINK = "tv_pink"
         const val THEME_PRESET_TV_PINK_ILLUSTRATION = "tv_pink_illustration"
+        const val THEME_PRESET_OLED_DARK = "oled_dark"
+        const val THEME_PRESET_OCEAN_BLUE = "ocean_blue"
+        const val THEME_PRESET_DARK_PINK = "dark_pink"
+        const val THEME_PRESET_AMBER = "amber"
 
         const val FOLLOWING_LIST_ORDER_FOLLOW_TIME = "follow_time"
         const val FOLLOWING_LIST_ORDER_RECENT_VISIT = "recent_visit"
@@ -1351,6 +1355,10 @@ class AppPrefs(context: Context) {
             return when (value?.trim()) {
                 THEME_PRESET_TV_PINK -> THEME_PRESET_TV_PINK
                 THEME_PRESET_TV_PINK_ILLUSTRATION -> THEME_PRESET_TV_PINK_ILLUSTRATION
+                THEME_PRESET_OLED_DARK -> THEME_PRESET_OLED_DARK
+                THEME_PRESET_OCEAN_BLUE -> THEME_PRESET_OCEAN_BLUE
+                THEME_PRESET_DARK_PINK -> THEME_PRESET_DARK_PINK
+                THEME_PRESET_AMBER -> THEME_PRESET_AMBER
                 else -> THEME_PRESET_DEFAULT
             }
         }

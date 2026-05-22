@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="blbl_bg">#121212</color>
     <color name="blbl_surface">#1E1E1E</color>
@@ -24,6 +24,10 @@
     <color name="blbl_on_page_backdrop_classic">#FFF5FA</color>
     <color name="blbl_on_page_backdrop_secondary_classic">#DFC4D2</color>
 
+    <!-- Base palette: OLED Dark preset. -->
+    <color name="blbl_bg_oled">#000000</color>
+    <color name="blbl_surface_oled">#080808</color>
+
     <!-- Focus highlight: white frame + subtle shadow/overlay. -->
     <color name="blbl_focus_white">#FFFFFF</color>
     <color name="blbl_focus_shadow">#66000000</color>
@@ -48,6 +52,11 @@
     <color name="blbl_accent_blue_weak">#6600A1D6</color>
     <color name="blbl_accent_blue_pressed">#8000A1D6</color>
     <color name="player_button_tint">#FFFFFF</color>
+    <color name="blbl_accent_amber">#FFB300</color>
+    <color name="blbl_accent_amber_container">#33FFB300</color>
+    <color name="blbl_accent_amber_weak">#66FFB300</color>
+    <color name="blbl_accent_amber_pressed">#80FFB300</color>
+
     <color name="blbl_purple">#8A2BE2</color>
     <color name="blbl_blue">#00A1D6</color>
     <color name="player_comment_thread_root_bg">#2600A1D6</color>

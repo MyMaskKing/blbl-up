@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="ShapeAppearanceOverlay_Blbl_Circular">
         <item name="cornerFamily">rounded</item>
@@ -8,6 +8,20 @@
     <style name="ShapeAppearanceOverlay_Blbl_Rounded">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">12dp</item>
+    </style>
+
+    <style name="ThemeOverlay.Blbl.Accent.Blue" parent="ThemeOverlay.MaterialComponents">
+        <item name="blblAccent">@color/blbl_blue</item>
+        <item name="blblAccentContainer">@color/blbl_accent_blue_container</item>
+        <item name="blblAccentWeak">@color/blbl_accent_blue_weak</item>
+        <item name="blblAccentPressed">@color/blbl_accent_blue_pressed</item>
+    </style>
+
+    <style name="ThemeOverlay.Blbl.Accent.Amber" parent="ThemeOverlay.MaterialComponents">
+        <item name="blblAccent">@color/blbl_accent_amber</item>
+        <item name="blblAccentContainer">@color/blbl_accent_amber_container</item>
+        <item name="blblAccentWeak">@color/blbl_accent_amber_weak</item>
+        <item name="blblAccentPressed">@color/blbl_accent_amber_pressed</item>
     </style>
 
     <style name="ThemeOverlay.Blbl.Accent.Violet" parent="ThemeOverlay.MaterialComponents">
