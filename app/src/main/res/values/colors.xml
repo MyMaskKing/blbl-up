@@ -23,10 +23,21 @@
     <color name="blbl_text_secondary_classic">#D9BAC9</color>
     <color name="blbl_on_page_backdrop_classic">#FFF5FA</color>
     <color name="blbl_on_page_backdrop_secondary_classic">#DFC4D2</color>
-
     <!-- Base palette: OLED Dark preset. -->
     <color name="blbl_bg_oled">#000000</color>
     <color name="blbl_surface_oled">#080808</color>
+
+    <!-- Base palette: Ocean Blue preset - 深邃海洋蓝，适合大屏沉浸感 -->
+    <color name="blbl_bg_ocean_blue">#0A1929</color>
+    <color name="blbl_surface_ocean_blue">#132F4C</color>
+
+    <!-- Base palette: Dark Pink preset - 深紫红，优雅高级感 -->
+    <color name="blbl_bg_dark_pink">#2D1B35</color>
+    <color name="blbl_surface_dark_pink">#3D2847</color>
+
+    <!-- Base palette: Amber preset - 温暖琥珀金，舒适观看体验 -->
+    <color name="blbl_bg_amber">#2B1F0F</color>
+    <color name="blbl_surface_amber">#3D2F1A</color>
 
     <!-- Focus highlight: white frame + subtle shadow/overlay. -->
     <color name="blbl_focus_white">#FFFFFF</color>
@@ -52,10 +63,21 @@
     <color name="blbl_accent_blue_weak">#6600A1D6</color>
     <color name="blbl_accent_blue_pressed">#8000A1D6</color>
     <color name="player_button_tint">#FFFFFF</color>
-    <color name="blbl_accent_amber">#FFB300</color>
-    <color name="blbl_accent_amber_container">#33FFB300</color>
-    <color name="blbl_accent_amber_weak">#66FFB300</color>
-    <color name="blbl_accent_amber_pressed">#80FFB300</color>
+    <!-- Accent colors for new presets -->
+    <color name="blbl_accent_ocean_blue">#4DB8FF</color>
+    <color name="blbl_accent_ocean_blue_container">#334DB8FF</color>
+    <color name="blbl_accent_ocean_blue_weak">#664DB8FF</color>
+    <color name="blbl_accent_ocean_blue_pressed">#804DB8FF</color>
+
+    <color name="blbl_accent_dark_pink">#FF6B9D</color>
+    <color name="blbl_accent_dark_pink_container">#33FF6B9D</color>
+    <color name="blbl_accent_dark_pink_weak">#66FF6B9D</color>
+    <color name="blbl_accent_dark_pink_pressed">#80FF6B9D</color>
+
+    <color name="blbl_accent_amber">#FFD54F</color>
+    <color name="blbl_accent_amber_container">#33FFD54F</color>
+    <color name="blbl_accent_amber_weak">#66FFD54F</color>
+    <color name="blbl_accent_amber_pressed">#80FFD54F</color>
 
     <color name="blbl_purple">#8A2BE2</color>
     <color name="blbl_blue">#00A1D6</color>
