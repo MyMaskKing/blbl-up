@@ -17,6 +17,20 @@
         <item name="blblAccentPressed">@color/blbl_accent_blue_pressed</item>
     </style>
 
+    <style name="ThemeOverlay.Blbl.Accent.OceanBlue" parent="ThemeOverlay.MaterialComponents">
+        <item name="blblAccent">@color/blbl_accent_ocean_blue</item>
+        <item name="blblAccentContainer">@color/blbl_accent_ocean_blue_container</item>
+        <item name="blblAccentWeak">@color/blbl_accent_ocean_blue_weak</item>
+        <item name="blblAccentPressed">@color/blbl_accent_ocean_blue_pressed</item>
+    </style>
+
+    <style name="ThemeOverlay.Blbl.Accent.DarkPink" parent="ThemeOverlay.MaterialComponents">
+        <item name="blblAccent">@color/blbl_accent_dark_pink</item>
+        <item name="blblAccentContainer">@color/blbl_accent_dark_pink_container</item>
+        <item name="blblAccentWeak">@color/blbl_accent_dark_pink_weak</item>
+        <item name="blblAccentPressed">@color/blbl_accent_dark_pink_pressed</item>
+    </style>
+
     <style name="ThemeOverlay.Blbl.Accent.Amber" parent="ThemeOverlay.MaterialComponents">
         <item name="blblAccent">@color/blbl_accent_amber</item>
         <item name="blblAccentContainer">@color/blbl_accent_amber_container</item>

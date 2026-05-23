@@ -153,37 +153,6 @@
         <item name="blblAccentPressed">@color/blbl_accent_classic_pressed</item>
     </style>
 
-    <!-- Accent overlays for new presets -->
-    <style name="ThemeOverlay.Blbl.Accent.OceanBlue" parent="">
-        <item name="blblAccent">@color/blbl_accent_ocean_blue</item>
-        <item name="blblAccentContainer">@color/blbl_accent_ocean_blue_container</item>
-        <item name="blblAccentWeak">@color/blbl_accent_ocean_blue_weak</item>
-        <item name="blblAccentPressed">@color/blbl_accent_ocean_blue_pressed</item>
-        <item name="colorSecondary">@color/blbl_accent_ocean_blue</item>
-        <item name="colorControlActivated">@color/blbl_accent_ocean_blue</item>
-        <item name="colorControlHighlight">@color/blbl_accent_ocean_blue_container</item>
-    </style>
-
-    <style name="ThemeOverlay.Blbl.Accent.DarkPink" parent="">
-        <item name="blblAccent">@color/blbl_accent_dark_pink</item>
-        <item name="blblAccentContainer">@color/blbl_accent_dark_pink_container</item>
-        <item name="blblAccentWeak">@color/blbl_accent_dark_pink_weak</item>
-        <item name="blblAccentPressed">@color/blbl_accent_dark_pink_pressed</item>
-        <item name="colorSecondary">@color/blbl_accent_dark_pink</item>
-        <item name="colorControlActivated">@color/blbl_accent_dark_pink</item>
-        <item name="colorControlHighlight">@color/blbl_accent_dark_pink_container</item>
-    </style>
-
-    <style name="ThemeOverlay.Blbl.Accent.Amber" parent="">
-        <item name="blblAccent">@color/blbl_accent_amber</item>
-        <item name="blblAccentContainer">@color/blbl_accent_amber_container</item>
-        <item name="blblAccentWeak">@color/blbl_accent_amber_weak</item>
-        <item name="blblAccentPressed">@color/blbl_accent_amber_pressed</item>
-        <item name="colorSecondary">@color/blbl_accent_amber</item>
-        <item name="colorControlActivated">@color/blbl_accent_amber</item>
-        <item name="colorControlHighlight">@color/blbl_accent_amber_container</item>
-    </style>
-
     <!-- Player is frozen for this iteration: keep existing blue focus/active states. -->
     <style name="Theme.Blbl.Player.Fixed" parent="Theme.Blbl.Base.Dark">
         <item name="blblAccent">@color/blbl_blue</item>
