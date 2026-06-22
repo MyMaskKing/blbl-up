@@ -1,126 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- ============================================================
-         BASE PALETTE — Default Dark (charcoal + violet accent)
-         Deep, neutral dark with a vibrant violet accent.
-         ============================================================ -->
-    <color name="blbl_bg">#0B0B0D</color>
-    <color name="blbl_surface">#16161A</color>
-    <color name="blbl_text">#EEEEF0</color>
-    <color name="blbl_text_secondary">#8E8E93</color>
+    <color name="blbl_bg">#090A10</color>
+    <color name="blbl_surface">#171827</color>
+    <color name="blbl_text">#F3F4FF</color>
+    <color name="blbl_text_secondary">#9CA0B8</color>
+    <color name="blbl_text_on_media">#F3F4FF</color>
 
-    <!-- Text/icon tint used on top of media covers with scrims/shadows (theme-independent). -->
-    <color name="blbl_text_on_media">#EEEEF0</color>
-
-    <!-- ============================================================
-         OLED DARK — True black for infinite contrast.
-         Pure #000000 background, barely-visible surface for depth.
-         ============================================================ -->
     <color name="blbl_bg_oled">#000000</color>
-    <color name="blbl_surface_oled">#0D0D0D</color>
+    <color name="blbl_surface_oled">#080808</color>
+    <color name="blbl_text_oled">#F2F2F2</color>
+    <color name="blbl_text_secondary_oled">#7A7A7A</color>
 
-    <!-- ============================================================
-         OCEAN BLUE — Deep navy with electric cyan accent.
-         Inspired by ocean depths; cool tones for a calm immersive feel.
-         ============================================================ -->
-    <color name="blbl_bg_ocean_blue">#060B14</color>
-    <color name="blbl_surface_ocean_blue">#0E1A2B</color>
+    <color name="blbl_bg_ocean_blue">#03111F</color>
+    <color name="blbl_surface_ocean_blue">#0B2236</color>
+    <color name="blbl_text_ocean_blue">#EAF6FF</color>
+    <color name="blbl_text_secondary_ocean_blue">#8AA4B8</color>
 
-    <!-- ============================================================
-         DARK PINK — Rich plum with magenta-pink accent.
-         Dark, moody, and cinematic.
-         ============================================================ -->
-    <color name="blbl_bg_dark_pink">#0F0814</color>
-    <color name="blbl_surface_dark_pink">#1C0F24</color>
+    <color name="blbl_bg_dark_pink">#12070B</color>
+    <color name="blbl_surface_dark_pink">#241016</color>
+    <color name="blbl_text_dark_pink">#FFF0F4</color>
+    <color name="blbl_text_secondary_dark_pink">#A98891</color>
 
-    <!-- ============================================================
-         AMBER — Warm dark brown with golden accent.
-         Cozy, retro warmth — like a dimly-lit lounge.
-         ============================================================ -->
-    <color name="blbl_bg_amber">#0F0C06</color>
-    <color name="blbl_surface_amber">#1A150A</color>
+    <color name="blbl_bg_amber">#120D05</color>
+    <color name="blbl_surface_amber">#241A0A</color>
+    <color name="blbl_text_amber">#FFF4D6</color>
+    <color name="blbl_text_secondary_amber">#A89467</color>
 
-    <!-- ============================================================
-         TV PINK — Rose-dark (converted from light theme).
-         Formerly #FFF7FA — completely wrong for TV. Now a deep rose-dark.
-         ============================================================ -->
-    <color name="blbl_bg_tv_pink">#0F080C</color>
-    <color name="blbl_surface_tv_pink">#1C0F16</color>
+    <color name="blbl_bg_tv_pink">#130812</color>
+    <color name="blbl_surface_tv_pink">#261124</color>
+    <color name="blbl_text_tv_pink">#FFF0FA</color>
+    <color name="blbl_text_secondary_tv_pink">#B08AA7</color>
 
-    <!-- ============================================================
-         CLASSIC — Plum-dark illustration theme.
-         Formerly #5A1C43 (harsh saturated purple) — now a deep,
-         controlled dark plum with soft pink accent.
-         ============================================================ -->
-    <color name="blbl_bg_classic">#120810</color>
+    <color name="blbl_bg_classic">#0E1020</color>
     <color name="blbl_content_bg_classic">#00000000</color>
-    <color name="blbl_surface_classic">#1E0F1A</color>
-    <color name="blbl_dialog_surface_classic">#2A1422</color>
-    <color name="blbl_text_classic">#F0E6EE</color>
-    <color name="blbl_text_secondary_classic">#8E8E93</color>
-    <color name="blbl_on_page_backdrop_classic">#F0E6EE</color>
-    <color name="blbl_on_page_backdrop_secondary_classic">#6E6E73</color>
+    <color name="blbl_surface_classic">#1A1D33</color>
+    <color name="blbl_dialog_surface_classic">#232742</color>
+    <color name="blbl_text_classic">#F6EEDB</color>
+    <color name="blbl_text_secondary_classic">#9B907C</color>
+    <color name="blbl_on_page_backdrop_classic">#F6EEDB</color>
+    <color name="blbl_on_page_backdrop_secondary_classic">#9B907C</color>
 
-    <!-- ============================================================
-         FOCUS HIGHLIGHT — Shared across all dark themes.
-         White frame + subtle shadow overlay for TV remote focus.
-         ============================================================ -->
     <color name="blbl_focus_white">#FFFFFF</color>
     <color name="blbl_focus_shadow">#55000000</color>
     <color name="blbl_focus_fill">#33333333</color>
     <color name="blbl_focus_fill_pressed">#55333333</color>
 
-    <!-- ============================================================
-         ACCENT COLORS — Luminous, high-contrast, TV-optimized.
-         Each preset has a base accent + alpha variants.
-         ============================================================ -->
+    <color name="blbl_purple">#8B5CF6</color>
+    <color name="blbl_accent_violet_container">#2A8B5CF6</color>
+    <color name="blbl_accent_violet_weak">#558B5CF6</color>
+    <color name="blbl_accent_violet_pressed">#778B5CF6</color>
 
-    <!-- Violet (Default) — Electric purple, pops on dark charcoal -->
-    <color name="blbl_purple">#A855F7</color>
-    <color name="blbl_accent_violet_container">#2AA855F7</color>
-    <color name="blbl_accent_violet_weak">#55A855F7</color>
-    <color name="blbl_accent_violet_pressed">#77A855F7</color>
+    <color name="blbl_accent_tv_pink">#FF5DA2</color>
+    <color name="blbl_pink">#FF5DA2</color>
+    <color name="blbl_accent_tv_pink_container">#2AFF5DA2</color>
+    <color name="blbl_accent_tv_pink_weak">#55FF5DA2</color>
+    <color name="blbl_accent_tv_pink_pressed">#77FF5DA2</color>
 
-    <!-- TV Pink — Soft rose, cinematic warmth -->
-    <color name="blbl_accent_tv_pink">#F43F5E</color>
-    <color name="blbl_pink">#F43F5E</color>
-    <color name="blbl_accent_tv_pink_container">#2AF43F5E</color>
-    <color name="blbl_accent_tv_pink_weak">#55F43F5E</color>
-    <color name="blbl_accent_tv_pink_pressed">#77F43F5E</color>
+    <color name="blbl_accent_classic">#D8A35D</color>
+    <color name="blbl_accent_classic_container">#2AD8A35D</color>
+    <color name="blbl_accent_classic_weak">#55D8A35D</color>
+    <color name="blbl_accent_classic_pressed">#77D8A35D</color>
 
-    <!-- Classic — Pastel rose, gentle on plum-dark -->
-    <color name="blbl_accent_classic">#F9A8D4</color>
-    <color name="blbl_accent_classic_container">#2AF9A8D4</color>
-    <color name="blbl_accent_classic_weak">#55F9A8D4</color>
-    <color name="blbl_accent_classic_pressed">#77F9A8D4</color>
-
-    <!-- Blue (Player) — Trustworthy cyan-blue -->
-    <color name="blbl_blue">#06B6D4</color>
-    <color name="blbl_accent_blue_container">#2A06B6D4</color>
-    <color name="blbl_accent_blue_weak">#5506B6D4</color>
-    <color name="blbl_accent_blue_pressed">#7706B6D4</color>
+    <color name="blbl_blue">#6EE7FF</color>
+    <color name="blbl_accent_blue_container">#2A6EE7FF</color>
+    <color name="blbl_accent_blue_weak">#556EE7FF</color>
+    <color name="blbl_accent_blue_pressed">#776EE7FF</color>
     <color name="player_button_tint">#FFFFFF</color>
 
-    <!-- Ocean Blue — Bright sky-cyan, high contrast on navy -->
-    <color name="blbl_accent_ocean_blue">#22D3EE</color>
-    <color name="blbl_accent_ocean_blue_container">#2A22D3EE</color>
-    <color name="blbl_accent_ocean_blue_weak">#5522D3EE</color>
-    <color name="blbl_accent_ocean_blue_pressed">#7722D3EE</color>
+    <color name="blbl_accent_ocean_blue">#FF8A3D</color>
+    <color name="blbl_accent_ocean_blue_container">#2AFF8A3D</color>
+    <color name="blbl_accent_ocean_blue_weak">#55FF8A3D</color>
+    <color name="blbl_accent_ocean_blue_pressed">#77FF8A3D</color>
 
-    <!-- Dark Pink — Vibrant magenta-pink on plum -->
-    <color name="blbl_accent_dark_pink">#EC4899</color>
-    <color name="blbl_accent_dark_pink_container">#2AEC4899</color>
-    <color name="blbl_accent_dark_pink_weak">#55EC4899</color>
-    <color name="blbl_accent_dark_pink_pressed">#77EC4899</color>
+    <color name="blbl_accent_dark_pink">#FF3B6B</color>
+    <color name="blbl_accent_dark_pink_container">#2AFF3B6B</color>
+    <color name="blbl_accent_dark_pink_weak">#55FF3B6B</color>
+    <color name="blbl_accent_dark_pink_pressed">#77FF3B6B</color>
 
-    <!-- Amber — Golden warmth, readable on dark brown -->
-    <color name="blbl_accent_amber">#FBBF24</color>
-    <color name="blbl_accent_amber_container">#2AFBBF24</color>
-    <color name="blbl_accent_amber_weak">#55FBBF24</color>
-    <color name="blbl_accent_amber_pressed">#77FBBF24</color>
+    <color name="blbl_accent_amber">#F6B73C</color>
+    <color name="blbl_accent_amber_container">#2AF6B73C</color>
+    <color name="blbl_accent_amber_weak">#55F6B73C</color>
+    <color name="blbl_accent_amber_pressed">#77F6B73C</color>
 
-    <!-- Misc -->
-    <color name="player_comment_thread_root_bg">#2606B6D4</color>
+    <color name="player_comment_thread_root_bg">#266EE7FF</color>
     <color name="blbl_red">#EF4444</color>
     <color name="player_overlay_bg">#88000000</color>
 </resources>

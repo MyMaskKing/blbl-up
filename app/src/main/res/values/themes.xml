@@ -60,19 +60,31 @@
     <style name="Theme.Blbl.Base.OledDark" parent="Theme.Blbl.Base.Dark">
         <item name="colorPrimary">@color/blbl_surface_oled</item>
         <item name="colorPrimaryVariant">@color/blbl_surface_oled</item>
+        <item name="colorOnPrimary">@color/blbl_text_oled</item>
         <item name="android:colorBackground">@color/blbl_bg_oled</item>
         <item name="colorBackground">@color/blbl_bg_oled</item>
         <item name="colorSurface">@color/blbl_surface_oled</item>
+        <item name="colorOnSurface">@color/blbl_text_oled</item>
         <item name="blblDialogSurface">@color/blbl_surface_oled</item>
+        <item name="blblOnPageBackdrop">@color/blbl_text_oled</item>
+        <item name="blblOnPageBackdropSecondary">@color/blbl_text_secondary_oled</item>
+        <item name="android:textColorPrimary">@color/blbl_text_oled</item>
+        <item name="android:textColorSecondary">@color/blbl_text_secondary_oled</item>
     </style>
 
     <style name="Theme.Blbl.Base.OceanBlue" parent="Theme.Blbl.Base.Dark">
         <item name="colorPrimary">@color/blbl_surface_ocean_blue</item>
         <item name="colorPrimaryVariant">@color/blbl_surface_ocean_blue</item>
+        <item name="colorOnPrimary">@color/blbl_text_ocean_blue</item>
         <item name="android:colorBackground">@color/blbl_bg_ocean_blue</item>
         <item name="colorBackground">@color/blbl_bg_ocean_blue</item>
         <item name="colorSurface">@color/blbl_surface_ocean_blue</item>
+        <item name="colorOnSurface">@color/blbl_text_ocean_blue</item>
         <item name="blblDialogSurface">@color/blbl_surface_ocean_blue</item>
+        <item name="blblOnPageBackdrop">@color/blbl_text_ocean_blue</item>
+        <item name="blblOnPageBackdropSecondary">@color/blbl_text_secondary_ocean_blue</item>
+        <item name="android:textColorPrimary">@color/blbl_text_ocean_blue</item>
+        <item name="android:textColorSecondary">@color/blbl_text_secondary_ocean_blue</item>
         <item name="blblAccent">@color/blbl_accent_ocean_blue</item>
         <item name="blblAccentContainer">@color/blbl_accent_ocean_blue_container</item>
         <item name="blblAccentWeak">@color/blbl_accent_ocean_blue_weak</item>
@@ -82,10 +94,16 @@
     <style name="Theme.Blbl.Base.DarkPink" parent="Theme.Blbl.Base.Dark">
         <item name="colorPrimary">@color/blbl_surface_dark_pink</item>
         <item name="colorPrimaryVariant">@color/blbl_surface_dark_pink</item>
+        <item name="colorOnPrimary">@color/blbl_text_dark_pink</item>
         <item name="android:colorBackground">@color/blbl_bg_dark_pink</item>
         <item name="colorBackground">@color/blbl_bg_dark_pink</item>
         <item name="colorSurface">@color/blbl_surface_dark_pink</item>
+        <item name="colorOnSurface">@color/blbl_text_dark_pink</item>
         <item name="blblDialogSurface">@color/blbl_surface_dark_pink</item>
+        <item name="blblOnPageBackdrop">@color/blbl_text_dark_pink</item>
+        <item name="blblOnPageBackdropSecondary">@color/blbl_text_secondary_dark_pink</item>
+        <item name="android:textColorPrimary">@color/blbl_text_dark_pink</item>
+        <item name="android:textColorSecondary">@color/blbl_text_secondary_dark_pink</item>
         <item name="blblAccent">@color/blbl_accent_dark_pink</item>
         <item name="blblAccentContainer">@color/blbl_accent_dark_pink_container</item>
         <item name="blblAccentWeak">@color/blbl_accent_dark_pink_weak</item>
@@ -95,10 +113,16 @@
     <style name="Theme.Blbl.Base.Amber" parent="Theme.Blbl.Base.Dark">
         <item name="colorPrimary">@color/blbl_surface_amber</item>
         <item name="colorPrimaryVariant">@color/blbl_surface_amber</item>
+        <item name="colorOnPrimary">@color/blbl_text_amber</item>
         <item name="android:colorBackground">@color/blbl_bg_amber</item>
         <item name="colorBackground">@color/blbl_bg_amber</item>
         <item name="colorSurface">@color/blbl_surface_amber</item>
+        <item name="colorOnSurface">@color/blbl_text_amber</item>
         <item name="blblDialogSurface">@color/blbl_surface_amber</item>
+        <item name="blblOnPageBackdrop">@color/blbl_text_amber</item>
+        <item name="blblOnPageBackdropSecondary">@color/blbl_text_secondary_amber</item>
+        <item name="android:textColorPrimary">@color/blbl_text_amber</item>
+        <item name="android:textColorSecondary">@color/blbl_text_secondary_amber</item>
         <item name="blblAccent">@color/blbl_accent_amber</item>
         <item name="blblAccentContainer">@color/blbl_accent_amber_container</item>
         <item name="blblAccentWeak">@color/blbl_accent_amber_weak</item>
@@ -106,12 +130,23 @@
     </style>
 
     <style name="Theme.Blbl.Base.PinkLight" parent="Theme.Blbl.Base.Dark">
+        <item name="colorPrimary">@color/blbl_surface_tv_pink</item>
+        <item name="colorPrimaryVariant">@color/blbl_surface_tv_pink</item>
+        <item name="colorOnPrimary">@color/blbl_text_tv_pink</item>
+        <item name="android:colorBackground">@color/blbl_bg_tv_pink</item>
+        <item name="colorBackground">@color/blbl_bg_tv_pink</item>
+        <item name="colorSurface">@color/blbl_surface_tv_pink</item>
+        <item name="colorOnSurface">@color/blbl_text_tv_pink</item>
+        <item name="blblDialogSurface">@color/blbl_surface_tv_pink</item>
+        <item name="blblOnPageBackdrop">@color/blbl_text_tv_pink</item>
+        <item name="blblOnPageBackdropSecondary">@color/blbl_text_secondary_tv_pink</item>
+        <item name="android:textColorPrimary">@color/blbl_text_tv_pink</item>
+        <item name="android:textColorSecondary">@color/blbl_text_secondary_tv_pink</item>
         <item name="blblAccent">@color/blbl_accent_tv_pink</item>
         <item name="blblAccentContainer">@color/blbl_accent_tv_pink_container</item>
         <item name="blblAccentWeak">@color/blbl_accent_tv_pink_weak</item>
         <item name="blblAccentPressed">@color/blbl_accent_tv_pink_pressed</item>
 
-        <!-- Focus resources: use accent color for better contrast on dark backgrounds. -->
         <item name="blblFocusBgRound">@drawable/blbl_focus_bg_round_tv_pink</item>
         <item name="blblFocusListSelectorRound">@drawable/blbl_focus_list_selector_round_tv_pink</item>
         <item name="blblFocusStrokeColor">@color/blbl_focus_stroke_tv_pink</item>
