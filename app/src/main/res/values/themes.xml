@@ -105,34 +105,25 @@
         <item name="blblAccentPressed">@color/blbl_accent_amber_pressed</item>
     </style>
 
-    <style name="Theme.Blbl.Base.PinkLight" parent="Theme.Blbl.Base">
-        <item name="colorPrimary">@color/blbl_surface_tv_pink</item>
-        <item name="colorPrimaryVariant">@color/blbl_surface_tv_pink</item>
-        <item name="colorOnPrimary">@color/blbl_text_tv_pink</item>
+    <style name="Theme.Blbl.Base.PinkLight" parent="Theme.Blbl.Base.Dark">
+        <item name="blblAccent">@color/blbl_accent_tv_pink</item>
+        <item name="blblAccentContainer">@color/blbl_accent_tv_pink_container</item>
+        <item name="blblAccentWeak">@color/blbl_accent_tv_pink_weak</item>
+        <item name="blblAccentPressed">@color/blbl_accent_tv_pink_pressed</item>
 
-        <item name="android:colorBackground">@color/blbl_bg_tv_pink</item>
-        <item name="colorBackground">@color/blbl_bg_tv_pink</item>
-        <item name="blblContentBackground">?attr/colorSurface</item>
-        <item name="colorSurface">@color/blbl_surface_tv_pink</item>
-        <item name="colorOnSurface">@color/blbl_text_tv_pink</item>
-        <item name="blblDialogSurface">@color/blbl_surface_tv_pink</item>
-        <item name="blblOnPageBackdrop">@color/blbl_text_tv_pink</item>
-        <item name="blblOnPageBackdropSecondary">@color/blbl_text_secondary_tv_pink</item>
-
-        <item name="android:statusBarColor">@color/blbl_bg_tv_pink</item>
-        <item name="android:navigationBarColor">@color/blbl_bg_tv_pink</item>
-        <item name="android:windowBackground">@color/blbl_bg_tv_pink</item>
-        <item name="android:textColorPrimary">@color/blbl_text_tv_pink</item>
-        <item name="android:textColorSecondary">@color/blbl_text_secondary_tv_pink</item>
-
-        <!-- Focus resources: use accent color for better contrast on light backgrounds. -->
+        <!-- Focus resources: use accent color for better contrast on dark backgrounds. -->
         <item name="blblFocusBgRound">@drawable/blbl_focus_bg_round_tv_pink</item>
         <item name="blblFocusListSelectorRound">@drawable/blbl_focus_list_selector_round_tv_pink</item>
         <item name="blblFocusStrokeColor">@color/blbl_focus_stroke_tv_pink</item>
         <item name="blblFocusStrokeFocusOnlyColor">@color/blbl_focus_stroke_focus_only_tv_pink</item>
     </style>
 
-    <style name="Theme.Blbl.Base.TvPinkIllustration" parent="Theme.Blbl.Base.PinkLight">
+    <style name="Theme.Blbl.Base.TvPinkIllustration" parent="Theme.Blbl.Base.Dark">
+        <item name="blblAccent">@color/blbl_accent_classic</item>
+        <item name="blblAccentContainer">@color/blbl_accent_classic_container</item>
+        <item name="blblAccentWeak">@color/blbl_accent_classic_weak</item>
+        <item name="blblAccentPressed">@color/blbl_accent_classic_pressed</item>
+
         <item name="android:colorBackground">@color/blbl_bg_classic</item>
         <item name="colorBackground">@color/blbl_bg_classic</item>
         <item name="blblPageBackdrop">@drawable/bg_tv_pink_illustration_backdrop</item>
@@ -147,10 +138,6 @@
         <item name="android:windowBackground">@drawable/bg_launcher_window</item>
         <item name="android:textColorPrimary">@color/blbl_text_classic</item>
         <item name="android:textColorSecondary">@color/blbl_text_secondary_classic</item>
-        <item name="blblAccent">@color/blbl_accent_classic</item>
-        <item name="blblAccentContainer">@color/blbl_accent_classic_container</item>
-        <item name="blblAccentWeak">@color/blbl_accent_classic_weak</item>
-        <item name="blblAccentPressed">@color/blbl_accent_classic_pressed</item>
     </style>
 
     <!-- Player is frozen for this iteration: keep existing blue focus/active states. -->
@@ -175,18 +162,10 @@
     </style>
 
     <style name="Theme.Blbl.Launcher.TvPink" parent="Theme.Blbl.Base.PinkLight">
-        <item name="blblAccent">@color/blbl_accent_tv_pink</item>
-        <item name="blblAccentContainer">@color/blbl_accent_tv_pink_container</item>
-        <item name="blblAccentWeak">@color/blbl_accent_tv_pink_weak</item>
-        <item name="blblAccentPressed">@color/blbl_accent_tv_pink_pressed</item>
         <item name="android:windowBackground">@drawable/bg_launcher_window</item>
     </style>
 
     <style name="Theme.Blbl.Launcher.TvPinkIllustration" parent="Theme.Blbl.Base.TvPinkIllustration">
-        <item name="blblAccent">@color/blbl_accent_classic</item>
-        <item name="blblAccentContainer">@color/blbl_accent_classic_container</item>
-        <item name="blblAccentWeak">@color/blbl_accent_classic_weak</item>
-        <item name="blblAccentPressed">@color/blbl_accent_classic_pressed</item>
         <item name="android:windowBackground">@drawable/bg_launcher_window</item>
     </style>
 </resources>

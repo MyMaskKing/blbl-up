@@ -18,6 +18,7 @@ import blbl.cat3399.core.net.BiliClient
 import blbl.cat3399.core.ui.AppToast
 import blbl.cat3399.core.ui.DpadGridController
 import blbl.cat3399.core.ui.TabContentFocusTarget
+import blbl.cat3399.core.ui.enableDpadTabFocus
 import blbl.cat3399.core.ui.postIfAlive
 import blbl.cat3399.core.ui.requestFocusAdapterPositionReliable
 import blbl.cat3399.core.ui.requestFocusFirstItemOrSelfAfterRefresh
@@ -381,6 +382,7 @@ class PgcCategoryFragment : Fragment(), RefreshKeyHandler, TabContentFocusTarget
             },
         )
         installInnerTabFocusOrder()
+        binding.tabLayout.enableDpadTabFocus()
     }
 
     private fun installInnerTabFocusOrder() {
