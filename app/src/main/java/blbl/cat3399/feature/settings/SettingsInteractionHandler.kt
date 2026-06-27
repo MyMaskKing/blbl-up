@@ -682,6 +682,9 @@ class SettingsInteractionHandler(
                         blbl.cat3399.core.prefs.AppPrefs.THEME_PRESET_OCEAN_BLUE to "深海蓝",
                         blbl.cat3399.core.prefs.AppPrefs.THEME_PRESET_TV_PINK to "小电视粉",
                         blbl.cat3399.core.prefs.AppPrefs.THEME_PRESET_TV_PINK_ILLUSTRATION to "经典",
+                        blbl.cat3399.core.prefs.AppPrefs.THEME_PRESET_NEON_PUNCH to "霓虹撞色",
+                        blbl.cat3399.core.prefs.AppPrefs.THEME_PRESET_DEEP_CYAN to "苍青渐变",
+                        blbl.cat3399.core.prefs.AppPrefs.THEME_PRESET_BLACK_GOLD to "黑金",
                     )
                 showChoiceDialog(
                     title = "主题",
