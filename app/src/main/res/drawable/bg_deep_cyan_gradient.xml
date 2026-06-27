@@ -3,4 +3,3 @@
     android:startColor="@color/blbl_bg_deep_cyan_start"
     android:endColor="@color/blbl_bg_deep_cyan_end"
     android:angle="135" />
-</gradient>
