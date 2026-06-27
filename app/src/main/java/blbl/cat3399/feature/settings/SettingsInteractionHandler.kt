@@ -675,12 +675,12 @@ class SettingsInteractionHandler(
             SettingId.ThemePreset -> {
                 val options =
                     listOf(
-                        blbl.cat3399.core.prefs.AppPrefs.THEME_PRESET_DEFAULT to "默认",
-                        blbl.cat3399.core.prefs.AppPrefs.THEME_PRESET_DARK_PINK to "暗夜粉",
-                        blbl.cat3399.core.prefs.AppPrefs.THEME_PRESET_AMBER to "琥珀黄",
+                        blbl.cat3399.core.prefs.AppPrefs.THEME_PRESET_DEFAULT to "深夜蓝",
+                        blbl.cat3399.core.prefs.AppPrefs.THEME_PRESET_DARK_PINK to "暗夜玫瑰",
+                        blbl.cat3399.core.prefs.AppPrefs.THEME_PRESET_AMBER to "琥珀金",
                         blbl.cat3399.core.prefs.AppPrefs.THEME_PRESET_OLED_DARK to "OLED 纯黑",
-                        blbl.cat3399.core.prefs.AppPrefs.THEME_PRESET_OCEAN_BLUE to "深海蓝",
-                        blbl.cat3399.core.prefs.AppPrefs.THEME_PRESET_TV_PINK to "小电视粉",
+                        blbl.cat3399.core.prefs.AppPrefs.THEME_PRESET_OCEAN_BLUE to "静谧蓝",
+                        blbl.cat3399.core.prefs.AppPrefs.THEME_PRESET_TV_PINK to "复古粉",
                         blbl.cat3399.core.prefs.AppPrefs.THEME_PRESET_TV_PINK_ILLUSTRATION to "经典",
                         blbl.cat3399.core.prefs.AppPrefs.THEME_PRESET_NEON_PUNCH to "霓虹撞色",
                         blbl.cat3399.core.prefs.AppPrefs.THEME_PRESET_DEEP_CYAN to "苍青渐变",

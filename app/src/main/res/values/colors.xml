@@ -7,8 +7,8 @@
     <color name="blbl_text_on_media">#F3F4FF</color>
 
     <color name="blbl_bg_oled">#000000</color>
-    <color name="blbl_surface_oled">#080808</color>
-    <color name="blbl_text_oled">#F2F2F2</color>
+    <color name="blbl_surface_oled">#050505</color>
+    <color name="blbl_text_oled">#E6E6E6</color>
     <color name="blbl_text_secondary_oled">#7A7A7A</color>
 
     <color name="blbl_bg_ocean_blue">#03111F</color>
@@ -16,17 +16,17 @@
     <color name="blbl_text_ocean_blue">#EAF6FF</color>
     <color name="blbl_text_secondary_ocean_blue">#8AA4B8</color>
 
-    <color name="blbl_bg_dark_pink">#12070B</color>
+    <color name="blbl_bg_dark_pink">#150A0F</color>
     <color name="blbl_surface_dark_pink">#241016</color>
     <color name="blbl_text_dark_pink">#FFF0F4</color>
     <color name="blbl_text_secondary_dark_pink">#A98891</color>
 
-    <color name="blbl_bg_amber">#120D05</color>
+    <color name="blbl_bg_amber">#151200</color>
     <color name="blbl_surface_amber">#241A0A</color>
     <color name="blbl_text_amber">#FFF4D6</color>
     <color name="blbl_text_secondary_amber">#A89467</color>
 
-    <color name="blbl_bg_tv_pink">#130812</color>
+    <color name="blbl_bg_tv_pink">#1A0A10</color>
     <color name="blbl_surface_tv_pink">#261124</color>
     <color name="blbl_text_tv_pink">#FFF0FA</color>
     <color name="blbl_text_secondary_tv_pink">#B08AA7</color>
