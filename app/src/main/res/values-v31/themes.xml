@@ -28,4 +28,37 @@
         <item name="android:windowSplashScreenAnimatedIcon">@drawable/ic_splash_transparent</item>
         <item name="android:windowSplashScreenIconBackgroundColor">@android:color/transparent</item>
     </style>
+
+    <style name="Theme.Blbl.Launcher.NeonPunch" parent="Theme.Blbl.Base.NeonPunch">
+        <item name="blblAccent">@color/blbl_accent_neon_punch</item>
+        <item name="blblAccentContainer">@color/blbl_accent_neon_punch_container</item>
+        <item name="blblAccentWeak">@color/blbl_accent_neon_punch_weak</item>
+        <item name="blblAccentPressed">@color/blbl_accent_neon_punch_pressed</item>
+        <item name="android:windowBackground">@drawable/bg_launcher_window</item>
+        <item name="android:windowSplashScreenBackground">?attr/colorBackground</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/ic_splash_transparent</item>
+        <item name="android:windowSplashScreenIconBackgroundColor">@android:color/transparent</item>
+    </style>
+
+    <style name="Theme.Blbl.Launcher.DeepCyan" parent="Theme.Blbl.Base.DeepCyan">
+        <item name="blblAccent">@color/blbl_accent_deep_cyan</item>
+        <item name="blblAccentContainer">@color/blbl_accent_deep_cyan_container</item>
+        <item name="blblAccentWeak">@color/blbl_accent_deep_cyan_weak</item>
+        <item name="blblAccentPressed">@color/blbl_accent_deep_cyan_pressed</item>
+        <item name="android:windowBackground">@drawable/bg_launcher_window</item>
+        <item name="android:windowSplashScreenBackground">?attr/colorBackground</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/ic_splash_transparent</item>
+        <item name="android:windowSplashScreenIconBackgroundColor">@android:color/transparent</item>
+    </style>
+
+    <style name="Theme.Blbl.Launcher.BlackGold" parent="Theme.Blbl.Base.BlackGold">
+        <item name="blblAccent">@color/blbl_accent_black_gold</item>
+        <item name="blblAccentContainer">@color/blbl_accent_black_gold_container</item>
+        <item name="blblAccentWeak">@color/blbl_accent_black_gold_weak</item>
+        <item name="blblAccentPressed">@color/blbl_accent_black_gold_pressed</item>
+        <item name="android:windowBackground">@drawable/bg_launcher_window</item>
+        <item name="android:windowSplashScreenBackground">?attr/colorBackground</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/ic_splash_transparent</item>
+        <item name="android:windowSplashScreenIconBackgroundColor">@android:color/transparent</item>
+    </style>
 </resources>
