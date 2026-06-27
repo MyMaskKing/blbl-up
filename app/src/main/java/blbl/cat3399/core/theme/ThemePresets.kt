@@ -69,6 +69,24 @@ object ThemePresets {
                     overlayRes = R.style.ThemeOverlay_Blbl_Accent_Amber,
                 )
 
+            AppPrefs.THEME_PRESET_NEON_PUNCH ->
+                Spec(
+                    baseThemeRes = R.style.Theme_Blbl_Base_NeonPunch,
+                    overlayRes = R.style.ThemeOverlay_Blbl_Accent_NeonPunch,
+                )
+
+            AppPrefs.THEME_PRESET_DEEP_CYAN ->
+                Spec(
+                    baseThemeRes = R.style.Theme_Blbl_Base_DeepCyan,
+                    overlayRes = R.style.ThemeOverlay_Blbl_Accent_DeepCyan,
+                )
+
+            AppPrefs.THEME_PRESET_BLACK_GOLD ->
+                Spec(
+                    baseThemeRes = R.style.Theme_Blbl_Base_BlackGold,
+                    overlayRes = R.style.ThemeOverlay_Blbl_Accent_BlackGold,
+                )
+
             else ->
                 Spec(
                     baseThemeRes = R.style.Theme_Blbl_Base_Dark,

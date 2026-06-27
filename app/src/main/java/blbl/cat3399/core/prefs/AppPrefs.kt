@@ -1002,6 +1002,9 @@ class AppPrefs(context: Context) {
         const val THEME_PRESET_OCEAN_BLUE = "ocean_blue"
         const val THEME_PRESET_DARK_PINK = "dark_pink"
         const val THEME_PRESET_AMBER = "amber"
+        const val THEME_PRESET_NEON_PUNCH = "neon_punch"
+        const val THEME_PRESET_DEEP_CYAN = "deep_cyan"
+        const val THEME_PRESET_BLACK_GOLD = "black_gold"
 
         const val FOLLOWING_LIST_ORDER_FOLLOW_TIME = "follow_time"
         const val FOLLOWING_LIST_ORDER_RECENT_VISIT = "recent_visit"
@@ -1359,6 +1362,9 @@ class AppPrefs(context: Context) {
                 THEME_PRESET_OCEAN_BLUE -> THEME_PRESET_OCEAN_BLUE
                 THEME_PRESET_DARK_PINK -> THEME_PRESET_DARK_PINK
                 THEME_PRESET_AMBER -> THEME_PRESET_AMBER
+                THEME_PRESET_NEON_PUNCH -> THEME_PRESET_NEON_PUNCH
+                THEME_PRESET_DEEP_CYAN -> THEME_PRESET_DEEP_CYAN
+                THEME_PRESET_BLACK_GOLD -> THEME_PRESET_BLACK_GOLD
                 else -> THEME_PRESET_DEFAULT
             }
         }

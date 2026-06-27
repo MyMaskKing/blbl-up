@@ -155,6 +155,9 @@ object SettingsText {
             blbl.cat3399.core.prefs.AppPrefs.THEME_PRESET_AMBER -> "琥珀黄"
             blbl.cat3399.core.prefs.AppPrefs.THEME_PRESET_TV_PINK -> "小电视粉"
             blbl.cat3399.core.prefs.AppPrefs.THEME_PRESET_TV_PINK_ILLUSTRATION -> "经典"
+            blbl.cat3399.core.prefs.AppPrefs.THEME_PRESET_NEON_PUNCH -> "霓虹撞色"
+            blbl.cat3399.core.prefs.AppPrefs.THEME_PRESET_DEEP_CYAN -> "苍青渐变"
+            blbl.cat3399.core.prefs.AppPrefs.THEME_PRESET_BLACK_GOLD -> "黑金"
             else -> "默认"
         }
 

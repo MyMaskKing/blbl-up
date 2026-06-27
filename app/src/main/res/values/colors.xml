@@ -40,6 +40,37 @@
     <color name="blbl_on_page_backdrop_classic">#F6EEDB</color>
     <color name="blbl_on_page_backdrop_secondary_classic">#9B907C</color>
 
+    <!-- 霓虹撞色 - Neon Punch -->
+    <color name="blbl_bg_neon_punch">#0F051D</color>
+    <color name="blbl_surface_neon_punch">#1F0A38</color>
+    <color name="blbl_text_neon_punch">#D9FFCC</color>
+    <color name="blbl_text_secondary_neon_punch">#8FB38F</color>
+    <color name="blbl_accent_neon_punch">#FF55CC</color>
+    <color name="blbl_accent_neon_punch_container">#2AFF55CC</color>
+    <color name="blbl_accent_neon_punch_weak">#55FF55CC</color>
+    <color name="blbl_accent_neon_punch_pressed">#77FF55CC</color>
+
+    <!-- 苍青渐变 - Deep Cyan -->
+    <color name="blbl_bg_deep_cyan_start">#0A1929</color>
+    <color name="blbl_bg_deep_cyan_end">#0F2820</color>
+    <color name="blbl_surface_deep_cyan">#152B3B</color>
+    <color name="blbl_text_deep_cyan">#E6FFEE</color>
+    <color name="blbl_text_secondary_deep_cyan">#8FB3A5</color>
+    <color name="blbl_accent_deep_cyan">#5DD9FF</color>
+    <color name="blbl_accent_deep_cyan_container">#2A5DD9FF</color>
+    <color name="blbl_accent_deep_cyan_weak">#555DD9FF</color>
+    <color name="blbl_accent_deep_cyan_pressed">#775DD9FF</color>
+
+    <!-- 黑金 - Black Gold -->
+    <color name="blbl_bg_black_gold">#000000</color>
+    <color name="blbl_surface_black_gold">#0A0A0A</color>
+    <color name="blbl_text_black_gold">#F5F0E1</color>
+    <color name="blbl_text_secondary_black_gold">#998F66</color>
+    <color name="blbl_accent_black_gold">#D4AF37</color>
+    <color name="blbl_accent_black_gold_container">#2AD4AF37</color>
+    <color name="blbl_accent_black_gold_weak">#55D4AF37</color>
+    <color name="blbl_accent_black_gold_pressed">#77D4AF37</color>
+
     <color name="blbl_focus_white">#FFFFFF</color>
     <color name="blbl_focus_shadow">#55000000</color>
     <color name="blbl_focus_fill">#33333333</color>

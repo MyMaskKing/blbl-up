@@ -43,8 +43,8 @@
         <item name="colorOnPrimary">@color/blbl_text</item>
 
         <item name="android:colorBackground">@color/blbl_bg</item>
-        <item name="colorBackground">@color/blbl_bg</item>
-        <item name="blblContentBackground">?attr/colorBackground</item>
+        <item name="colorBackground">@drawable/bg_default_gradient</item>
+        <item name="blblPageBackdrop">@drawable/bg_default_gradient</item>
         <item name="colorSurface">@color/blbl_surface</item>
         <item name="colorOnSurface">@color/blbl_text</item>
         <item name="blblDialogSurface">@color/blbl_surface</item>
@@ -53,7 +53,7 @@
 
         <item name="android:statusBarColor">@color/blbl_bg</item>
         <item name="android:navigationBarColor">@color/blbl_bg</item>
-        <item name="android:windowBackground">@color/blbl_bg</item>
+        <item name="android:windowBackground">@drawable/bg_default_gradient</item>
         <item name="android:textColorPrimary">@color/blbl_text</item>
         <item name="android:textColorSecondary">@color/blbl_text_secondary</item>
     </style>
@@ -77,7 +77,8 @@
         <item name="colorPrimaryVariant">@color/blbl_surface_ocean_blue</item>
         <item name="colorOnPrimary">@color/blbl_text_ocean_blue</item>
         <item name="android:colorBackground">@color/blbl_bg_ocean_blue</item>
-        <item name="colorBackground">@color/blbl_bg_ocean_blue</item>
+        <item name="colorBackground">@drawable/bg_ocean_blue_gradient</item>
+        <item name="blblPageBackdrop">@drawable/bg_ocean_blue_gradient</item>
         <item name="colorSurface">@color/blbl_surface_ocean_blue</item>
         <item name="colorOnSurface">@color/blbl_text_ocean_blue</item>
         <item name="blblDialogSurface">@color/blbl_surface_ocean_blue</item>
@@ -96,7 +97,8 @@
         <item name="colorPrimaryVariant">@color/blbl_surface_dark_pink</item>
         <item name="colorOnPrimary">@color/blbl_text_dark_pink</item>
         <item name="android:colorBackground">@color/blbl_bg_dark_pink</item>
-        <item name="colorBackground">@color/blbl_bg_dark_pink</item>
+        <item name="colorBackground">@drawable/bg_dark_pink_gradient</item>
+        <item name="blblPageBackdrop">@drawable/bg_dark_pink_gradient</item>
         <item name="colorSurface">@color/blbl_surface_dark_pink</item>
         <item name="colorOnSurface">@color/blbl_text_dark_pink</item>
         <item name="blblDialogSurface">@color/blbl_surface_dark_pink</item>
@@ -115,7 +117,8 @@
         <item name="colorPrimaryVariant">@color/blbl_surface_amber</item>
         <item name="colorOnPrimary">@color/blbl_text_amber</item>
         <item name="android:colorBackground">@color/blbl_bg_amber</item>
-        <item name="colorBackground">@color/blbl_bg_amber</item>
+        <item name="colorBackground">@drawable/bg_amber_gradient</item>
+        <item name="blblPageBackdrop">@drawable/bg_amber_gradient</item>
         <item name="colorSurface">@color/blbl_surface_amber</item>
         <item name="colorOnSurface">@color/blbl_text_amber</item>
         <item name="blblDialogSurface">@color/blbl_surface_amber</item>
@@ -134,7 +137,8 @@
         <item name="colorPrimaryVariant">@color/blbl_surface_tv_pink</item>
         <item name="colorOnPrimary">@color/blbl_text_tv_pink</item>
         <item name="android:colorBackground">@color/blbl_bg_tv_pink</item>
-        <item name="colorBackground">@color/blbl_bg_tv_pink</item>
+        <item name="colorBackground">@drawable/bg_tv_pink_gradient</item>
+        <item name="blblPageBackdrop">@drawable/bg_tv_pink_gradient</item>
         <item name="colorSurface">@color/blbl_surface_tv_pink</item>
         <item name="colorOnSurface">@color/blbl_text_tv_pink</item>
         <item name="blblDialogSurface">@color/blbl_surface_tv_pink</item>
@@ -175,6 +179,82 @@
         <item name="android:textColorSecondary">@color/blbl_text_secondary_classic</item>
     </style>
 
+    <style name="Theme.Blbl.Base.NeonPunch" parent="Theme.Blbl.Base.Dark">
+        <item name="colorPrimary">@color/blbl_surface_neon_punch</item>
+        <item name="colorPrimaryVariant">@color/blbl_surface_neon_punch</item>
+        <item name="colorOnPrimary">@color/blbl_text_neon_punch</item>
+        <item name="android:colorBackground">@color/blbl_bg_neon_punch</item>
+        <item name="colorBackground">@color/blbl_bg_neon_punch</item>
+        <item name="colorSurface">@color/blbl_surface_neon_punch</item>
+        <item name="colorOnSurface">@color/blbl_text_neon_punch</item>
+        <item name="blblDialogSurface">@color/blbl_surface_neon_punch</item>
+        <item name="blblOnPageBackdrop">@color/blbl_text_neon_punch</item>
+        <item name="blblOnPageBackdropSecondary">@color/blbl_text_secondary_neon_punch</item>
+        <item name="android:textColorPrimary">@color/blbl_text_neon_punch</item>
+        <item name="android:textColorSecondary">@color/blbl_text_secondary_neon_punch</item>
+        <item name="blblAccent">@color/blbl_accent_neon_punch</item>
+        <item name="blblAccentContainer">@color/blbl_accent_neon_punch_container</item>
+        <item name="blblAccentWeak">@color/blbl_accent_neon_punch_weak</item>
+        <item name="blblAccentPressed">@color/blbl_accent_neon_punch_pressed</item>
+
+        <!-- Neon Punch accent colored focus border -->
+        <item name="blblFocusBgRound">@drawable/blbl_focus_bg_round_neon_punch</item>
+        <item name="blblFocusListSelectorRound">@drawable/blbl_focus_list_selector_round_neon_punch</item>
+        <item name="blblFocusStrokeColor">@color/blbl_accent_neon_punch</item>
+        <item name="blblFocusStrokeFocusOnlyColor">@color/blbl_accent_neon_punch_weak</item>
+    </style>
+
+    <style name="Theme.Blbl.Base.DeepCyan" parent="Theme.Blbl.Base.Dark">
+        <item name="colorPrimary">@color/blbl_surface_deep_cyan</item>
+        <item name="colorPrimaryVariant">@color/blbl_surface_deep_cyan</item>
+        <item name="colorOnPrimary">@color/blbl_text_deep_cyan</item>
+        <item name="android:colorBackground">@color/blbl_bg_deep_cyan_start</item>
+        <item name="colorBackground">@drawable/bg_deep_cyan_gradient</item>
+        <item name="blblPageBackdrop">@drawable/bg_deep_cyan_gradient</item>
+        <item name="colorSurface">@color/blbl_surface_deep_cyan</item>
+        <item name="colorOnSurface">@color/blbl_text_deep_cyan</item>
+        <item name="blblDialogSurface">@color/blbl_surface_deep_cyan</item>
+        <item name="blblOnPageBackdrop">@color/blbl_text_deep_cyan</item>
+        <item name="blblOnPageBackdropSecondary">@color/blbl_text_secondary_deep_cyan</item>
+        <item name="android:textColorPrimary">@color/blbl_text_deep_cyan</item>
+        <item name="android:textColorSecondary">@color/blbl_text_secondary_deep_cyan</item>
+        <item name="blblAccent">@color/blbl_accent_deep_cyan</item>
+        <item name="blblAccentContainer">@color/blbl_accent_deep_cyan_container</item>
+        <item name="blblAccentWeak">@color/blbl_accent_deep_cyan_weak</item>
+        <item name="blblAccentPressed">@color/blbl_accent_deep_cyan_pressed</item>
+
+        <!-- Deep Cyan accent colored focus border -->
+        <item name="blblFocusBgRound">@drawable/blbl_focus_bg_round_deep_cyan</item>
+        <item name="blblFocusListSelectorRound">@drawable/blbl_focus_list_selector_round_deep_cyan</item>
+        <item name="blblFocusStrokeColor">@color/blbl_accent_deep_cyan</item>
+        <item name="blblFocusStrokeFocusOnlyColor">@color/blbl_accent_deep_cyan_weak</item>
+    </style>
+
+    <style name="Theme.Blbl.Base.BlackGold" parent="Theme.Blbl.Base.Dark">
+        <item name="colorPrimary">@color/blbl_surface_black_gold</item>
+        <item name="colorPrimaryVariant">@color/blbl_surface_black_gold</item>
+        <item name="colorOnPrimary">@color/blbl_text_black_gold</item>
+        <item name="android:colorBackground">@color/blbl_bg_black_gold</item>
+        <item name="colorBackground">@color/blbl_bg_black_gold</item>
+        <item name="colorSurface">@color/blbl_surface_black_gold</item>
+        <item name="colorOnSurface">@color/blbl_text_black_gold</item>
+        <item name="blblDialogSurface">@color/blbl_surface_black_gold</item>
+        <item name="blblOnPageBackdrop">@color/blbl_text_black_gold</item>
+        <item name="blblOnPageBackdropSecondary">@color/blbl_text_secondary_black_gold</item>
+        <item name="android:textColorPrimary">@color/blbl_text_black_gold</item>
+        <item name="android:textColorSecondary">@color/blbl_text_secondary_black_gold</item>
+        <item name="blblAccent">@color/blbl_accent_black_gold</item>
+        <item name="blblAccentContainer">@color/blbl_accent_black_gold_container</item>
+        <item name="blblAccentWeak">@color/blbl_accent_black_gold_weak</item>
+        <item name="blblAccentPressed">@color/blbl_accent_black_gold_pressed</item>
+
+        <!-- Golden focus border for BlackGold -->
+        <item name="blblFocusBgRound">@drawable/blbl_focus_bg_round_black_gold</item>
+        <item name="blblFocusListSelectorRound">@drawable/blbl_focus_list_selector_round_black_gold</item>
+        <item name="blblFocusStrokeColor">@color/blbl_accent_black_gold</item>
+        <item name="blblFocusStrokeFocusOnlyColor">@color/blbl_accent_black_gold_weak</item>
+    </style>
+
     <!-- Player is frozen for this iteration: keep existing blue focus/active states. -->
     <style name="Theme.Blbl.Player.Fixed" parent="Theme.Blbl.Base.Dark">
         <item name="blblAccent">@color/blbl_blue</item>
@@ -200,7 +280,60 @@
         <item name="android:windowBackground">@drawable/bg_launcher_window</item>
     </style>
 
+    <style name="Theme.Blbl.Launcher.Dark" parent="Theme.Blbl.Base.Dark">
+        <item name="android:windowBackground">@drawable/bg_launcher_window</item>
+    </style>
+
+    <style name="Theme.Blbl.Launcher.TvPink" parent="Theme.Blbl.Base.PinkLight">
+        <item name="android:windowBackground">@drawable/bg_launcher_window</item>
+    </style>
+
     <style name="Theme.Blbl.Launcher.TvPinkIllustration" parent="Theme.Blbl.Base.TvPinkIllustration">
         <item name="android:windowBackground">@drawable/bg_launcher_window</item>
+    </style>
+
+    <style name="Theme.Blbl.Launcher.NeonPunch" parent="Theme.Blbl.Base.NeonPunch">
+        <item name="android:windowBackground">@drawable/bg_launcher_window</item>
+    </style>
+
+    <style name="Theme.Blbl.Launcher.DeepCyan" parent="Theme.Blbl.Base.DeepCyan">
+        <item name="android:windowBackground">@drawable/bg_launcher_window</item>
+    </style>
+
+    <style name="Theme.Blbl.Launcher.BlackGold" parent="Theme.Blbl.Base.BlackGold">
+        <item name="android:windowBackground">@drawable/bg_launcher_window</item>
+    </style>
+
+    <style name="ThemeOverlay.Blbl.Accent.NeonPunch" parent="">
+        <item name="blblAccent">@color/blbl_accent_neon_punch</item>
+        <item name="blblAccentContainer">@color/blbl_accent_neon_punch_container</item>
+        <item name="blblAccentWeak">@color/blbl_accent_neon_punch_weak</item>
+        <item name="blblAccentPressed">@color/blbl_accent_neon_punch_pressed</item>
+        <item name="colorSecondary">?attr/blblAccent</item>
+        <item name="colorOnSecondary">@android:color/white</item>
+        <item name="colorControlActivated">?attr/blblAccent</item>
+        <item name="colorControlHighlight">?attr/blblAccentContainer</item>
+    </style>
+
+    <style name="ThemeOverlay.Blbl.Accent.DeepCyan" parent="">
+        <item name="blblAccent">@color/blbl_accent_deep_cyan</item>
+        <item name="blblAccentContainer">@color/blbl_accent_deep_cyan_container</item>
+        <item name="blblAccentWeak">@color/blbl_accent_deep_cyan_weak</item>
+        <item name="blblAccentPressed">@color/blbl_accent_deep_cyan_pressed</item>
+        <item name="colorSecondary">?attr/blblAccent</item>
+        <item name="colorOnSecondary">@android:color/white</item>
+        <item name="colorControlActivated">?attr/blblAccent</item>
+        <item name="colorControlHighlight">?attr/blblAccentContainer</item>
+    </style>
+
+    <style name="ThemeOverlay.Blbl.Accent.BlackGold" parent="">
+        <item name="blblAccent">@color/blbl_accent_black_gold</item>
+        <item name="blblAccentContainer">@color/blbl_accent_black_gold_container</item>
+        <item name="blblAccentWeak">@color/blbl_accent_black_gold_weak</item>
+        <item name="blblAccentPressed">@color/blbl_accent_black_gold_pressed</item>
+        <item name="colorSecondary">?attr/blblAccent</item>
+        <item name="colorOnSecondary">@android:color/black</item>
+        <item name="colorControlActivated">?attr/blblAccent</item>
+        <item name="colorControlHighlight">?attr/blblAccentContainer</item>
     </style>
 </resources>
