@@ -185,6 +185,7 @@
         <item name="colorOnPrimary">@color/blbl_text_neon_punch</item>
         <item name="android:colorBackground">@color/blbl_bg_neon_punch</item>
         <item name="colorBackground">@color/blbl_bg_neon_punch</item>
+        <item name="blblPageBackdrop">@color/blbl_bg_neon_punch</item>
         <item name="colorSurface">@color/blbl_surface_neon_punch</item>
         <item name="colorOnSurface">@color/blbl_text_neon_punch</item>
         <item name="blblDialogSurface">@color/blbl_surface_neon_punch</item>
@@ -236,6 +237,7 @@
         <item name="colorOnPrimary">@color/blbl_text_black_gold</item>
         <item name="android:colorBackground">@color/blbl_bg_black_gold</item>
         <item name="colorBackground">@color/blbl_bg_black_gold</item>
+        <item name="blblPageBackdrop">@color/blbl_bg_black_gold</item>
         <item name="colorSurface">@color/blbl_surface_black_gold</item>
         <item name="colorOnSurface">@color/blbl_text_black_gold</item>
         <item name="blblDialogSurface">@color/blbl_surface_black_gold</item>
