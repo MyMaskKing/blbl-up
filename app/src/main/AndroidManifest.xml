@@ -92,6 +92,24 @@
             android:screenOrientation="sensorLandscape"
             android:theme="@style/Theme.Blbl.Launcher.TvPinkIllustration" />
 
+        <activity
+            android:name=".ui.SplashNeonPunchActivity"
+            android:banner="@drawable/tv_banner"
+            android:screenOrientation="sensorLandscape"
+            android:theme="@style/Theme.Blbl.Launcher.NeonPunch" />
+
+        <activity
+            android:name=".ui.SplashDeepCyanActivity"
+            android:banner="@drawable/tv_banner"
+            android:screenOrientation="sensorLandscape"
+            android:theme="@style/Theme.Blbl.Launcher.DeepCyan" />
+
+        <activity
+            android:name=".ui.SplashBlackGoldActivity"
+            android:banner="@drawable/tv_banner"
+            android:screenOrientation="sensorLandscape"
+            android:theme="@style/Theme.Blbl.Launcher.BlackGold" />
+
         <activity-alias
             android:name=".ui.MainLauncherDarkAlias"
             android:banner="@drawable/tv_banner"
@@ -141,6 +159,63 @@
             android:label="@string/app_name"
             android:roundIcon="@mipmap/ic_launcher_round"
             android:targetActivity=".ui.SplashTvPinkIllustrationActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name=".ui.MainLauncherNeonPunchAlias"
+            android:banner="@drawable/tv_banner"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher"
+            android:label="@string/app_name"
+            android:roundIcon="@mipmap/ic_launcher_round"
+            android:targetActivity=".ui.SplashNeonPunchActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name=".ui.MainLauncherDeepCyanAlias"
+            android:banner="@drawable/tv_banner"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher"
+            android:label="@string/app_name"
+            android:roundIcon="@mipmap/ic_launcher_round"
+            android:targetActivity=".ui.SplashDeepCyanActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name=".ui.MainLauncherBlackGoldAlias"
+            android:banner="@drawable/tv_banner"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher"
+            android:label="@string/app_name"
+            android:roundIcon="@mipmap/ic_launcher_round"
+            android:targetActivity=".ui.SplashBlackGoldActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
