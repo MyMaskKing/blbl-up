@@ -18,6 +18,7 @@
         <item name="blblDialogSurface">?attr/colorSurface</item>
         <item name="blblOnPageBackdrop">?attr/colorOnSurface</item>
         <item name="blblOnPageBackdropSecondary">?android:attr/textColorSecondary</item>
+        <item name="blblContentBackground">?attr/colorSurface</item>
 
         <item name="colorSecondary">?attr/blblAccent</item>
         <item name="colorOnSecondary">@android:color/white</item>
