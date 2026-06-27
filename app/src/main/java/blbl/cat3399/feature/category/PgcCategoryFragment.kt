@@ -712,6 +712,10 @@ class PgcCategoryFragment : Fragment(), RefreshKeyHandler, TabContentFocusTarget
         super.onResume()
         (binding.recyclerView.layoutManager as? GridLayoutManager)?.spanCount = pgcGridSpanCount()
         maybeTriggerInitialLoad()
+        // 从外部跳转进来时（比如点击首页更多按钮），主动聚焦到选中的 tab
+        if (arguments != null && isResumed) {
+            binding.root.post { focusSelectedInnerTab() }
+        }
     }
 
     override fun onDestroyView() {

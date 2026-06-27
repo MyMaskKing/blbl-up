@@ -76,15 +76,15 @@
                             android:id="@+id/btn_movies_more"
                             style="@style/Widget.MaterialComponents.Button.TextButton"
                             android:layout_width="wrap_content"
-                            android:layout_height="32dp"
+                            android:layout_height="36dp"
                             android:background="?attr/blblFocusBgRound"
                             android:clickable="true"
                             android:focusable="true"
                             android:textColor="@color/blbl_button_text_selector"
                             android:text="@string/cinema_more"
-                            android:textSize="12sp"
+                            android:textSize="14sp"
                             app:backgroundTint="@null"
-                            app:cornerRadius="16dp" />
+                            app:cornerRadius="18dp" />
 
                     </LinearLayout>
 
@@ -124,15 +124,15 @@
                             android:id="@+id/btn_tv_more"
                             style="@style/Widget.MaterialComponents.Button.TextButton"
                             android:layout_width="wrap_content"
-                            android:layout_height="32dp"
+                            android:layout_height="36dp"
                             android:background="?attr/blblFocusBgRound"
                             android:clickable="true"
                             android:focusable="true"
                             android:textColor="@color/blbl_button_text_selector"
                             android:text="@string/cinema_more"
-                            android:textSize="12sp"
+                            android:textSize="14sp"
                             app:backgroundTint="@null"
-                            app:cornerRadius="16dp" />
+                            app:cornerRadius="18dp" />
 
                     </LinearLayout>
 
@@ -172,15 +172,15 @@
                             android:id="@+id/btn_documentary_more"
                             style="@style/Widget.MaterialComponents.Button.TextButton"
                             android:layout_width="wrap_content"
-                            android:layout_height="32dp"
+                            android:layout_height="36dp"
                             android:background="?attr/blblFocusBgRound"
                             android:clickable="true"
                             android:focusable="true"
                             android:textColor="@color/blbl_button_text_selector"
                             android:text="@string/cinema_more"
-                            android:textSize="12sp"
+                            android:textSize="14sp"
                             app:backgroundTint="@null"
-                            app:cornerRadius="16dp" />
+                            app:cornerRadius="18dp" />
 
                     </LinearLayout>
 
@@ -220,15 +220,15 @@
                             android:id="@+id/btn_variety_more"
                             style="@style/Widget.MaterialComponents.Button.TextButton"
                             android:layout_width="wrap_content"
-                            android:layout_height="32dp"
+                            android:layout_height="36dp"
                             android:background="?attr/blblFocusBgRound"
                             android:clickable="true"
                             android:focusable="true"
                             android:textColor="@color/blbl_button_text_selector"
                             android:text="@string/cinema_more"
-                            android:textSize="12sp"
+                            android:textSize="14sp"
                             app:backgroundTint="@null"
-                            app:cornerRadius="16dp" />
+                            app:cornerRadius="18dp" />
 
                     </LinearLayout>
 
