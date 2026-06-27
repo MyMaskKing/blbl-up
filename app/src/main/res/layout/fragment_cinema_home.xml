@@ -70,7 +70,10 @@
                             android:text="@string/cinema_movies"
                             android:textColor="?attr/blblOnPageBackdrop"
                             android:textSize="18sp"
-                            android:textStyle="bold" />
+                            android:textStyle="bold"
+                            android:background="?attr/blblFocusBgRound"
+                            android:clickable="true"
+                            android:focusable="true" />
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btn_movies_more"
@@ -118,7 +121,10 @@
                             android:text="@string/cinema_tv"
                             android:textColor="?attr/blblOnPageBackdrop"
                             android:textSize="18sp"
-                            android:textStyle="bold" />
+                            android:textStyle="bold"
+                            android:background="?attr/blblFocusBgRound"
+                            android:clickable="true"
+                            android:focusable="true" />
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btn_tv_more"
@@ -166,7 +172,10 @@
                             android:text="@string/cinema_documentary"
                             android:textColor="?attr/blblOnPageBackdrop"
                             android:textSize="18sp"
-                            android:textStyle="bold" />
+                            android:textStyle="bold"
+                            android:background="?attr/blblFocusBgRound"
+                            android:clickable="true"
+                            android:focusable="true" />
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btn_documentary_more"
@@ -214,7 +223,10 @@
                             android:text="@string/cinema_variety"
                             android:textColor="?attr/blblOnPageBackdrop"
                             android:textSize="18sp"
-                            android:textStyle="bold" />
+                            android:textStyle="bold"
+                            android:background="?attr/blblFocusBgRound"
+                            android:clickable="true"
+                            android:focusable="true" />
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btn_variety_more"

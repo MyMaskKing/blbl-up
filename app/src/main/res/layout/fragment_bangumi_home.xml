@@ -69,7 +69,10 @@
                             android:text="番剧热播"
                             android:textColor="?attr/blblOnPageBackdrop"
                             android:textSize="18sp"
-                            android:textStyle="bold" />
+                            android:textStyle="bold"
+                            android:background="?attr/blblFocusBgRound"
+                            android:clickable="true"
+                            android:focusable="true" />
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnBangumiMore"
@@ -117,7 +120,10 @@
                             android:text="国创热播"
                             android:textColor="?attr/blblOnPageBackdrop"
                             android:textSize="18sp"
-                            android:textStyle="bold" />
+                            android:textStyle="bold"
+                            android:background="?attr/blblFocusBgRound"
+                            android:clickable="true"
+                            android:focusable="true" />
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnChineseMore"
