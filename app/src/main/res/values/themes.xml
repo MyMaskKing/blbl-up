@@ -280,14 +280,6 @@
         <item name="android:windowBackground">@drawable/bg_launcher_window</item>
     </style>
 
-    <style name="Theme.Blbl.Launcher.Dark" parent="Theme.Blbl.Base.Dark">
-        <item name="android:windowBackground">@drawable/bg_launcher_window</item>
-    </style>
-
-    <style name="Theme.Blbl.Launcher.TvPink" parent="Theme.Blbl.Base.PinkLight">
-        <item name="android:windowBackground">@drawable/bg_launcher_window</item>
-    </style>
-
     <style name="Theme.Blbl.Launcher.TvPinkIllustration" parent="Theme.Blbl.Base.TvPinkIllustration">
         <item name="android:windowBackground">@drawable/bg_launcher_window</item>
     </style>
