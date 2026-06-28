@@ -1,20 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="blbl_bg">#090A10</color>
-    <color name="blbl_surface">#171827</color>
+    <!-- 深夜蓝 - Midnight Blue (默认主题) 优化：加入紫调，更通透 -->
+    <color name="blbl_bg">#0A0F1A</color>
+    <color name="blbl_surface">#1E2033</color>
     <color name="blbl_text">#F3F4FF</color>
-    <color name="blbl_text_secondary">#9CA0B8</color>
+    <color name="blbl_text_secondary">#9194AA</color>
     <color name="blbl_text_on_media">#F3F4FF</color>
+
+    <color name="blbl_purple">#7C3AED</color>
+    <color name="blbl_accent_violet_container">#2A7C3AED</color>
+    <color name="blbl_accent_violet_weak">#557C3AED</color>
+    <color name="blbl_accent_violet_pressed">#777C3AED</color>
 
     <color name="blbl_bg_oled">#000000</color>
     <color name="blbl_surface_oled">#050505</color>
     <color name="blbl_text_oled">#E6E6E6</color>
     <color name="blbl_text_secondary_oled">#7A7A7A</color>
 
-    <color name="blbl_bg_ocean_blue">#03111F</color>
-    <color name="blbl_surface_ocean_blue">#0B2236</color>
+    <!-- 静谧蓝 - Ocean Blue 优化：更偏天蓝，拉开和深夜蓝距离，保留橙色撞色特色 -->
+    <color name="blbl_bg_ocean_blue">#021930</color>
+    <color name="blbl_surface_ocean_blue">#102A45</color>
     <color name="blbl_text_ocean_blue">#EAF6FF</color>
-    <color name="blbl_text_secondary_ocean_blue">#8AA4B8</color>
+    <color name="blbl_text_secondary_ocean_blue">#82A8C2</color>
 
     <color name="blbl_bg_dark_pink">#150A0F</color>
     <color name="blbl_surface_dark_pink">#241016</color>
