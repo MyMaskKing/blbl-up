@@ -804,7 +804,7 @@ class LivePlayerActivity : BaseActivity() {
                 longPressPendingKeyCode = keyCode
                 longPressPendingJob?.cancel()
                 longPressPendingJob = lifecycleScope.launch {
-                    delay(500) // Standard long press timeout
+                    delay(1500) // Standard long press timeout (Android default)
                     // Long press triggered
                     binding.longClickAction?.let { applyCustomShortcut(keyCode = keyCode, action = it) }
                     longPressPendingKeyCode = 0

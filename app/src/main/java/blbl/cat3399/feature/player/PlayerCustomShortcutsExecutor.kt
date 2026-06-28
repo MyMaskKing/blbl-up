@@ -98,7 +98,7 @@ internal fun PlayerActivity.dispatchPlayerCustomShortcutIfNeeded(event: KeyEvent
             detector.pendingKeyCode = keyCode
             detector.pendingJob?.cancel()
             detector.pendingJob = lifecycleScope.launch {
-                delay(500) // Standard long press timeout
+                delay(1500) // Standard long press timeout (Android default)
                 // Long press triggered
                 binding.longClickAction?.let { applyPlayerCustomShortcut(keyCode = keyCode, action = it) }
                 detector.pendingKeyCode = 0
