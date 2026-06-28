@@ -2167,9 +2167,6 @@ class SettingsInteractionHandler(
                     showManager(focusKeyCode = keyCode)
                 }
             }
-                    showManager(focusKeyCode = keyCode)
-                }
-            }
 
             private fun showDeletePicker(focusKeyCode: Int?) {
                 var forward = false

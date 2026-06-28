@@ -40,6 +40,7 @@ import blbl.cat3399.core.log.AppLog
 import blbl.cat3399.core.model.Danmaku
 import blbl.cat3399.core.net.BiliClient
 import blbl.cat3399.core.prefs.AppPrefs
+import blbl.cat3399.core.prefs.PlayerCustomShortcut
 import blbl.cat3399.core.prefs.PlayerCustomShortcutAction
 import blbl.cat3399.core.prefs.PlayerCustomShortcutsStore
 import blbl.cat3399.core.ui.AppToast
@@ -112,6 +113,10 @@ class LivePlayerActivity : BaseActivity() {
     private val shortcutPrevDanmakuTextSizeByKey = HashMap<Int, Float>()
     private val shortcutPrevDanmakuSpeedLevelByKey = HashMap<Int, Int>()
     private val shortcutPrevDanmakuAreaByKey = HashMap<Int, Float>()
+
+    // Long press detection for custom shortcuts
+    private var longPressPendingKeyCode: Int = 0
+    private var longPressPendingJob: Job? = null
     private var debugJob: Job? = null
     private var autoFailoverJob: Job? = null
     private var liveEntryReportedRoomId: Long = 0L
@@ -764,9 +769,6 @@ class LivePlayerActivity : BaseActivity() {
     }
 
     private fun dispatchLiveCustomShortcutIfNeeded(event: KeyEvent): Boolean {
-        if (event.action != KeyEvent.ACTION_DOWN) return false
-        if (event.repeatCount != 0) return false
-
         val keyCode = event.keyCode
         if (keyCode <= 0 || keyCode == KeyEvent.KEYCODE_UNKNOWN) return false
         if (PlayerCustomShortcutsStore.isForbiddenKeyCode(keyCode)) return false
@@ -781,7 +783,53 @@ class LivePlayerActivity : BaseActivity() {
 
         val binding = BiliClient.prefs.playerCustomShortcuts.firstOrNull { it.keyCode == keyCode } ?: return false
 
-        when (val action = binding.action) {
+        // If no long press action, handle normally
+        if (binding.longClickAction == null) {
+            if (event.action != KeyEvent.ACTION_DOWN) return false
+            if (event.repeatCount != 0) return false
+            noteUserInteraction()
+            binding.clickAction?.let { applyCustomShortcut(keyCode = keyCode, action = it) }
+            return true
+        }
+
+        // Has long press action - need detection
+        when (event.action) {
+            KeyEvent.ACTION_DOWN -> {
+                if (event.repeatCount != 0) {
+                    // Repeat events are ignored - long press already triggered
+                    return longPressPendingKeyCode == keyCode
+                }
+                noteUserInteraction()
+                // Start long press detection
+                longPressPendingKeyCode = keyCode
+                longPressPendingJob?.cancel()
+                longPressPendingJob = lifecycleScope.launch {
+                    delay(500) // Standard long press timeout
+                    // Long press triggered
+                    binding.longClickAction?.let { applyCustomShortcut(keyCode = keyCode, action = it) }
+                    longPressPendingKeyCode = 0
+                    longPressPendingJob = null
+                }
+                return true
+            }
+            KeyEvent.ACTION_UP -> {
+                val pending = longPressPendingJob != null && longPressPendingKeyCode == keyCode
+                if (pending) {
+                    // Cancel pending long press and trigger click
+                    longPressPendingJob?.cancel()
+                    longPressPendingKeyCode = 0
+                    longPressPendingJob = null
+                    binding.clickAction?.let { applyCustomShortcut(keyCode = keyCode, action = it) }
+                    return true
+                }
+                return false
+            }
+            else -> return false
+        }
+    }
+
+    private fun applyCustomShortcut(keyCode: Int, action: PlayerCustomShortcutAction) {
+        when (action) {
             PlayerCustomShortcutAction.ShowOsd -> {
                 noteUserInteraction()
                 setControlsVisible(true)
@@ -906,6 +954,11 @@ class LivePlayerActivity : BaseActivity() {
 
             else -> return false
         }
+    }
+
+    private fun sameFloat(a: Float, b: Float): Boolean {
+        if (!a.isFinite() || !b.isFinite()) return false
+        return abs(a - b) < 0.0001f
     }
 
     private fun showShortcutHint(text: String) {

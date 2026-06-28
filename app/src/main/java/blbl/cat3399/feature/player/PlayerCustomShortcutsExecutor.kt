@@ -1,15 +1,15 @@
 package blbl.cat3399.feature.player
 
 import android.view.KeyEvent
+import androidx.lifecycle.lifecycleScope
 import blbl.cat3399.core.net.BiliClient
 import blbl.cat3399.core.prefs.AppPrefs
 import blbl.cat3399.core.prefs.PlayerCustomShortcut
 import blbl.cat3399.core.prefs.PlayerCustomShortcutAction
 import blbl.cat3399.core.prefs.PlayerCustomShortcutsStore
 import blbl.cat3399.core.prefs.PlayerPlaybackModes
+import blbl.cat3399.feature.player.engine.ExoEngine
 import blbl.cat3399.feature.player.engine.ExoPlayerEngine
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.Locale
