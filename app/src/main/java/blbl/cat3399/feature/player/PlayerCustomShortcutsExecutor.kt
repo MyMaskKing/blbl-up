@@ -3,10 +3,15 @@ package blbl.cat3399.feature.player
 import android.view.KeyEvent
 import blbl.cat3399.core.net.BiliClient
 import blbl.cat3399.core.prefs.AppPrefs
+import blbl.cat3399.core.prefs.PlayerCustomShortcut
 import blbl.cat3399.core.prefs.PlayerCustomShortcutAction
 import blbl.cat3399.core.prefs.PlayerCustomShortcutsStore
 import blbl.cat3399.core.prefs.PlayerPlaybackModes
 import blbl.cat3399.feature.player.engine.ExoPlayerEngine
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.util.Locale
 import java.util.WeakHashMap
 import kotlin.math.abs
@@ -25,10 +30,20 @@ private class PlayerCustomShortcutToggleMemory {
     val danmakuAreaPrevByKey = HashMap<Int, Float>()
 }
 
+private class LongPressDetector {
+    var pendingKeyCode: Int = 0
+    var pendingJob: kotlinx.coroutines.Job? = null
+}
+
 private val shortcutToggleMemoryByPlayer = WeakHashMap<PlayerActivity, PlayerCustomShortcutToggleMemory>()
+private val longPressDetectorByPlayer = WeakHashMap<PlayerActivity, LongPressDetector>()
 
 private fun PlayerActivity.shortcutToggleMemory(): PlayerCustomShortcutToggleMemory {
     return shortcutToggleMemoryByPlayer.getOrPut(this) { PlayerCustomShortcutToggleMemory() }
+}
+
+private fun PlayerActivity.longPressDetector(): LongPressDetector {
+    return longPressDetectorByPlayer.getOrPut(this) { LongPressDetector() }
 }
 
 private fun sameFloat(a: Float, b: Float): Boolean {
@@ -46,9 +61,6 @@ private fun PlayerActivity.showShortcutOsd() {
 }
 
 internal fun PlayerActivity.dispatchPlayerCustomShortcutIfNeeded(event: KeyEvent): Boolean {
-    if (event.action != KeyEvent.ACTION_DOWN) return false
-    if (event.repeatCount != 0) return false
-
     val keyCode = event.keyCode
     if (keyCode <= 0 || keyCode == KeyEvent.KEYCODE_UNKNOWN) return false
     if (PlayerCustomShortcutsStore.isForbiddenKeyCode(keyCode)) return false
@@ -63,9 +75,52 @@ internal fun PlayerActivity.dispatchPlayerCustomShortcutIfNeeded(event: KeyEvent
     }
 
     val binding = BiliClient.prefs.playerCustomShortcuts.firstOrNull { it.keyCode == keyCode } ?: return false
-    noteUserInteraction()
-    applyPlayerCustomShortcut(keyCode = keyCode, action = binding.action)
-    return true
+
+    // If no long press action, handle normally
+    if (binding.longClickAction == null) {
+        if (event.action != KeyEvent.ACTION_DOWN) return false
+        if (event.repeatCount != 0) return false
+        noteUserInteraction()
+        binding.clickAction?.let { applyPlayerCustomShortcut(keyCode = keyCode, action = it) }
+        return true
+    }
+
+    // Has long press action - need detection
+    val detector = longPressDetector()
+
+    when (event.action) {
+        KeyEvent.ACTION_DOWN -> {
+            if (event.repeatCount != 0) {
+                // Repeat events are ignored - long press already triggered
+                return detector.pendingKeyCode == keyCode
+            }
+            noteUserInteraction()
+            // Start long press detection
+            detector.pendingKeyCode = keyCode
+            detector.pendingJob?.cancel()
+            detector.pendingJob = lifecycleScope.launch {
+                delay(500) // Standard long press timeout
+                // Long press triggered
+                binding.longClickAction?.let { applyPlayerCustomShortcut(keyCode = keyCode, action = it) }
+                detector.pendingKeyCode = 0
+                detector.pendingJob = null
+            }
+            return true
+        }
+        KeyEvent.ACTION_UP -> {
+            val pending = detector.pendingJob != null && detector.pendingKeyCode == keyCode
+            if (pending) {
+                // Cancel pending long press and trigger click
+                detector.pendingJob?.cancel()
+                detector.pendingKeyCode = 0
+                detector.pendingJob = null
+                binding.clickAction?.let { applyPlayerCustomShortcut(keyCode = keyCode, action = it) }
+                return true
+            }
+            return false
+        }
+        else -> return false
+    }
 }
 
 private fun PlayerActivity.applyPlayerCustomShortcut(keyCode: Int, action: PlayerCustomShortcutAction) {

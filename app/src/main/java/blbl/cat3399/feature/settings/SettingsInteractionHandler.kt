@@ -1733,8 +1733,19 @@ class SettingsInteractionHandler(
 
         fun actionLabel(action: PlayerCustomShortcutAction): String = PlayerCustomShortcutCatalog.actionLabel(action)
 
-        fun bindingLabel(binding: PlayerCustomShortcut): String =
-            "${keyLabel(binding.keyCode)} → ${actionLabel(binding.action)}"
+        fun bindingLabel(binding: PlayerCustomShortcut): String = buildString {
+            append(keyLabel(binding.keyCode))
+            append(" → ")
+            if (binding.clickAction != null && binding.longClickAction != null) {
+                append("单击:${actionLabel(binding.clickAction)} / 长按:${actionLabel(binding.longClickAction)}")
+            } else if (binding.clickAction != null) {
+                append(actionLabel(binding.clickAction))
+            } else if (binding.longClickAction != null) {
+                append("长按:${actionLabel(binding.longClickAction)}")
+            } else {
+                append("(无动作)")
+            }
+        }
 
         fun loadShortcuts(): List<PlayerCustomShortcut> = BiliClient.prefs.playerCustomShortcuts
 
@@ -1742,6 +1753,29 @@ class SettingsInteractionHandler(
             val prefs = BiliClient.prefs
             prefs.playerCustomShortcuts = PlayerCustomShortcutsStore.upsert(prefs.playerCustomShortcuts, binding)
             renderer.refreshSection(SettingId.PlayerCustomShortcuts)
+        }
+
+        fun upsert(
+            keyCode: Int,
+            clickOrLong: String,
+            newAction: PlayerCustomShortcutAction,
+            existing: PlayerCustomShortcut?,
+        ) {
+            val newBinding =
+                if (existing == null) {
+                    if (clickOrLong == "click") {
+                        PlayerCustomShortcut(keyCode = keyCode, clickAction = newAction, longClickAction = null)
+                    } else {
+                        PlayerCustomShortcut(keyCode = keyCode, clickAction = null, longClickAction = newAction)
+                    }
+                } else {
+                    if (clickOrLong == "click") {
+                        existing.copy(clickAction = newAction)
+                    } else {
+                        existing.copy(longClickAction = newAction)
+                    }
+                }
+            upsert(newBinding)
         }
 
         fun removeBinding(keyCode: Int) {
@@ -1885,7 +1919,24 @@ class SettingsInteractionHandler(
                     recycler.adapter =
                         ShortcutListAdapter(items) { picked ->
                             replacing = true
-                            showActionPicker(keyCode = picked.keyCode, currentAction = picked.action)
+                            // If both click and long press actions exist, ask which to edit
+                            if (picked.clickAction != null && picked.longClickAction != null) {
+                                showClickLongPressPicker(picked)
+                            } else if (picked.clickAction != null) {
+                                showActionPicker(
+                                    keyCode = picked.keyCode,
+                                    clickOrLong = "click",
+                                    currentAction = picked.clickAction,
+                                    existingBinding = picked,
+                                )
+                            } else if (picked.longClickAction != null) {
+                                showActionPicker(
+                                    keyCode = picked.keyCode,
+                                    clickOrLong = "long",
+                                    currentAction = picked.longClickAction,
+                                    existingBinding = picked,
+                                )
+                            }
                         }
 
                     if (items.isNotEmpty()) {
@@ -1945,16 +1996,86 @@ class SettingsInteractionHandler(
                             return@setOnKeyListener true
                         }
 
-                        val existing = loadShortcuts().firstOrNull { it.keyCode == keyCode }?.action
+                        val existing = loadShortcuts().firstOrNull { it.keyCode == keyCode }
+                        val existingClick = existing?.clickAction
                         forward = true
-                        showActionPicker(keyCode = keyCode, currentAction = existing)
+                        // For new key capture, if it doesn't exist yet, just edit click action
+                        if (existing == null) {
+                            showActionPicker(
+                                keyCode = keyCode,
+                                clickOrLong = "click",
+                                currentAction = null,
+                                existingBinding = null,
+                            )
+                        } else if (existing.clickAction != null && existing.longClickAction != null) {
+                            // Both exist, let user choose
+                            showClickLongPressPicker(existing)
+                        } else if (existing.clickAction != null) {
+                            showActionPicker(
+                                keyCode = keyCode,
+                                clickOrLong = "click",
+                                currentAction = existing.clickAction,
+                                existingBinding = existing,
+                            )
+                        } else {
+                            showActionPicker(
+                                keyCode = keyCode,
+                                clickOrLong = "long",
+                                currentAction = existing.longClickAction,
+                                existingBinding = existing,
+                            )
+                        }
                         true
                     }
                     tv
                 }
             }
 
-            private fun showActionPicker(keyCode: Int, currentAction: PlayerCustomShortcutAction?) {
+            private fun showClickLongPressPicker(existing: PlayerCustomShortcut) {
+                var forward = false
+                AppPopup.singleChoice(
+                    context = activity,
+                    title = "选择编辑：${keyLabel(existing.keyCode)}",
+                    items = listOf("编辑单击动作", "编辑长按动作", "删除长按动作"),
+                    checkedIndex = 0,
+                    onDismiss = {
+                        if (!forward) showManager(focusKeyCode = existing.keyCode)
+                    },
+                ) { which, _ ->
+                    forward = true
+                    when (which) {
+                        0 -> {
+                            showActionPicker(
+                                keyCode = existing.keyCode,
+                                clickOrLong = "click",
+                                currentAction = existing.clickAction,
+                                existingBinding = existing,
+                            )
+                        }
+                        1 -> {
+                            showActionPicker(
+                                keyCode = existing.keyCode,
+                                clickOrLong = "long",
+                                currentAction = existing.longClickAction,
+                                existingBinding = existing,
+                            )
+                        }
+                        2 -> {
+                            // Remove long click action - keep click
+                            val updated = existing.copy(longClickAction = null)
+                            upsert(updated)
+                            showManager(focusKeyCode = existing.keyCode)
+                        }
+                    }
+                }
+            }
+
+            private fun showActionPicker(
+                keyCode: Int,
+                clickOrLong: String, // "click" or "long"
+                currentAction: PlayerCustomShortcutAction?,
+                existingBinding: PlayerCustomShortcut?,
+            ) {
                 var forward = false
                 val options = PlayerCustomShortcutCatalog.actionOptions()
 
@@ -1962,9 +2083,15 @@ class SettingsInteractionHandler(
                     options.indexOfFirst { it.type == currentAction?.type }
                         .takeIf { it >= 0 } ?: 0
 
+                val title = buildString {
+                    append(if (clickOrLong == "click") "单击" else "长按")
+                    append(" - ")
+                    append(keyLabel(keyCode))
+                }
+
                 AppPopup.singleChoice(
                     context = activity,
-                    title = "选择动作（${keyLabel(keyCode)}）",
+                    title = title,
                     items = options.map { it.label },
                     checkedIndex = checked,
                     onDismiss = {
@@ -1974,24 +2101,47 @@ class SettingsInteractionHandler(
                     val picked = options.getOrNull(which) ?: return@singleChoice
                     if (picked.requiresValue) {
                         forward = true
-                        showValuePicker(keyCode = keyCode, actionType = picked.type, currentAction = currentAction)
+                        showValuePicker(
+                            keyCode = keyCode,
+                            clickOrLong = clickOrLong,
+                            actionType = picked.type,
+                            currentAction = currentAction,
+                            existingBinding = existingBinding,
+                        )
                         return@singleChoice
                     }
 
                     val action = PlayerCustomShortcutCatalog.createAction(picked.type) ?: return@singleChoice
 
                     forward = true
-                    upsert(PlayerCustomShortcut(keyCode = keyCode, action = action))
+                    upsert(keyCode = keyCode, clickOrLong = clickOrLong, newAction = action, existing = existingBinding)
                     showManager(focusKeyCode = keyCode)
                 }
             }
 
-            private fun showValuePicker(keyCode: Int, actionType: String, currentAction: PlayerCustomShortcutAction?) {
+            private fun showValuePicker(
+                keyCode: Int,
+                clickOrLong: String,
+                actionType: String,
+                currentAction: PlayerCustomShortcutAction?,
+                existingBinding: PlayerCustomShortcut?,
+            ) {
                 var forward = false
-                val title = "${keyLabel(keyCode)} → ${PlayerCustomShortcutCatalog.actionTitle(actionType)}"
+                val title = buildString {
+                    append(if (clickOrLong == "click") "单击" else "长按")
+                    append(" - ")
+                    append(keyLabel(keyCode))
+                    append(" → ")
+                    append(PlayerCustomShortcutCatalog.actionTitle(actionType))
+                }
 
                 fun cancelBackToActionPicker() {
-                    if (!forward) showActionPicker(keyCode = keyCode, currentAction = currentAction)
+                    if (!forward) showActionPicker(
+                        keyCode = keyCode,
+                        clickOrLong = clickOrLong,
+                        currentAction = currentAction,
+                        existingBinding = existingBinding,
+                    )
                 }
 
                 val config =
@@ -2000,7 +2150,7 @@ class SettingsInteractionHandler(
                         currentAction = currentAction,
                     ) ?: run {
                         AppToast.show(activity, "未知动作：$actionType")
-                        showActionPicker(keyCode = keyCode, currentAction = currentAction)
+                        cancelBackToActionPicker()
                         return
                     }
 
@@ -2013,7 +2163,10 @@ class SettingsInteractionHandler(
                 ) { which, _ ->
                     val action = config.choices.getOrNull(which)?.action ?: return@singleChoice
                     forward = true
-                    upsert(PlayerCustomShortcut(keyCode = keyCode, action = action))
+                    upsert(keyCode = keyCode, clickOrLong = clickOrLong, newAction = action, existing = existingBinding)
+                    showManager(focusKeyCode = keyCode)
+                }
+            }
                     showManager(focusKeyCode = keyCode)
                 }
             }

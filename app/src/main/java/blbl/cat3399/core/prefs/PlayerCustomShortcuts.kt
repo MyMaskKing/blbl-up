@@ -6,7 +6,8 @@ import org.json.JSONObject
 
 internal data class PlayerCustomShortcut(
     val keyCode: Int,
-    val action: PlayerCustomShortcutAction,
+    val clickAction: PlayerCustomShortcutAction?,
+    val longClickAction: PlayerCustomShortcutAction?,
 )
 
 internal enum class PlayerCustomShortcutOpenVideoListTarget(
@@ -148,8 +149,10 @@ internal object PlayerCustomShortcutsStore {
     private const val KEY_ITEMS = "items"
 
     private const val KEY_KEYCODE = "k"
-    private const val KEY_ACTION = "a"
-    private const val KEY_PARAMS = "p"
+    private const val KEY_CLICK_ACTION = "a"
+    private const val KEY_CLICK_PARAMS = "p"
+    private const val KEY_LONG_CLICK_ACTION = "la"
+    private const val KEY_LONG_CLICK_PARAMS = "lp"
 
     fun isForbiddenKeyCode(keyCode: Int): Boolean {
         // Reserve "system / navigation / confirm" keys so custom shortcuts never break basic navigation.
@@ -179,11 +182,41 @@ internal object PlayerCustomShortcutsStore {
             if (keyCode <= 0) continue
             if (isForbiddenKeyCode(keyCode)) continue
 
-            val actionType = obj.optString(KEY_ACTION, "").trim()
-            if (actionType.isBlank()) continue
-            val params = obj.optJSONObject(KEY_PARAMS)
-            val action = parseAction(type = actionType, params = params) ?: continue
-            out.add(PlayerCustomShortcut(keyCode = keyCode, action = action))
+            // Legacy format: single action
+            val hasClick = obj.has(KEY_CLICK_ACTION)
+            val clickActionType = if (hasClick) {
+                obj.optString(KEY_CLICK_ACTION, "").trim()
+            } else {
+                obj.optString("a", "").trim() // old key
+            }
+            val clickParams = if (hasClick) {
+                obj.optJSONObject(KEY_CLICK_PARAMS)
+            } else {
+                obj.optJSONObject("p") // old key
+            }
+            val clickAction = if (clickActionType.isNotBlank()) {
+                parseAction(type = clickActionType, params = clickParams)
+            } else {
+                null
+            }
+
+            // Long press action (new format)
+            val longClickActionType = obj.optString(KEY_LONG_CLICK_ACTION, "").trim()
+            val longClickParams = obj.optJSONObject(KEY_LONG_CLICK_PARAMS)
+            val longClickAction = if (longClickActionType.isNotBlank()) {
+                parseAction(type = longClickActionType, params = longClickParams)
+            } else {
+                null
+            }
+
+            // At least one action must be present
+            if (clickAction == null && longClickAction == null) continue
+
+            out.add(PlayerCustomShortcut(
+                keyCode = keyCode,
+                clickAction = clickAction,
+                longClickAction = longClickAction,
+            ))
         }
 
         return normalize(out)
@@ -195,9 +228,18 @@ internal object PlayerCustomShortcutsStore {
         for (item in normalized) {
             val obj = JSONObject()
             obj.put(KEY_KEYCODE, item.keyCode)
-            obj.put(KEY_ACTION, item.action.type)
-            val params = buildActionParams(item.action)
-            if (params != null) obj.put(KEY_PARAMS, params)
+            item.clickAction?.let { click ->
+                obj.put(KEY_CLICK_ACTION, click.type)
+                buildActionParams(click)?.let {
+                    obj.put(KEY_CLICK_PARAMS, it)
+                }
+            }
+            item.longClickAction?.let { longClick ->
+                obj.put(KEY_LONG_CLICK_ACTION, longClick.type)
+                buildActionParams(longClick)?.let {
+                    obj.put(KEY_LONG_CLICK_PARAMS, it)
+                }
+            }
             arr.put(obj)
         }
         return JSONObject()
@@ -234,8 +276,20 @@ internal object PlayerCustomShortcutsStore {
             if (it.keyCode <= 0) continue
             if (isForbiddenKeyCode(it.keyCode)) continue
             if (!seen.add(it.keyCode)) continue
-            val action = parseAction(type = it.action.type, params = buildActionParams(it.action)) ?: continue
-            outReversed.add(PlayerCustomShortcut(keyCode = it.keyCode, action = action))
+            if (it.clickAction == null && it.longClickAction == null) continue
+            // Re-parse to ensure action types are valid (defensive against bad JSON)
+            val normalizedClick = it.clickAction?.let { click ->
+                parseAction(click.type, buildActionParams(click))
+            }
+            val normalizedLongClick = it.longClickAction?.let { longClick ->
+               parseAction(longClick.type, buildActionParams(longClick))
+            }
+            if (normalizedClick == null && normalizedLongClick == null) continue
+            outReversed.add(PlayerCustomShortcut(
+                keyCode = it.keyCode,
+                clickAction = normalizedClick,
+                longClickAction = normalizedLongClick,
+            ))
         }
         outReversed.reverse()
         return outReversed
