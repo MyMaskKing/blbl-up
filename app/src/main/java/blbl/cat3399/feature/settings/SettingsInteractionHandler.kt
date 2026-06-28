@@ -1972,14 +1972,34 @@ class SettingsInteractionHandler(
                         LayoutInflater.from(dialogContext)
                             .inflate(blbl.cat3399.R.layout.view_player_custom_shortcut_key_capture, null, false) as TextView
                     captureView = tv
-                    tv.text = "请按下要绑定的按键\n（返回键取消）"
+                    tv.text = "请按下要绑定的按键\n（返回键可绑定，按返回键关闭弹窗）"
                     tv.setOnKeyListener { _, keyCode, event ->
                         if (event.action != KeyEvent.ACTION_DOWN) return@setOnKeyListener false
                         if (event.repeatCount > 0) return@setOnKeyListener true
 
-                        // Let the popup host handle these as "cancel/back".
+                        // Special handling for back/escape/button B: ask user whether to cancel or bind
                         if (keyCode == KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_ESCAPE || keyCode == KeyEvent.KEYCODE_BUTTON_B) {
-                            return@setOnKeyListener false
+                            if (PlayerCustomShortcutsStore.isForbiddenKeyCode(keyCode)) {
+                                // Ask user: cancel or bind?
+                                AppPopup.confirm(
+                                    context = activity,
+                                    title = "绑定该按键",
+                                    message = "返回键通常用于返回/关闭弹窗，是否仍要绑定此按键？",
+                                    positiveText = "绑定",
+                                    negativeText = "取消",
+                                    cancelable = true,
+                                    onPositive = {
+                                        forward = true
+                                        val existing = loadShortcuts().firstOrNull { it.keyCode == keyCode }
+                                        // Let user choose click or long press
+                                        showClickLongPressPickerForNew(keyCode = keyCode, existing = existing)
+                                    },
+                                    onNegative = {
+                                        // let popup host handle closing
+                                    },
+                                )
+                                return@setOnKeyListener true
+                            }
                         }
 
                         if (keyCode == KeyEvent.KEYCODE_UNKNOWN || keyCode <= 0) return@setOnKeyListener true
@@ -1997,34 +2017,9 @@ class SettingsInteractionHandler(
                         }
 
                         val existing = loadShortcuts().firstOrNull { it.keyCode == keyCode }
-                        val existingClick = existing?.clickAction
+                        // New key: let user choose click or long press
                         forward = true
-                        // For new key capture, if it doesn't exist yet, just edit click action
-                        if (existing == null) {
-                            showActionPicker(
-                                keyCode = keyCode,
-                                clickOrLong = "click",
-                                currentAction = null,
-                                existingBinding = null,
-                            )
-                        } else if (existing.clickAction != null && existing.longClickAction != null) {
-                            // Both exist, let user choose
-                            showClickLongPressPicker(existing)
-                        } else if (existing.clickAction != null) {
-                            showActionPicker(
-                                keyCode = keyCode,
-                                clickOrLong = "click",
-                                currentAction = existing.clickAction,
-                                existingBinding = existing,
-                            )
-                        } else {
-                            showActionPicker(
-                                keyCode = keyCode,
-                                clickOrLong = "long",
-                                currentAction = existing.longClickAction,
-                                existingBinding = existing,
-                            )
-                        }
+                        showClickLongPressPickerForNew(keyCode = keyCode, existing = existing)
                         true
                     }
                     tv
@@ -2065,6 +2060,39 @@ class SettingsInteractionHandler(
                             val updated = existing.copy(longClickAction = null)
                             upsert(updated)
                             showManager(focusKeyCode = existing.keyCode)
+                        }
+                    }
+                }
+            }
+
+            private fun showClickLongPressPickerForNew(keyCode: Int, existing: PlayerCustomShortcut?) {
+                var forward = false
+                AppPopup.singleChoice(
+                    context = activity,
+                    title = "选择设置：${keyLabel(keyCode)}",
+                    items = listOf("设置单击动作", "设置长按动作"),
+                    checkedIndex = 0,
+                    onDismiss = {
+                        if (!forward) showManager(focusKeyCode = keyCode)
+                    },
+                ) { which, _ ->
+                    forward = true
+                    when (which) {
+                        0 -> {
+                            showActionPicker(
+                                keyCode = keyCode,
+                                clickOrLong = "click",
+                                currentAction = existing?.clickAction,
+                                existingBinding = existing,
+                            )
+                        }
+                        1 -> {
+                            showActionPicker(
+                                keyCode = keyCode,
+                                clickOrLong = "long",
+                                currentAction = existing?.longClickAction,
+                                existingBinding = existing,
+                            )
                         }
                     }
                 }

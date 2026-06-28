@@ -155,11 +155,9 @@ internal object PlayerCustomShortcutsStore {
     private const val KEY_LONG_CLICK_PARAMS = "lp"
 
     fun isForbiddenKeyCode(keyCode: Int): Boolean {
-        // Reserve "system / navigation / confirm" keys so custom shortcuts never break basic navigation.
-        return keyCode == KeyEvent.KEYCODE_BACK ||
-            keyCode == KeyEvent.KEYCODE_ESCAPE ||
-            keyCode == KeyEvent.KEYCODE_BUTTON_B ||
-            keyCode == KeyEvent.KEYCODE_DPAD_CENTER ||
+        // Reserve "confirm" keys so custom shortcuts never break basic navigation.
+        // Allow BACK/ESCAPE/BUTTON_B to be custom bound (user knows what they're doing)
+        return keyCode == KeyEvent.KEYCODE_DPAD_CENTER ||
             keyCode == KeyEvent.KEYCODE_ENTER ||
             keyCode == KeyEvent.KEYCODE_NUMPAD_ENTER
     }
