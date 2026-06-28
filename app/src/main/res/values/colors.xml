@@ -83,11 +83,6 @@
     <color name="blbl_focus_fill">#33333333</color>
     <color name="blbl_focus_fill_pressed">#55333333</color>
 
-    <color name="blbl_purple">#8B5CF6</color>
-    <color name="blbl_accent_violet_container">#2A8B5CF6</color>
-    <color name="blbl_accent_violet_weak">#558B5CF6</color>
-    <color name="blbl_accent_violet_pressed">#778B5CF6</color>
-
     <color name="blbl_accent_tv_pink">#FF5DA2</color>
     <color name="blbl_pink">#FF5DA2</color>
     <color name="blbl_accent_tv_pink_container">#2AFF5DA2</color>
