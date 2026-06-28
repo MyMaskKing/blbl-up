@@ -977,6 +977,11 @@ class LivePlayerActivity : BaseActivity() {
         return kotlin.math.abs(a - b) < 0.0001f
     }
 
+    private fun showShortcutHint(text: String) {
+        if (!controlsVisible) setControlsVisible(true)
+        showSeekHint(text, hold = false)
+    }
+
     private fun setupSettingsPanel() {
         val settingsAdapter =
             PlayerSettingsAdapter { item ->
