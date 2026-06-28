@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- 深夜蓝 - Midnight Blue (默认主题) -->
+    <color name="blbl_bg_midnight_start">#0B0F1E</color>
+    <color name="blbl_bg_midnight_end">#120F20</color>
+    <color name="blbl_surface_midnight">#1A1F35</color>
+    <color name="blbl_text_midnight">#F0F0FF</color>
+    <color name="blbl_text_secondary_midnight">#8E8FB0</color>
+    <color name="blbl_accent_midnight">#A78BFA</color>
+    <color name="blbl_accent_midnight_container">#2AA78BFA</color>
+    <color name="blbl_accent_midnight_weak">#55A78BFA</color>
+    <color name="blbl_accent_midnight_pressed">#77A78BFA</color>
+
     <color name="blbl_bg">#090A10</color>
     <color name="blbl_surface">#171827</color>
     <color name="blbl_text">#F3F4FF</color>
@@ -11,10 +22,22 @@
     <color name="blbl_text_oled">#E6E6E6</color>
     <color name="blbl_text_secondary_oled">#7A7A7A</color>
 
-    <color name="blbl_bg_ocean_blue">#03111F</color>
-    <color name="blbl_surface_ocean_blue">#0B2236</color>
-    <color name="blbl_text_ocean_blue">#EAF6FF</color>
-    <color name="blbl_text_secondary_ocean_blue">#8AA4B8</color>
+    <!-- 静谧蓝 - Arctic Blue -->
+    <color name="blbl_bg_arctic_start">#062238</color>
+    <color name="blbl_bg_arctic_end">#082D28</color>
+    <color name="blbl_surface_arctic">#0F3247</color>
+    <color name="blbl_text_arctic">#E6F7FF</color>
+    <color name="blbl_text_secondary_arctic">#7AA9B8</color>
+    <color name="blbl_accent_arctic">#5EEAD4</color>
+    <color name="blbl_accent_arctic_container">#2A5EEAD4</color>
+    <color name="blbl_accent_arctic_weak">#555EEAD4</color>
+    <color name="blbl_accent_arctic_pressed">#775EEAD4</color>
+
+    <!-- 兼容保留旧命名 -->
+    <color name="blbl_bg_ocean_blue">#062238</color>
+    <color name="blbl_surface_ocean_blue">#0F3247</color>
+    <color name="blbl_text_ocean_blue">#E6F7FF</color>
+    <color name="blbl_text_secondary_ocean_blue">#7AA9B8</color>
 
     <color name="blbl_bg_dark_pink">#150A0F</color>
     <color name="blbl_surface_dark_pink">#241016</color>

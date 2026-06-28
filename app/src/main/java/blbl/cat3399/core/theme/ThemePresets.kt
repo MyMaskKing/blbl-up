@@ -54,7 +54,7 @@ object ThemePresets {
             AppPrefs.THEME_PRESET_OCEAN_BLUE ->
                 Spec(
                     baseThemeRes = R.style.Theme_Blbl_Base_OceanBlue,
-                    overlayRes = R.style.ThemeOverlay_Blbl_Accent_OceanBlue,
+                    overlayRes = R.style.ThemeOverlay_Blbl_Accent_Arctic,
                 )
 
             AppPrefs.THEME_PRESET_DARK_PINK ->
@@ -89,8 +89,8 @@ object ThemePresets {
 
             else ->
                 Spec(
-                    baseThemeRes = R.style.Theme_Blbl_Base_Dark,
-                    overlayRes = R.style.ThemeOverlay_Blbl_Accent_Violet,
+                    baseThemeRes = R.style.Theme_Blbl_Base_MidnightBlue,
+                    overlayRes = R.style.ThemeOverlay_Blbl_Accent_MidnightBlue,
                 )
         }
     }

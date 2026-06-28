@@ -58,6 +58,34 @@
         <item name="android:textColorPrimary">@color/blbl_text</item>
         <item name="android:textColorSecondary">@color/blbl_text_secondary</item>
     </style>
+
+    <!-- 深夜蓝 - Midnight Blue (默认主题) -->
+    <style name="Theme.Blbl.Base.MidnightBlue" parent="Theme.Blbl.Base.Dark">
+        <item name="colorPrimary">@color/blbl_surface_midnight</item>
+        <item name="colorPrimaryVariant">@color/blbl_surface_midnight</item>
+        <item name="colorOnPrimary">@color/blbl_text_midnight</item>
+        <item name="android:colorBackground">@color/blbl_bg_midnight_start</item>
+        <item name="colorBackground">@drawable/bg_midnight_blue_gradient</item>
+        <item name="blblPageBackdrop">@drawable/bg_midnight_blue_gradient</item>
+        <item name="colorSurface">@color/blbl_surface_midnight</item>
+        <item name="colorOnSurface">@color/blbl_text_midnight</item>
+        <item name="blblDialogSurface">@color/blbl_surface_midnight</item>
+        <item name="blblOnPageBackdrop">@color/blbl_text_midnight</item>
+        <item name="blblOnPageBackdropSecondary">@color/blbl_text_secondary_midnight</item>
+        <item name="android:textColorPrimary">@color/blbl_text_midnight</item>
+        <item name="android:textColorSecondary">@color/blbl_text_secondary_midnight</item>
+        <item name="blblAccent">@color/blbl_accent_midnight</item>
+        <item name="blblAccentContainer">@color/blbl_accent_midnight_container</item>
+        <item name="blblAccentWeak">@color/blbl_accent_midnight_weak</item>
+        <item name="blblAccentPressed">@color/blbl_accent_midnight_pressed</item>
+
+        <!-- Lavender accent colored focus border -->
+        <item name="blblFocusBgRound">@drawable/blbl_focus_bg_round_midnight_blue</item>
+        <item name="blblFocusListSelectorRound">@drawable/blbl_focus_list_selector_round_midnight_blue</item>
+        <item name="blblFocusStrokeColor">@color/blbl_accent_midnight</item>
+        <item name="blblFocusStrokeFocusOnlyColor">@color/blbl_accent_midnight_weak</item>
+    </style>
+
     <style name="Theme.Blbl.Base.OledDark" parent="Theme.Blbl.Base.Dark">
         <item name="colorPrimary">@color/blbl_surface_oled</item>
         <item name="colorPrimaryVariant">@color/blbl_surface_oled</item>
@@ -75,23 +103,29 @@
     </style>
 
     <style name="Theme.Blbl.Base.OceanBlue" parent="Theme.Blbl.Base.Dark">
-        <item name="colorPrimary">@color/blbl_surface_ocean_blue</item>
-        <item name="colorPrimaryVariant">@color/blbl_surface_ocean_blue</item>
-        <item name="colorOnPrimary">@color/blbl_text_ocean_blue</item>
-        <item name="android:colorBackground">@color/blbl_bg_ocean_blue</item>
+        <item name="colorPrimary">@color/blbl_surface_arctic</item>
+        <item name="colorPrimaryVariant">@color/blbl_surface_arctic</item>
+        <item name="colorOnPrimary">@color/blbl_text_arctic</item>
+        <item name="android:colorBackground">@color/blbl_bg_arctic_start</item>
         <item name="colorBackground">@drawable/bg_ocean_blue_gradient</item>
         <item name="blblPageBackdrop">@drawable/bg_ocean_blue_gradient</item>
-        <item name="colorSurface">@color/blbl_surface_ocean_blue</item>
-        <item name="colorOnSurface">@color/blbl_text_ocean_blue</item>
-        <item name="blblDialogSurface">@color/blbl_surface_ocean_blue</item>
-        <item name="blblOnPageBackdrop">@color/blbl_text_ocean_blue</item>
-        <item name="blblOnPageBackdropSecondary">@color/blbl_text_secondary_ocean_blue</item>
-        <item name="android:textColorPrimary">@color/blbl_text_ocean_blue</item>
-        <item name="android:textColorSecondary">@color/blbl_text_secondary_ocean_blue</item>
-        <item name="blblAccent">@color/blbl_accent_ocean_blue</item>
-        <item name="blblAccentContainer">@color/blbl_accent_ocean_blue_container</item>
-        <item name="blblAccentWeak">@color/blbl_accent_ocean_blue_weak</item>
-        <item name="blblAccentPressed">@color/blbl_accent_ocean_blue_pressed</item>
+        <item name="colorSurface">@color/blbl_surface_arctic</item>
+        <item name="colorOnSurface">@color/blbl_text_arctic</item>
+        <item name="blblDialogSurface">@color/blbl_surface_arctic</item>
+        <item name="blblOnPageBackdrop">@color/blbl_text_arctic</item>
+        <item name="blblOnPageBackdropSecondary">@color/blbl_text_secondary_arctic</item>
+        <item name="android:textColorPrimary">@color/blbl_text_arctic</item>
+        <item name="android:textColorSecondary">@color/blbl_text_secondary_arctic</item>
+        <item name="blblAccent">@color/blbl_accent_arctic</item>
+        <item name="blblAccentContainer">@color/blbl_accent_arctic_container</item>
+        <item name="blblAccentWeak">@color/blbl_accent_arctic_weak</item>
+        <item name="blblAccentPressed">@color/blbl_accent_arctic_pressed</item>
+
+        <!-- Ice cyan accent colored focus border -->
+        <item name="blblFocusBgRound">@drawable/blbl_focus_bg_round_arctic</item>
+        <item name="blblFocusListSelectorRound">@drawable/blbl_focus_list_selector_round_arctic</item>
+        <item name="blblFocusStrokeColor">@color/blbl_accent_arctic</item>
+        <item name="blblFocusStrokeFocusOnlyColor">@color/blbl_accent_arctic_weak</item>
     </style>
 
     <style name="Theme.Blbl.Base.DarkPink" parent="Theme.Blbl.Base.Dark">
@@ -280,6 +314,10 @@
         <item name="android:windowBackground">@drawable/bg_launcher_window</item>
     </style>
 
+    <style name="Theme.Blbl.Launcher.MidnightBlue" parent="Theme.Blbl.Base.MidnightBlue">
+        <item name="android:windowBackground">@drawable/bg_launcher_window</item>
+    </style>
+
     <style name="Theme.Blbl.Launcher.TvPink" parent="Theme.Blbl.Base.PinkLight">
         <item name="android:windowBackground">@drawable/bg_launcher_window</item>
     </style>
@@ -327,6 +365,28 @@
         <item name="blblAccentContainer">@color/blbl_accent_black_gold_container</item>
         <item name="blblAccentWeak">@color/blbl_accent_black_gold_weak</item>
         <item name="blblAccentPressed">@color/blbl_accent_black_gold_pressed</item>
+        <item name="colorSecondary">?attr/blblAccent</item>
+        <item name="colorOnSecondary">@android:color/black</item>
+        <item name="colorControlActivated">?attr/blblAccent</item>
+        <item name="colorControlHighlight">?attr/blblAccentContainer</item>
+    </style>
+
+    <style name="ThemeOverlay.Blbl.Accent.MidnightBlue" parent="">
+        <item name="blblAccent">@color/blbl_accent_midnight</item>
+        <item name="blblAccentContainer">@color/blbl_accent_midnight_container</item>
+        <item name="blblAccentWeak">@color/blbl_accent_midnight_weak</item>
+        <item name="blblAccentPressed">@color/blbl_accent_midnight_pressed</item>
+        <item name="colorSecondary">?attr/blblAccent</item>
+        <item name="colorOnSecondary">@android:color/white</item>
+        <item name="colorControlActivated">?attr/blblAccent</item>
+        <item name="colorControlHighlight">?attr/blblAccentContainer</item>
+    </style>
+
+    <style name="ThemeOverlay.Blbl.Accent.Arctic" parent="">
+        <item name="blblAccent">@color/blbl_accent_arctic</item>
+        <item name="blblAccentContainer">@color/blbl_accent_arctic_container</item>
+        <item name="blblAccentWeak">@color/blbl_accent_arctic_weak</item>
+        <item name="blblAccentPressed">@color/blbl_accent_arctic_pressed</item>
         <item name="colorSecondary">?attr/blblAccent</item>
         <item name="colorOnSecondary">@android:color/black</item>
         <item name="colorControlActivated">?attr/blblAccent</item>
