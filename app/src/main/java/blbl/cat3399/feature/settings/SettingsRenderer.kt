@@ -397,7 +397,7 @@ class SettingsRenderer(
                         SettingId.PlayerCustomShortcuts,
                         "自定义播放快捷键",
                         prefs.playerCustomShortcuts.let { if (it.isEmpty()) "未设置" else "已设置 ${it.size} 个" },
-                        "仅在播放画面生效，支持单击/长按分别绑定不同动作，长按触发需要按住超过${LONG_PRESS_TIMEOUT_MS / 1000}秒",
+                        "仅播放界面生效，每个按键可绑定单击+长按两个不同动作，长按需要按住超过${1500 / 1000}秒才触发",
                     ),
                     SettingEntry(
                         SettingId.PlayerAudioBalance,
