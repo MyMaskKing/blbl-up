@@ -828,7 +828,7 @@ class LivePlayerActivity : BaseActivity() {
         }
     }
 
-    private fun applyCustomShortcut(keyCode: Int, action: PlayerCustomShortcutAction) {
+    private fun applyCustomShortcut(keyCode: Int, action: PlayerCustomShortcutAction): Boolean {
         when (action) {
             PlayerCustomShortcutAction.ShowOsd -> {
                 noteUserInteraction()
@@ -954,16 +954,6 @@ class LivePlayerActivity : BaseActivity() {
 
             else -> return false
         }
-    }
-
-    private fun sameFloat(a: Float, b: Float): Boolean {
-        if (!a.isFinite() || !b.isFinite()) return false
-        return abs(a - b) < 0.0001f
-    }
-
-    private fun showShortcutHint(text: String) {
-        if (!controlsVisible) setControlsVisible(true)
-        showSeekHint(text, hold = false)
     }
 
     private fun showSeekHint(text: String, hold: Boolean = false) {
