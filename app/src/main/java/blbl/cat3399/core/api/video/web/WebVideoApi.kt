@@ -132,7 +132,7 @@ internal class WebVideoApi(
         val safeRequest = request.copy(rid = safeRid, pn = safePn, ps = safePs)
         val url =
             transport.withQuery(
-                "https://api.bilibili.com/x/web-interface/dynamic/region",
+                "https://api.bilibili.com/x/web-interface/newlist",
                 mapOf("rid" to safeRid.toString(), "pn" to safePn.toString(), "ps" to safePs.toString()),
             )
         val json = transport.getJson(url)
