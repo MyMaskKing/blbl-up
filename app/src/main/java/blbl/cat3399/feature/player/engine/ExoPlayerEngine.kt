@@ -31,6 +31,9 @@ import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
 import androidx.media3.exoplayer.source.MediaSource
 import androidx.media3.exoplayer.source.MergingMediaSource
 import androidx.media3.exoplayer.upstream.ParsingLoadable
+import androidx.media3.extractor.DefaultExtractorsFactory
+import androidx.media3.extractor.mp4.FragmentedMp4Extractor
+import androidx.media3.extractor.mp4.Mp4Extractor
 import blbl.cat3399.core.api.video.VideoMediaRequestProfile
 import blbl.cat3399.core.net.BiliClient
 import blbl.cat3399.feature.player.AudioBalanceLevel
@@ -70,6 +73,14 @@ internal class ExoPlayerEngine(
     private val appContext: Context = context.applicationContext
 
     private val volumeBalanceProcessor = VolumeBalanceAudioProcessor(level = audioBalanceLevel)
+
+    // UGC 音/视频 DASH 分片各自携带 mp4 edit list（AAC encoder delay 等起始偏移），
+    // 两条流作为独立 ProgressiveMediaSource 合并时会各自应用 edit list，导致固定音画偏移。
+    // 忽略 edit list 使音视频均从 0 起始对齐。
+    private val editListIgnoringExtractorsFactory: DefaultExtractorsFactory =
+        DefaultExtractorsFactory()
+            .setMp4ExtractorFlags(Mp4Extractor.FLAG_WORKAROUND_IGNORE_EDIT_LISTS)
+            .setFragmentedMp4ExtractorFlags(FragmentedMp4Extractor.FLAG_WORKAROUND_IGNORE_EDIT_LISTS)
     private val loadControl: DefaultLoadControl =
         DefaultLoadControl.Builder()
             // Keep roughly one forward buffer window behind the playhead so in-buffer seek
@@ -273,12 +284,12 @@ internal class ExoPlayerEngine(
     ): MediaSource {
         val subs = listOfNotNull(subtitle)
         val videoSource =
-            DefaultMediaSourceFactory(DefaultDataSource.Factory(appContext, videoFactory))
+            DefaultMediaSourceFactory(DefaultDataSource.Factory(appContext, videoFactory), editListIgnoringExtractorsFactory)
                 .createMediaSource(
                     MediaItem.Builder().setUri(Uri.parse(videoUrl)).setSubtitleConfigurations(subs).build(),
                 )
         val audioSource =
-            DefaultMediaSourceFactory(DefaultDataSource.Factory(appContext, audioFactory))
+            DefaultMediaSourceFactory(DefaultDataSource.Factory(appContext, audioFactory), editListIgnoringExtractorsFactory)
                 .createMediaSource(
                     MediaItem.Builder().setUri(Uri.parse(audioUrl)).build(),
                 )
