@@ -26,6 +26,8 @@ enum class SettingId(
     GridSpanCount("grid_span_count"),
     DynamicGridSpanCount("dynamic_grid_span_count"),
     PgcGridSpanCount("pgc_grid_span_count"),
+    ShowPgcPaid("show_pgc_paid"),
+    ShowPgcPreview("show_pgc_preview"),
     UiScaleFactor("ui_scale_factor"),
     FullscreenEnabled("fullscreen_enabled"),
     AvoidDisplayCutout("avoid_display_cutout"),

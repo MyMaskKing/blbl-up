@@ -1460,6 +1460,18 @@ class SettingsInteractionHandler(
                 renderer.refreshSection(entry.id)
             }
 
+            SettingId.ShowPgcPaid -> {
+                prefs.pgcShowPaidEnabled = !prefs.pgcShowPaidEnabled
+                AppToast.show(activity, "显示付费影视：${if (prefs.pgcShowPaidEnabled) "开" else "关"}")
+                renderer.refreshSection(entry.id)
+            }
+
+            SettingId.ShowPgcPreview -> {
+                prefs.pgcShowPreviewEnabled = !prefs.pgcShowPreviewEnabled
+                AppToast.show(activity, "显示预告影视：${if (prefs.pgcShowPreviewEnabled) "开" else "关"}")
+                renderer.refreshSection(entry.id)
+            }
+
             SettingId.PlayerDoubleBackToExit -> {
                 prefs.playerDoubleBackToExit = !prefs.playerDoubleBackToExit
                 renderer.refreshSection(entry.id)

@@ -4,11 +4,13 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
+import blbl.cat3399.R
 import blbl.cat3399.core.image.ImageLoader
 import blbl.cat3399.core.image.ImageUrl
 import blbl.cat3399.core.model.BangumiSeason
 import blbl.cat3399.core.ui.cloneInUserScale
-import blbl.cat3399.core.util.pgcAccessBadgeTextOf
+import blbl.cat3399.core.util.backgroundRes
+import blbl.cat3399.core.util.pgcAccessBadgeKindOf
 import blbl.cat3399.databinding.ItemBangumiFollowBinding
 
 class BangumiFollowAdapter(
@@ -58,11 +60,15 @@ class BangumiFollowAdapter(
         fun bind(item: BangumiSeason, onClick: (position: Int, season: BangumiSeason) -> Unit) {
             binding.tvTitle.text = item.title
 
+            val badgeKind = pgcAccessBadgeKindOf(item.badgeEp, item.badge)
             val badgeText =
-                pgcAccessBadgeTextOf(item.badgeEp, item.badge)
+                badgeKind?.label
                     ?: item.badge?.trim()?.takeIf { it.isNotBlank() }
             binding.tvAccessBadgeText.isVisible = badgeText != null
             binding.tvAccessBadgeText.text = badgeText.orEmpty()
+            binding.tvAccessBadgeText.setBackgroundResource(
+                badgeKind?.backgroundRes() ?: R.drawable.bg_pgc_access_badge,
+            )
 
             val metaParts =
                 buildList {

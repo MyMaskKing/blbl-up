@@ -208,6 +208,8 @@ class SettingsRenderer(
                         null,
                     ),
                     SettingEntry(SettingId.PgcGridSpanCount, "番剧/电视剧每行卡片数量", SettingsText.gridSpanText(prefs.pgcGridSpanCount), null),
+                    SettingEntry(SettingId.ShowPgcPaid, "显示付费影视", if (prefs.pgcShowPaidEnabled) "开" else "关", null),
+                    SettingEntry(SettingId.ShowPgcPreview, "显示预告影视", if (prefs.pgcShowPreviewEnabled) "开" else "关", null),
                     SettingEntry(SettingId.UiScaleFactor, "界面大小", SettingsText.uiScaleFactorText(prefs.uiScaleFactor), null),
                     SettingEntry(SettingId.FullscreenEnabled, "以全屏模式运行", if (prefs.fullscreenEnabled) "开" else "关", null),
                     SettingEntry(SettingId.AvoidDisplayCutout, "避开挖孔/圆角区域", if (prefs.avoidDisplayCutout) "开" else "关", null),

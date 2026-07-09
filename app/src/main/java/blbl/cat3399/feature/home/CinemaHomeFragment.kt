@@ -20,7 +20,9 @@ import blbl.cat3399.core.net.BiliClient
 import blbl.cat3399.core.ui.TabContentFocusTarget
 import blbl.cat3399.core.ui.cloneInUserScale
 import blbl.cat3399.core.ui.requestFocusAdapterPositionReliable
-import blbl.cat3399.core.util.pgcAccessBadgeTextOf
+import blbl.cat3399.core.util.backgroundRes
+import blbl.cat3399.core.util.filterHiddenPgcAccess
+import blbl.cat3399.core.util.pgcAccessBadgeKindOf
 import blbl.cat3399.databinding.FragmentCinemaHomeBinding
 import blbl.cat3399.databinding.ItemPgcHorizontalBinding
 import blbl.cat3399.feature.category.PgcCategoryFragment
@@ -164,7 +166,7 @@ class CinemaHomeFragment : Fragment(), RefreshKeyHandler, TabContentFocusTarget 
                 }
                 hotItems.clear()
                 hotItems.addAll(result)
-                hotAdapter?.submit(hotItems)
+                hotAdapter?.submit(hotItems.filterHiddenPgcAccess())
             } catch (t: Throwable) {
                 if (t is CancellationException) throw t
                 AppLog.e("CinemaHome", "load hot section failed", t)
@@ -207,7 +209,7 @@ class CinemaHomeFragment : Fragment(), RefreshKeyHandler, TabContentFocusTarget 
             7 -> varietyAdapter
             else -> return
         }
-        adapter?.submit(section.items)
+        adapter?.submit(section.items.filterHiddenPgcAccess())
     }
 
     private fun hotPageSize(): Int = spanCountForPgc() * 4
@@ -433,12 +435,15 @@ class PgcHorizontalAdapter(
 
         fun bind(season: BangumiSeason) {
             binding.tvTitle.text = season.title
-            val accessBadge = pgcAccessBadgeTextOf(season.badgeEp, season.badge)
-            binding.tvAccessBadgeText.isVisible = accessBadge != null
-            binding.tvAccessBadgeText.text = accessBadge.orEmpty()
+            val accessBadgeKind = pgcAccessBadgeKindOf(season.badgeEp, season.badge)
+            binding.tvAccessBadgeText.isVisible = accessBadgeKind != null
+            binding.tvAccessBadgeText.text = accessBadgeKind?.label.orEmpty()
+            binding.tvAccessBadgeText.setBackgroundResource(
+                accessBadgeKind?.backgroundRes() ?: R.drawable.bg_pgc_access_badge,
+            )
             binding.tvDesc.text =
                 season.progressText?.takeIf { it.isNotBlank() }
-                    ?: season.badge?.takeIf { accessBadge == null }.orEmpty()
+                    ?: season.badge?.takeIf { accessBadgeKind == null }.orEmpty()
             ImageLoader.loadInto(binding.ivCover, ImageUrl.poster(season.coverUrl))
         }
     }

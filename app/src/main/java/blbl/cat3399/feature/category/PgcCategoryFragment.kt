@@ -22,6 +22,7 @@ import blbl.cat3399.core.ui.enableDpadTabFocus
 import blbl.cat3399.core.ui.postIfAlive
 import blbl.cat3399.core.ui.requestFocusAdapterPositionReliable
 import blbl.cat3399.core.ui.requestFocusFirstItemOrSelfAfterRefresh
+import blbl.cat3399.core.util.filterHiddenPgcAccess
 import blbl.cat3399.databinding.FragmentPgcCategoryBinding
 import blbl.cat3399.feature.my.BangumiFollowAdapter
 import blbl.cat3399.feature.my.BangumiDetailActivity
@@ -569,9 +570,9 @@ class PgcCategoryFragment : Fragment(), RefreshKeyHandler, TabContentFocusTarget
                 currentPage++
 
                 if (isRefresh) {
-                    adapter.submit(result.items)
+                    adapter.submit(result.items.filterHiddenPgcAccess())
                 } else {
-                    adapter.append(result.items)
+                    adapter.append(result.items.filterHiddenPgcAccess())
                 }
 
                 _binding?.let { b ->

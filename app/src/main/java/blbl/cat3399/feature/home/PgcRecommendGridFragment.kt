@@ -24,6 +24,7 @@ import blbl.cat3399.core.ui.postIfAlive
 import blbl.cat3399.core.ui.postIfAttached
 import blbl.cat3399.core.ui.requestFocusAdapterPositionReliable
 import blbl.cat3399.core.ui.requestFocusFirstItemOrSelfAfterRefresh
+import blbl.cat3399.core.util.filterHiddenPgcAccess
 import blbl.cat3399.databinding.FragmentVideoGridBinding
 import blbl.cat3399.feature.my.BangumiFollowAdapter
 import blbl.cat3399.feature.my.BangumiDetailActivity
@@ -46,12 +47,14 @@ class PgcRecommendGridFragment : Fragment(), RefreshKeyHandler, TabSwitchFocusTa
     private sealed interface PgcGridSource {
         val isDrama: Boolean
         val logName: String
+        val isRecommend: Boolean
 
         suspend fun fetch(key: PgcPagingKey): FetchedPage
 
         data object BangumiRecommend : PgcGridSource {
             override val isDrama: Boolean = false
             override val logName: String = "bangumi_recommend"
+            override val isRecommend: Boolean = true
 
             override suspend fun fetch(key: PgcPagingKey): FetchedPage {
                 val res = BiliApi.pgcBangumiPage(cursor = key.cursor)
@@ -66,6 +69,7 @@ class PgcRecommendGridFragment : Fragment(), RefreshKeyHandler, TabSwitchFocusTa
         data object CinemaRecommend : PgcGridSource {
             override val isDrama: Boolean = true
             override val logName: String = "cinema_recommend"
+            override val isRecommend: Boolean = true
 
             override suspend fun fetch(key: PgcPagingKey): FetchedPage {
                 val res = BiliApi.pgcCinemaTabPage(cursor = key.cursor)
@@ -80,6 +84,7 @@ class PgcRecommendGridFragment : Fragment(), RefreshKeyHandler, TabSwitchFocusTa
         data class BangumiSearch(private val keyword: String) : PgcGridSource {
             override val isDrama: Boolean = false
             override val logName: String = "bangumi_search"
+            override val isRecommend: Boolean = false
 
             override suspend fun fetch(key: PgcPagingKey): FetchedPage {
                 return fetchSearchPage(keyword = keyword, key = key, isDrama = false)
@@ -89,6 +94,7 @@ class PgcRecommendGridFragment : Fragment(), RefreshKeyHandler, TabSwitchFocusTa
         data class CinemaSearch(private val keyword: String) : PgcGridSource {
             override val isDrama: Boolean = true
             override val logName: String = "cinema_search"
+            override val isRecommend: Boolean = false
 
             override suspend fun fetch(key: PgcPagingKey): FetchedPage {
                 return fetchSearchPage(keyword = keyword, key = key, isDrama = true)
@@ -355,7 +361,8 @@ class PgcRecommendGridFragment : Fragment(), RefreshKeyHandler, TabSwitchFocusTa
                 nextKey = fetched.nextKey
                 hasNext = fetched.hasNext
 
-                val filtered = fetched.items.filter { loadedSeasonIds.add(it.seasonId) }
+                val deduped = fetched.items.filter { loadedSeasonIds.add(it.seasonId) }
+                val filtered = if (source.isRecommend) deduped.filterHiddenPgcAccess() else deduped
                 if (isRefresh) adapter.submit(filtered) else adapter.append(filtered)
 
                 _binding?.let { b ->

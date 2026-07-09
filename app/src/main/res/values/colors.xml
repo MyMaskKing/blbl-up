@@ -117,5 +117,6 @@
 
     <color name="player_comment_thread_root_bg">#266EE7FF</color>
     <color name="blbl_red">#EF4444</color>
+    <color name="blbl_orange">#FF8A3D</color>
     <color name="player_overlay_bg">#88000000</color>
 </resources>

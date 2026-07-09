@@ -16,6 +16,7 @@ import blbl.cat3399.core.log.AppLog
 import blbl.cat3399.core.net.BiliClient
 import blbl.cat3399.core.ui.TabContentFocusTarget
 import blbl.cat3399.core.ui.requestFocusAdapterPositionReliable
+import blbl.cat3399.core.util.filterHiddenPgcAccess
 import blbl.cat3399.databinding.FragmentBangumiHomeBinding
 import blbl.cat3399.feature.category.PgcCategoryFragment
 import blbl.cat3399.feature.my.BangumiDetailActivity
@@ -158,7 +159,7 @@ class BangumiHomeFragment : Fragment(), RefreshKeyHandler, TabContentFocusTarget
                 }
                 hotItems.clear()
                 hotItems.addAll(result.items)
-                hotAdapter?.submit(hotItems)
+                hotAdapter?.submit(hotItems.filterHiddenPgcAccess())
             } catch (t: Throwable) {
                 if (t is CancellationException) throw t
                 AppLog.e("BangumiHome", "load hot section failed", t)
@@ -199,7 +200,7 @@ class BangumiHomeFragment : Fragment(), RefreshKeyHandler, TabContentFocusTarget
             4 -> chineseAdapter
             else -> return
         }
-        adapter?.submit(section.items)
+        adapter?.submit(section.items.filterHiddenPgcAccess())
     }
 
     private fun hotPageSize(): Int = spanCountForPgc() * 4

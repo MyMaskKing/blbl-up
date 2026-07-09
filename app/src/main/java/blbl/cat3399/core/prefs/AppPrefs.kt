@@ -127,6 +127,14 @@ class AppPrefs(context: Context) {
         get() = prefs.getBoolean(KEY_DYNAMIC_FOLLOWING_RECENT_UPDATE_DOT_ENABLED, false)
         set(value) = prefs.edit().putBoolean(KEY_DYNAMIC_FOLLOWING_RECENT_UPDATE_DOT_ENABLED, value).apply()
 
+    var pgcShowPaidEnabled: Boolean
+        get() = prefs.getBoolean(KEY_PGC_SHOW_PAID_ENABLED, true)
+        set(value) = prefs.edit().putBoolean(KEY_PGC_SHOW_PAID_ENABLED, value).apply()
+
+    var pgcShowPreviewEnabled: Boolean
+        get() = prefs.getBoolean(KEY_PGC_SHOW_PREVIEW_ENABLED, true)
+        set(value) = prefs.edit().putBoolean(KEY_PGC_SHOW_PREVIEW_ENABLED, value).apply()
+
     var autoUpdateCheckEnabled: Boolean
         get() = prefs.getBoolean(KEY_AUTO_UPDATE_CHECK_ENABLED, true)
         set(value) = prefs.edit().putBoolean(KEY_AUTO_UPDATE_CHECK_ENABLED, value).apply()
@@ -1044,6 +1052,8 @@ class AppPrefs(context: Context) {
         private const val KEY_MAIN_MY_VISIBLE_TABS = "main_my_visible_tabs"
         private const val KEY_FOLLOWING_LIST_ORDER = "following_list_order"
         private const val KEY_DYNAMIC_FOLLOWING_RECENT_UPDATE_DOT_ENABLED = "dynamic_following_recent_update_dot_enabled"
+        private const val KEY_PGC_SHOW_PAID_ENABLED = "pgc_show_paid_enabled"
+        private const val KEY_PGC_SHOW_PREVIEW_ENABLED = "pgc_show_preview_enabled"
         private const val KEY_AUTO_UPDATE_CHECK_ENABLED = "auto_update_check_enabled"
         private const val KEY_AUTO_UPDATE_IGNORED_VERSION_NAME = "auto_update_ignored_version_name"
         private const val KEY_IMAGE_QUALITY = "image_quality"
