@@ -74,10 +74,12 @@ internal class ExoPlayerEngine(
 
     private val volumeBalanceProcessor = VolumeBalanceAudioProcessor(level = audioBalanceLevel)
 
-    // UGC 音/视频 DASH 分片各自携带 mp4 edit list（AAC encoder delay 等起始偏移），
-    // 两条流作为独立 ProgressiveMediaSource 合并时会各自应用 edit list，导致固定音画偏移。
-    // 忽略 edit list 使音视频均从 0 起始对齐。
-    private val editListIgnoringExtractorsFactory: DefaultExtractorsFactory =
+    // UGC 视频 DASH 分片携带的 mp4 edit list 会导致视频起点偏移，作为 ProgressiveMediaSource
+    // 与音频合并时产生固定音画偏移，因此视频侧忽略 edit list，使其从 0 起始。
+    // 注意：音频侧不能忽略 edit list —— B 站音频分片的 edit list 用于跳过 AAC encoder delay
+    // （priming samples），忽略会导致前导静音不被裁剪，真实语音后移，造成字幕比语音提前。
+    // 音视频周期对齐由 MergingMediaSource(adjustPeriodTimeOffsets = true) 处理。
+    private val videoExtractorsFactory: DefaultExtractorsFactory =
         DefaultExtractorsFactory()
             .setMp4ExtractorFlags(Mp4Extractor.FLAG_WORKAROUND_IGNORE_EDIT_LISTS)
             .setFragmentedMp4ExtractorFlags(FragmentedMp4Extractor.FLAG_WORKAROUND_IGNORE_EDIT_LISTS)
@@ -284,12 +286,12 @@ internal class ExoPlayerEngine(
     ): MediaSource {
         val subs = listOfNotNull(subtitle)
         val videoSource =
-            DefaultMediaSourceFactory(DefaultDataSource.Factory(appContext, videoFactory), editListIgnoringExtractorsFactory)
+            DefaultMediaSourceFactory(DefaultDataSource.Factory(appContext, videoFactory), videoExtractorsFactory)
                 .createMediaSource(
                     MediaItem.Builder().setUri(Uri.parse(videoUrl)).setSubtitleConfigurations(subs).build(),
                 )
         val audioSource =
-            DefaultMediaSourceFactory(DefaultDataSource.Factory(appContext, audioFactory), editListIgnoringExtractorsFactory)
+            DefaultMediaSourceFactory(DefaultDataSource.Factory(appContext, audioFactory))
                 .createMediaSource(
                     MediaItem.Builder().setUri(Uri.parse(audioUrl)).build(),
                 )
