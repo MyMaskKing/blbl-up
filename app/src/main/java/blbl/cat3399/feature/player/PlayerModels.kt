@@ -140,6 +140,7 @@ internal data class PlayerSessionSettings(
     val subtitleTextSizeSp: Float,
     val subtitleBottomPaddingFraction: Float,
     val subtitleBackgroundOpacity: Float,
+    val subtitleOffsetMs: Int,
     val audioBalanceLevel: AudioBalanceLevel,
     val persistentBottomProgressEnabled: Boolean,
     val danmaku: DanmakuSessionSettings,
@@ -163,6 +164,7 @@ internal fun PlayerSessionSettings.toEngineSwitchJsonString(): String {
             put("subtitleTextSizeSp", subtitleTextSizeSp.toDouble())
             put("subtitleBottomPaddingFraction", subtitleBottomPaddingFraction.toDouble())
             put("subtitleBackgroundOpacity", subtitleBackgroundOpacity.toDouble())
+            put("subtitleOffsetMs", subtitleOffsetMs)
             put("audioBalanceLevel", audioBalanceLevel.prefValue)
             put("persistentBottomProgressEnabled", persistentBottomProgressEnabled)
             put("danmakuEnabled", danmaku.enabled)
@@ -224,6 +226,7 @@ internal fun PlayerSessionSettings.restoreFromEngineSwitchJsonString(raw: String
     val subBackgroundOpacity =
         optFloat("subtitleBackgroundOpacity", subtitleBackgroundOpacity)
             .coerceIn(0f, 1.0f)
+    val subOffsetMs = optInt("subtitleOffsetMs", subtitleOffsetMs).coerceIn(-10_000, 10_000)
     val audioBalanceLevel = AudioBalanceLevel.fromPrefValue(obj.optString("audioBalanceLevel", audioBalanceLevel.prefValue))
     val persistentBottomProgressEnabled =
         obj.optBoolean("persistentBottomProgressEnabled", persistentBottomProgressEnabled)
@@ -252,6 +255,7 @@ internal fun PlayerSessionSettings.restoreFromEngineSwitchJsonString(raw: String
         subtitleTextSizeSp = subTextSize,
         subtitleBottomPaddingFraction = subBottomPaddingFraction,
         subtitleBackgroundOpacity = subBackgroundOpacity,
+        subtitleOffsetMs = subOffsetMs,
         audioBalanceLevel = audioBalanceLevel,
         persistentBottomProgressEnabled = persistentBottomProgressEnabled,
         danmaku =

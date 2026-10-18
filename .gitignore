@@ -14,6 +14,9 @@ local.properties
 # OS
 .DS_Store
 
+# AI 本地工作区（规划/记忆，不纳入版本控制）
+.ai/
+
 *.apk
 keystore/
 docs/

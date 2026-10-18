@@ -13,6 +13,8 @@ internal sealed interface PlaybackSource {
         val playable: Playable,
         val subtitle: MediaItem.SubtitleConfiguration?,
         val durationMs: Long? = null,
+        // 供系统媒体会话（小爱同学/媒体键/系统媒体中心）展示的标题
+        val mediaTitle: String? = null,
     ) : PlaybackSource
 
     data class Live(

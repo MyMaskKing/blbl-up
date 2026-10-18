@@ -7,6 +7,7 @@ import android.net.Uri
 import android.view.Surface
 import androidx.media3.common.C
 import androidx.media3.common.MediaItem
+import androidx.media3.common.MediaMetadata
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 import androidx.media3.common.VideoSize
@@ -181,7 +182,7 @@ internal class ExoPlayerEngine(
     override fun setSource(source: PlaybackSource) {
         when (source) {
             is PlaybackSource.Vod -> {
-                setVodPlayable(source.playable, subtitle = source.subtitle)
+                setVodPlayable(source.playable, subtitle = source.subtitle, mediaTitle = source.mediaTitle)
             }
 
             is PlaybackSource.Live -> {
@@ -283,12 +284,17 @@ internal class ExoPlayerEngine(
         videoUrl: String,
         audioUrl: String,
         subtitle: MediaItem.SubtitleConfiguration?,
+        mediaTitle: String?,
     ): MediaSource {
         val subs = listOfNotNull(subtitle)
         val videoSource =
             DefaultMediaSourceFactory(DefaultDataSource.Factory(appContext, videoFactory), videoExtractorsFactory)
                 .createMediaSource(
-                    MediaItem.Builder().setUri(Uri.parse(videoUrl)).setSubtitleConfigurations(subs).build(),
+                    MediaItem.Builder()
+                        .setUri(Uri.parse(videoUrl))
+                        .setSubtitleConfigurations(subs)
+                        .applyMediaTitle(mediaTitle)
+                        .build(),
                 )
         val audioSource =
             DefaultMediaSourceFactory(DefaultDataSource.Factory(appContext, audioFactory))
@@ -298,17 +304,23 @@ internal class ExoPlayerEngine(
         return MergingMediaSource(true, true, videoSource, audioSource)
     }
 
-    private fun buildProgressive(factory: DataSource.Factory, url: String, subtitle: MediaItem.SubtitleConfiguration?): MediaSource {
+    private fun buildProgressive(factory: DataSource.Factory, url: String, subtitle: MediaItem.SubtitleConfiguration?, mediaTitle: String?): MediaSource {
         val subs = listOfNotNull(subtitle)
         val item =
             MediaItem.Builder()
                 .setUri(Uri.parse(url))
                 .setSubtitleConfigurations(subs)
+                .applyMediaTitle(mediaTitle)
                 .build()
         return DefaultMediaSourceFactory(DefaultDataSource.Factory(appContext, factory)).createMediaSource(item)
     }
 
-    private fun setVodPlayable(playable: Playable, subtitle: MediaItem.SubtitleConfiguration?) {
+    private fun MediaItem.Builder.applyMediaTitle(title: String?): MediaItem.Builder {
+        val safe = title?.trim()?.takeIf { it.isNotBlank() } ?: return this
+        return setMediaMetadata(MediaMetadata.Builder().setTitle(safe).build())
+    }
+
+    private fun setVodPlayable(playable: Playable, subtitle: MediaItem.SubtitleConfiguration?, mediaTitle: String?) {
         when (playable) {
             is Playable.Dash -> {
                 val videoFactory =
@@ -323,7 +335,7 @@ internal class ExoPlayerEngine(
                         urlCandidates = playable.audioUrlCandidates,
                         mediaRequestProfile = playable.audioMediaRequestProfile,
                     )
-                exoPlayer.setMediaSource(buildMerged(videoFactory, audioFactory, playable.videoUrl, playable.audioUrl, subtitle))
+                exoPlayer.setMediaSource(buildMerged(videoFactory, audioFactory, playable.videoUrl, playable.audioUrl, subtitle, mediaTitle))
             }
 
             is Playable.VideoOnly -> {
@@ -333,7 +345,7 @@ internal class ExoPlayerEngine(
                         urlCandidates = playable.videoUrlCandidates,
                         mediaRequestProfile = playable.videoMediaRequestProfile,
                     )
-                exoPlayer.setMediaSource(buildProgressive(mainFactory, playable.videoUrl, subtitle))
+                exoPlayer.setMediaSource(buildProgressive(mainFactory, playable.videoUrl, subtitle, mediaTitle))
             }
 
             is Playable.Progressive -> {
@@ -343,7 +355,7 @@ internal class ExoPlayerEngine(
                         urlCandidates = playable.urlCandidates,
                         mediaRequestProfile = playable.mediaRequestProfile,
                     )
-                exoPlayer.setMediaSource(buildProgressive(mainFactory, playable.url, subtitle))
+                exoPlayer.setMediaSource(buildProgressive(mainFactory, playable.url, subtitle, mediaTitle))
             }
         }
     }

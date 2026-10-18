@@ -33,7 +33,6 @@ import androidx.media3.common.Player
 import androidx.media3.common.VideoSize
 import androidx.media3.ui.PlayerView
 import androidx.media3.ui.SubtitleView
-import androidx.media3.datasource.DefaultDataSource
 import androidx.media3.datasource.DataSource
 import androidx.media3.datasource.DataSpec
 import androidx.media3.datasource.TransferListener
@@ -43,9 +42,6 @@ import androidx.media3.exoplayer.DecoderReuseEvaluation
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.analytics.AnalyticsListener
 import androidx.media3.exoplayer.analytics.AnalyticsListener.EventTime
-import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
-import androidx.media3.exoplayer.source.MediaSource
-import androidx.media3.exoplayer.source.MergingMediaSource
 import androidx.media3.ui.AspectRatioFrameLayout
 import androidx.media3.ui.CaptionStyleCompat
 import blbl.cat3399.BlblApp
@@ -299,6 +295,9 @@ class PlayerActivity : BaseActivity() {
     internal var subtitleConfig: MediaItem.SubtitleConfiguration? = null
     internal var subtitleItems: List<SubtitleItem> = emptyList()
     internal var subtitleLoadJob: Job? = null
+
+    // 系统媒体会话（小爱同学/媒体键），仅 ExoPlayer 内核可用
+    private var mediaSession: PlayerMediaSession? = null
     internal var lastAvailableQns: List<Int> = emptyList()
     internal var lastAvailableAudioIds: List<Int> = emptyList()
     private var danmakuSegmentSizeMs: Int = DANMAKU_DEFAULT_SEGMENT_MS
@@ -829,6 +828,7 @@ class PlayerActivity : BaseActivity() {
             subtitleTextSizeSp = prefs.subtitleTextSizeSp,
             subtitleBottomPaddingFraction = prefs.subtitleBottomPaddingFraction,
             subtitleBackgroundOpacity = prefs.subtitleBackgroundOpacity,
+            subtitleOffsetMs = prefs.subtitleOffsetMs,
             audioBalanceLevel = AudioBalanceLevel.fromPrefValue(prefs.playerAudioBalanceLevel),
             persistentBottomProgressEnabled = prefs.playerPersistentBottomProgressEnabled,
             danmaku = DanmakuSessionSettings(
@@ -904,6 +904,20 @@ class PlayerActivity : BaseActivity() {
         player = engine
         applyRenderForEngine(engine, prefs)
         val exo = (engine as? ExoPlayerEngine)?.exoPlayer
+        if (exo != null) {
+            mediaSession =
+                PlayerMediaSession(
+                    context = this,
+                    player = exo,
+                    onSeekToNext = { playNextByPlaybackMode(userInitiated = true) },
+                    onSeekToPrevious = {
+                        // 无“上一集”数据流：播放超过 3 秒则回到开头，否则忽略
+                        if ((player?.currentPosition ?: 0L) > MEDIA_SESSION_PREVIOUS_RESTART_THRESHOLD_MS) {
+                            player?.seekTo(0L)
+                        }
+                    },
+                )
+        }
         trace?.log("player:created", "kind=${engine.kind.prefValue}")
         binding.danmakuView.setPositionProvider { player?.currentPosition ?: 0L }
         binding.danmakuView.setIsPlayingProvider { player?.isPlaying == true }
@@ -1939,6 +1953,9 @@ class PlayerActivity : BaseActivity() {
         if (exitTraceStartAtMs > 0L) {
             exitTraceLog("onDestroy:preRelease", "cost=${preReleaseCostMs}ms")
         }
+        // 媒体会话持有 player，必须先于 engine 释放
+        mediaSession?.release()
+        mediaSession = null
         trace?.log("exo:release:start")
         val releaseStart = SystemClock.elapsedRealtime()
         player?.release()
@@ -3012,37 +3029,6 @@ class PlayerActivity : BaseActivity() {
         return CdnFailoverDataSourceFactory(upstreamFactory = upstream, state = CdnFailoverState(kind = kind, candidates = uris))
     }
 
-    internal fun buildMerged(
-        videoFactory: DataSource.Factory,
-        audioFactory: DataSource.Factory,
-        videoUrl: String,
-        audioUrl: String,
-        subtitle: MediaItem.SubtitleConfiguration?,
-    ): MediaSource {
-        val subs = listOfNotNull(subtitle)
-        val videoSource =
-            DefaultMediaSourceFactory(DefaultDataSource.Factory(this, videoFactory))
-                .createMediaSource(
-                    MediaItem.Builder().setUri(Uri.parse(videoUrl)).setSubtitleConfigurations(subs).build(),
-                )
-        val audioSource =
-            DefaultMediaSourceFactory(DefaultDataSource.Factory(this, audioFactory))
-                .createMediaSource(
-                    MediaItem.Builder().setUri(Uri.parse(audioUrl)).build(),
-                )
-        return MergingMediaSource(videoSource, audioSource)
-    }
-
-    internal fun buildProgressive(factory: DataSource.Factory, url: String, subtitle: MediaItem.SubtitleConfiguration?): MediaSource {
-        val subs = listOfNotNull(subtitle)
-        val item =
-            MediaItem.Builder()
-                .setUri(Uri.parse(url))
-                .setSubtitleConfigurations(subs)
-                .build()
-        return DefaultMediaSourceFactory(DefaultDataSource.Factory(this, factory)).createMediaSource(item)
-    }
-
     internal fun reloadStream(keepPosition: Boolean, resetConstraints: Boolean = true, autoPlay: Boolean = true) {
         // Defensive: Player/ExoPlayer must only be accessed on main thread.
         if (Thread.currentThread() !== Looper.getMainLooper().thread) {
@@ -3088,7 +3074,7 @@ class PlayerActivity : BaseActivity() {
                         lastPickedDash = playable
                         debug.cdnHost = runCatching { Uri.parse(playable.videoUrl).host }.getOrNull()
                         logPickedPlayable(source = "reload", playable = playable)
-                        engine.setSource(PlaybackSource.Vod(playable = playable, subtitle = subtitleConfig, durationMs = currentViewDurationMs))
+                        engine.setSource(PlaybackSource.Vod(playable = playable, subtitle = subtitleConfig, durationMs = currentViewDurationMs, mediaTitle = currentMainTitle))
                         applyResolutionFallbackIfNeeded(requestedQn = session.targetQn, actualQn = playable.qn)
                         applyAudioFallbackIfNeeded(requestedAudioId = session.targetAudioId, actualAudioId = playable.audioId)
                     }
@@ -3098,7 +3084,7 @@ class PlayerActivity : BaseActivity() {
                         (binding.recyclerSettings.adapter as? PlayerSettingsAdapter)?.let { refreshSettings(it) }
                         debug.cdnHost = runCatching { Uri.parse(playable.videoUrl).host }.getOrNull()
                         logPickedPlayable(source = "reload", playable = playable)
-                        engine.setSource(PlaybackSource.Vod(playable = playable, subtitle = subtitleConfig, durationMs = currentViewDurationMs))
+                        engine.setSource(PlaybackSource.Vod(playable = playable, subtitle = subtitleConfig, durationMs = currentViewDurationMs, mediaTitle = currentMainTitle))
                         applyResolutionFallbackIfNeeded(requestedQn = session.targetQn, actualQn = playable.qn)
                     }
                     is Playable.Progressive -> {
@@ -3107,7 +3093,7 @@ class PlayerActivity : BaseActivity() {
                         (binding.recyclerSettings.adapter as? PlayerSettingsAdapter)?.let { refreshSettings(it) }
                         debug.cdnHost = runCatching { Uri.parse(playable.url).host }.getOrNull()
                         logPickedPlayable(source = "reload", playable = playable)
-                        engine.setSource(PlaybackSource.Vod(playable = playable, subtitle = subtitleConfig, durationMs = currentViewDurationMs))
+                        engine.setSource(PlaybackSource.Vod(playable = playable, subtitle = subtitleConfig, durationMs = currentViewDurationMs, mediaTitle = currentMainTitle))
                     }
                 }
                 schedulePlayUrlAutoRefresh(playable, reason = "reload_stream")
@@ -3136,7 +3122,7 @@ class PlayerActivity : BaseActivity() {
         subtitleItems = items
         val chosen = pickSubtitleItem(items) ?: return null
         trace?.log("subtitle:download:start", "lan=${chosen.lan}")
-        return buildSubtitleConfigFromItem(chosen, bvid, cid, trace)
+        return buildSubtitleConfigFromItem(chosen, bvid, cid, trace, offsetMs = session.subtitleOffsetMs.toLong())
     }
 
     private suspend fun buildSubtitleConfigFromItem(
@@ -3144,15 +3130,17 @@ class PlayerActivity : BaseActivity() {
         bvid: String,
         cid: Long,
         trace: PlaybackTrace? = null,
+        offsetMs: Long = 0L,
     ): MediaItem.SubtitleConfiguration? {
         val subtitleJson = runCatching { BiliClient.getJson(item.url) }.getOrNull() ?: return null
         val body = subtitleJson.optJSONArray("body") ?: subtitleJson.optJSONObject("data")?.optJSONArray("body") ?: return null
 
-        val vtt = buildWebVtt(body)
+        val vtt = buildWebVtt(body, offsetMs)
         if (vtt.isBlank()) return null
 
         val safeLan = item.lan.replace(Regex("[^a-zA-Z0-9_-]"), "_")
-        val file = File(cacheDir, "sub_${bvid}_${cid}_${safeLan}.vtt")
+        // 文件名带偏移量，避免不同时间轴校准值读到旧缓存
+        val file = File(cacheDir, "sub_${bvid}_${cid}_${safeLan}_${offsetMs}.vtt")
         runCatching { file.writeText(vtt, Charsets.UTF_8) }.getOrElse { return null }
         trace?.log("subtitle:download:done", "vttBytes=${vtt.toByteArray(Charsets.UTF_8).size}")
 
@@ -3198,7 +3186,7 @@ class PlayerActivity : BaseActivity() {
     internal suspend fun buildSubtitleConfigFromCurrentSelection(bvid: String, cid: Long): MediaItem.SubtitleConfiguration? {
         if (bvid.isBlank() || cid <= 0) return null
         val chosen = pickSubtitleItem(subtitleItems) ?: return null
-        return buildSubtitleConfigFromItem(chosen, bvid, cid)
+        return buildSubtitleConfigFromItem(chosen, bvid, cid, offsetMs = session.subtitleOffsetMs.toLong())
     }
 
     internal data class DanmakuMeta(
@@ -3601,6 +3589,7 @@ class PlayerActivity : BaseActivity() {
 
     companion object {
         private const val HIGH_SPEC_FALLBACK_MAX_ATTEMPTS = 3
+        private const val MEDIA_SESSION_PREVIOUS_RESTART_THRESHOLD_MS = 3_000L
         private const val EXIT_TRACE_PREFIX = "EXIT_TRACE"
         const val EXTRA_BVID = "bvid"
         const val EXTRA_CID = "cid"

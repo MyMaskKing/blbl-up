@@ -94,13 +94,15 @@ internal fun normalizeUrl(url: String): String {
     }
 }
 
-internal fun buildWebVtt(body: JSONArray): String {
+internal fun buildWebVtt(body: JSONArray, offsetMs: Long = 0L): String {
+    val offsetSec = offsetMs / 1000.0
     val sb = StringBuilder()
     sb.append("WEBVTT\n\n")
     for (i in 0 until body.length()) {
         val line = body.optJSONObject(i) ?: continue
-        val from = line.optDouble("from", -1.0)
-        val to = line.optDouble("to", -1.0)
+        // 整体平移时间轴：正值延后、负值提前；平移后起点为负或终点不大于 0 的 cue 丢弃
+        val from = line.optDouble("from", -1.0) + offsetSec
+        val to = line.optDouble("to", -1.0) + offsetSec
         val content = line.optString("content", "").trim()
         if (from < 0 || to <= 0 || content.isBlank()) continue
         sb.append(formatVttTime(from)).append(" --> ").append(formatVttTime(to)).append('\n')

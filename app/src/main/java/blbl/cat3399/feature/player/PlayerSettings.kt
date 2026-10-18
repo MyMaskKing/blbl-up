@@ -42,6 +42,7 @@ internal object PlayerSettingKeys {
     const val SUBTITLE_TEXT_SIZE = "subtitle_text_size"
     const val SUBTITLE_BOTTOM_PADDING = "subtitle_bottom_padding"
     const val SUBTITLE_BACKGROUND_OPACITY = "subtitle_background_opacity"
+    const val SUBTITLE_OFFSET = "subtitle_offset"
     const val DANMAKU_MENU = "danmaku_menu"
     const val DANMAKU_ENABLED = "danmaku_enabled"
     const val DANMAKU_SPEED = "danmaku_speed"
@@ -323,6 +324,7 @@ internal fun PlayerActivity.handleSettingsItemClick(item: PlayerSettingsAdapter.
         PlayerSettingKeys.SUBTITLE_TEXT_SIZE -> showSubtitleTextSizeDialog()
         PlayerSettingKeys.SUBTITLE_BOTTOM_PADDING -> showSubtitleBottomPaddingDialog()
         PlayerSettingKeys.SUBTITLE_BACKGROUND_OPACITY -> showSubtitleBackgroundOpacityDialog()
+        PlayerSettingKeys.SUBTITLE_OFFSET -> showSubtitleOffsetDialog()
         PlayerSettingKeys.DANMAKU_MENU -> showDanmakuSettingsMenu()
         PlayerSettingKeys.DANMAKU_ENABLED -> setDanmakuEnabled(!session.danmaku.enabled)
 
@@ -524,6 +526,11 @@ private fun PlayerActivity.buildSubtitleSettingsItems(): List<PlayerSettingsAdap
             PlayerSettingKeys.SUBTITLE_BACKGROUND_OPACITY,
             "字幕背景透明度",
             subtitleBackgroundOpacityText(session.subtitleBackgroundOpacity),
+        ),
+        settingItem(
+            PlayerSettingKeys.SUBTITLE_OFFSET,
+            "字幕时间轴",
+            subtitleOffsetSubtitle(),
         ),
     )
 }
@@ -947,6 +954,46 @@ internal fun PlayerActivity.showSubtitleBackgroundOpacityDialog() {
         )
     }
 }
+
+internal fun PlayerActivity.showSubtitleOffsetDialog() {
+    val options = PlaybackSettingChoices.subtitleOffsets
+    val current =
+        options.indexOf(session.subtitleOffsetMs).takeIf { it >= 0 }
+            ?: options.indexOf(0).takeIf { it >= 0 }
+            ?: 0
+    showSettingsChoiceDialog(
+        title = "字幕时间轴",
+        options = options,
+        checkedIndex = current,
+        label = { subtitleOffsetLabel(it) },
+    ) { picked ->
+        applySessionSettingValue(
+            value = picked,
+            updateSession = { copy(subtitleOffsetMs = it) },
+            syncToGlobal = { subtitleOffsetMs = it },
+            afterApplied = {
+                // 与字幕语言切换一致：重建 VTT 后重载流才能应用新时间轴
+                val exo = (player as? ExoPlayerEngine)?.exoPlayer ?: return@applySessionSettingValue
+                lifecycleScope.launch {
+                    subtitleConfig = buildSubtitleConfigFromCurrentSelection(bvid = currentBvid, cid = currentCid)
+                    subtitleAvailabilityKnown = true
+                    subtitleAvailable = subtitleConfig != null
+                    applySubtitleEnabled(exo)
+                    reloadStream(keepPosition = true)
+                }
+            },
+        )
+    }
+}
+
+internal fun PlayerActivity.subtitleOffsetSubtitle(): String = subtitleOffsetLabel(session.subtitleOffsetMs)
+
+internal fun subtitleOffsetLabel(offsetMs: Int): String =
+    when {
+        offsetMs == 0 -> "无偏移"
+        offsetMs > 0 -> "延后 ${String.format(Locale.US, "%.1f", offsetMs / 1000f)}s"
+        else -> "提前 ${String.format(Locale.US, "%.1f", -offsetMs / 1000f)}s"
+    }
 
 internal fun PlayerActivity.configureSubtitleView() {
     val subtitleView = binding.playerView.findViewById<SubtitleView>(androidx.media3.ui.R.id.exo_subtitles) ?: return

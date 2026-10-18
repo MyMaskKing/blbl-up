@@ -461,6 +461,11 @@ class AppPrefs(context: Context) {
             prefs.edit().putFloat(KEY_SUBTITLE_BACKGROUND_OPACITY, v).apply()
         }
 
+    // 字幕时间轴整体偏移（毫秒）：正值延后、负值提前，用于个别视频人工校准音字幕不同步
+    var subtitleOffsetMs: Int
+        get() = prefs.getInt(KEY_SUBTITLE_OFFSET_MS, 0).coerceIn(SUBTITLE_OFFSET_MIN_MS, SUBTITLE_OFFSET_MAX_MS)
+        set(value) = prefs.edit().putInt(KEY_SUBTITLE_OFFSET_MS, value.coerceIn(SUBTITLE_OFFSET_MIN_MS, SUBTITLE_OFFSET_MAX_MS)).apply()
+
     var playerSpeed: Float
         get() = prefs.getFloat(KEY_PLAYER_SPEED, 1.0f)
         set(value) = prefs.edit().putFloat(KEY_PLAYER_SPEED, value).apply()
@@ -1088,6 +1093,9 @@ class AppPrefs(context: Context) {
         private const val KEY_SUBTITLE_TEXT_SIZE_SP = "subtitle_text_size_sp"
         private const val KEY_SUBTITLE_BOTTOM_PADDING_FRACTION = "subtitle_bottom_padding_fraction"
         private const val KEY_SUBTITLE_BACKGROUND_OPACITY = "subtitle_background_opacity"
+        private const val KEY_SUBTITLE_OFFSET_MS = "subtitle_offset_ms"
+        private const val SUBTITLE_OFFSET_MIN_MS = -10_000
+        private const val SUBTITLE_OFFSET_MAX_MS = 10_000
         private const val KEY_PLAYER_SPEED = "player_speed"
         private const val KEY_PLAYER_SHORT_SEEK_STEP_SECONDS = "player_short_seek_step_seconds"
         private const val KEY_PLAYER_HOLD_SEEK_SPEED = "player_hold_seek_speed"

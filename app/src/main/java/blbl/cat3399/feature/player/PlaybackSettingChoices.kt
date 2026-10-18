@@ -14,6 +14,11 @@ internal object PlaybackSettingChoices {
     val subtitleTextSizes: List<Int> = (10..60 step 2).toList()
     val subtitleBottomPaddingPercents: List<Int> = (0..30 step 2).toList()
 
+    // 字幕时间轴整体偏移档位（毫秒）：负值提前、正值延后
+    val subtitleOffsets: List<Int> =
+        listOf(-10_000, -5_000, -3_000, -2_000, -1_500, -1_000, -750, -500, -400, -300, -200, -100, 0,
+            100, 200, 300, 400, 500, 750, 1_000, 1_500, 2_000, 3_000, 5_000, 10_000)
+
     val subtitleBackgroundOpacities: List<Float> by lazy {
         val options = (20 downTo 0).map { it / 20f }.toMutableList()
         val defaultOpacity = 34f / 255f
