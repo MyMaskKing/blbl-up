@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Blbl</string>
+    <string name="app_name">我的B站</string>
     <string name="badge_charging">充电</string>
     <string name="tab_recommend">推荐</string>
     <string name="tab_bangumi">番剧</string>
